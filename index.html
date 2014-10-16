@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html ng-app="coreModelViewer" lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="viewer for metabolic central carbon core models">
+    <meta name="author" content="nconrad">
+
+    <title>Core Models</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="ui-common/ext/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom CSS -->
+    <link href="css/main.css" rel="stylesheet" type="text/css">
+    <link href="js/ng-table/ng-table.min.css" rel="stylesheet" type="text/css">
+
+    <link href="css/font-awesome-4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="css/viz.css" rel="stylesheet" type="text/css">    
+    <link href="ui-common/functional-site/assets/js/ws-widgets/style.css" rel="stylesheet" type="text/css">
+    <!--<link rel="stylesheet" href="http://openlayers.org/en/v3.0.0/css/ol.css" type="text/css">-->
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand sidebar-collapse" sidebar-collapse><i class="fa fa-caret-left"></i> <i class="fa fa-bars"></i></a>
+                <a class="navbar-brand pull-left" href="index.html">Core Model Viewer</a>
+
+            </div>
+        
+
+            <div class="navbar-default sidebar" role="navigation" ng-controller="SelectedModels">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        <li>
+                            <a ng-class="{ active: $state.includes('genomes')}" ui-sref="genomes"><object width=10 data="img/dna10.svg" type="image/svg+xml"></object> Genomes<span class="text-muted pull-right">8,179</span></a>
+                        </li>
+
+
+                        <li>
+                            <a ng-class="{ active: $state.includes('models')}" ui-sref="models"><i class="fa fa-bug"></i> Models<span class="text-muted pull-right">11,483</span></a>
+                        </li>
+
+                        <li>
+                            <a ng-class="{ active: $state.includes('media')}" ui-sref="media"><i class="fa fa-cutlery"></i> Media<span class="text-muted pull-right">14</span></a>
+                        </li>
+                        <li>
+                            <a ng-class="{ active: $state.includes('fba')}" ui-sref="fba"><i class="fa fa-line-chart"></i> FBA<span class="text-muted pull-right">38</span></a>
+                        </li>             
+
+                        <li>
+                            <a ui-sref="compare" class="">
+                                Compare Models
+                                <span class="badge pull-right model-count">{{models.length}}</span>
+                            </a> 
+                        </li>
+
+                    </ul>
+
+                    <div id="selected-models" ng-show="models.length">
+                        <h5 class="text-muted">Selected Models</h5>
+                        <ul  model-list>
+                            <li ng-repeat="model in models" ng-mouseenter="showRm()" ng-mouseleave="hideRm()">
+                                <a ui-sref="modelPage({ws: '{{model.workspace}}', name: '{{model.name}}' })">{{model.name}}</a>
+                                <span ng-show="hoverOn" class="glyphicon glyphicon-remove pull-right hover pointer btn-rm" ng-click="ML.rm($index)"></span>
+                            </li>
+                        </ul>
+
+                        <div> 
+                            <a class="btn btn-link pull-right" ng-click="ML.rmAll()">Clear All</a>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="sidebar-nav-small" style="display: none;">
+                    <ul class="nav">
+                        <li>
+                            <a ng-class="{ active: $state.includes('genomes')}" ui-sref="genomes"><object width=10 data="img/dna10.svg" type="image/svg+xml"></object></a>
+                        </li>
+                        <li>
+                            <a ng-class="{ active: $state.includes('models')}" ui-sref="models"><i class="fa fa-bug"></i></a>
+                        </li>
+                        <li>
+                            <a ng-class="{ active: $state.includes('media')}" ui-sref="media"><i class="fa fa-cutlery"></i></a>
+                        </li>
+                        <li>
+                            <a ng-class="{ active: $state.includes('fba')}" ui-sref="fba"><i class="fa fa-line-chart"></i></a>
+                        </li>             
+
+                        <li>
+                            <a ui-sref="compare">
+                                <span class="badge model-count">{{models.length}}</span>
+                            </a> 
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+        </nav>
+
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div ui-view id="content"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="footer">
+            <span class="pull-right">
+                <i class="text-muted">Powered by </i>
+                <a href="http://kbase.us" class="hover-inverted">
+                    <img width=30 height=30 src="img/labs_icon.png" />
+                </a>
+            </span>
+        </div>
+
+    </div>
+    <!-- /#wrapper -->
+
+    <script src="ui-common/ext/jquery/jquery-1.10.2.min.js"></script>    
+    <script src="ui-common/ext/jquery-ui/1.10.3/js/jquery-ui-1.10.3.custom.min.js"></script>    
+    <script src="ui-common/ext/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="js/d3.min.js"></script>
+    <script src="js/kinetic-v5.1.0.min.js"></script>
+    <script src="js/d3.min.js"></script>    
+
+    <script src="js/dataTables/jquery.dataTables.js"></script>
+    <script src="js/dataTables/dataTables.bootstrap.js"></script>
+
+    <!-- clients -->
+    <script src="app/clients/fbaModelServices.js"></script>    
+    <script src="app/clients/workspace-0.2.1.js"></script>
+    <script src="app/clients/userandjobstate.js"></script>
+
+
+    <script src="ui-common/functional-site/js/angular-1.2.14/angular.min.js"></script>
+    <script src="ui-common/functional-site/js/ui-router-0.2.10/angular-ui-router.min.js"></script>
+    <script src="js/ng-table/ng-table.min.js"></script>
+    <script src="app/app.js"></script>
+    <script src="app/controllers.js"></script>
+    <script src="app/directives.js"></script> 
+
+    <!-- kbase pages / widgets -->
+    <script src="ui-common/functional-site/js/kbapi.js"></script>    
+    <script src="ui-common/src/kbWidget.js"></script>
+    <script src="ui-common/functional-site/assets/js/ws-widgets/tabs.js"></script>    
+    <script src="ui-common/src/widgets/models/kbaseModelTabs.js"></script>
+    <script src="ui-common/src/widgets/maps/kbasePathway.js"></script>    
+    <script src="ui-common/src/widgets/maps/kbasePathways.js"></script>
+    <script src="ui-common/src/widgets/biochemistry/kbaseRxn.js"></script>
+    <script src="ui-common/src/widgets/biochemistry/kbaseCpd.js"></script>    
+
+    <script src="ui-common/src/widgets/fbas/kbaseFbaTabs.js"></script>
+    <script src="ui-common/src/widgets/kbaseTableEditor.js"></script>      
+    <script src="ui-common/src/widgets/media/kbaseMediaEditor.js"></script>
+    <script src="js/forked/kbaseSEEDFunctions.js"></script>    
+    
+</body>
+
+</html>

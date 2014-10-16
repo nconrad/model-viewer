@@ -1,0 +1,33 @@
+
+<h2>Comparitive Viewer</h2>
+
+<div ng-show="models.length == 0">
+    <div class="text-danger">No Models Selected</div>
+    <span class="glyphicon glyphicon-arrow-left"></span> Select models from the models page.
+</div>
+
+<table ng-show="models.length" class="table comparison-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Organism</th>
+            <th>Rxns</th>
+            <th>Cpds</th>
+            <th>FBA</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr ng-repeat="model in models">
+            <td><a ui-sref="modelPage({ws: '{{model.workspace}}', name: '{{model.name}}' })">{{model.name}}</a></td>
+            <td>Some Organism</td>
+            <td random-number></td>
+            <td random-number></td>
+            <td fba-dropdown ws="{{model.workspace}}" name="{{model.name}}"></td>
+        </tr>
+    </tbody>
+
+</table>
+
+
+<div class="overflow" compare></div>
