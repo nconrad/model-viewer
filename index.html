@@ -14,7 +14,6 @@
     <!-- Bootstrap Core CSS -->
     <link href="ui-common/ext/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 
-    <!-- Custom CSS -->
     <link href="css/main.css" rel="stylesheet" type="text/css">
     <link href="js/ng-table/ng-table.min.css" rel="stylesheet" type="text/css">
 
@@ -54,6 +53,8 @@
             <div class="navbar-default sidebar" role="navigation" ng-controller="SelectedModels">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
+
+                        <!--
                         <li class="sidebar-search">
                             <div class="input-group custom-search-form">
                                 <input type="text" class="form-control" placeholder="Search...">
@@ -63,8 +64,8 @@
                                 </button>
                             </span>
                             </div>
-                            <!-- /input-group -->
                         </li>
+                        -->
                         <li>
                             <a ng-class="{ active: $state.includes('genomes')}" ui-sref="genomes"><object width=10 data="img/dna10.svg" type="image/svg+xml"></object> Genomes<span class="text-muted pull-right">8,179</span></a>
                         </li>
