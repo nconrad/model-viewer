@@ -94,3 +94,39 @@ table.comparison-table th, table.comparison-table td {
 }
 
 
+.obj-grid {
+    height: 100%;
+}
+
+/* ui grid styling */
+
+.ui-grid {
+    border: none;
+    height: 330px;
+}
+
+.ui-grid-header {
+    border:none;
+    border-bottom: 2px solid #dfdfdf;
+}
+.ui-grid-vertical-bar {
+    background-color: #fff !important;
+}
+.ui-grid-top-panel .ui-grid-cell-contents {
+    border:none;
+}
+
+.ui-grid-top-panel {
+    background: #fff;
+}
+
+.ui-grid-cell {
+    border-right: none;
+}
+
+.ui-grid-row:nth-child(even),
+.ui-grid-cell {
+    border-bottom: 1px solid #dfdfdf;
+    background: #fff !important;
+}
+

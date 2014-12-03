@@ -1,8 +1,8 @@
 
 /* service configuration settings for UI */
-angular.module('appTasker').service('config', function() {
+angular.module('coreModelViewer').service('config', function() {
 
-    this.ui = {name: "App Tasker"};
+    this.ui = {name: "Core Mdoel Viewer"};
 
     this.services = {app_url: "http://140.221.66.219:7124",
                      ws_url: "https://kbase.us/services/ws",

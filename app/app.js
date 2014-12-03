@@ -2,8 +2,8 @@
 
 
 var app = angular.module('coreModelViewer', 
-    ['core-directives', 'ui.router', 'ngTable'])
-        .config(['$locationProvider', '$stateProvider', '$httpProvider', '$urlRouterProvider',
+    ['core-directives', 'ui.router', 'kbase-rpc']) //'ngMaterial'
+    .config(['$locationProvider', '$stateProvider', '$httpProvider', '$urlRouterProvider',
     function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider) {
 
 
@@ -13,24 +13,25 @@ var app = angular.module('coreModelViewer',
          .state('genomes', {
             url: "/genomes/",
             templateUrl: 'app/views/genomes.html',
-            controller: 'Ctrl'
         }).state('models', {
             url: "/models/",
             templateUrl: 'app/views/models.html',
-            controller: 'Ctrl'
-        }).state('modelsws', {
+        }).state('modelsByWS', {
             url: "/models/:ws",
             templateUrl: 'app/views/modelsws.html',
-            controller: 'Ctrl'
+            //controller: 'ModelsByWS'
         }).state('media', {
             url: "/media/",
             templateUrl: 'app/views/media.html',
-            controller: 'Ctrl'
         }).state('fba', {
             url: "/fba/",
-            templateUrl: 'app/views/fba.html',
-            controller: 'Ctrl'
+            templateUrl: 'app/views/fbas.html',
         })
+        .state('fbaByWS', {
+            url: "/fba/:ws",
+            templateUrl: 'app/views/fbaws.html',
+            controller: 'FBAByWS'
+        })        
 
         // object views
         .state('modelPage', {
@@ -63,7 +64,10 @@ var app = angular.module('coreModelViewer',
                       .when('/', '/models/')
                       .when('#', '/models/');
 
-}]);
+}]).config(['$httpProvider', function ($httpProvider) {
+            // enable http caching
+           $httpProvider.defaults.cache = true;
+      }])
 
 
 

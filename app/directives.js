@@ -23,6 +23,7 @@ angular.module('core-directives')
 .directive('modelTable', function($compile, $stateParams) {
     return {
         link: function(scope, element, attr) {
+            console.log($stateParams)            
             scope.tableOptions = {"columns": [
                                       { title: "Name", data: function(d) {
                                             var name = d[1];
@@ -48,11 +49,10 @@ angular.module('core-directives')
             var table;
 
             element.loading('', true);
-
-            if ($stateParams.ws == 'coremodels_ATP') { 
+            if ($stateParams.ws == 'janakakbase:CoreModels_ATP-eq') { 
                 var p = kb.ws.list_objects({workspaces: [$stateParams.ws], 
                                             includeMetadata: 1});
-            } else if ($stateParams.ws == 'coremodels') {
+            } else if ($stateParams.ws == 'janakakbase:CoreModels-VR') {
                 var p = kb.ws.list_objects({workspaces: [$stateParams.ws], 
                                             type: 'KBaseFBA.FBAModel',
                                             includeMetadata: 1});
@@ -119,7 +119,7 @@ angular.module('core-directives')
 
         }
     }
-}).directive('fbaTable', function($compile) {
+}).directive('fbaTable', function($compile, $stateParams) {
     return {
         link: function(scope, element, attr) {
             var table;
@@ -133,7 +133,7 @@ angular.module('core-directives')
 
 
             element.loading('', true);
-            var prom = kb.ws.list_objects({workspaces: ['coreATP_FBA_Glucose_aerobic']})
+            var prom = kb.ws.list_objects({workspaces: [$stateParams.ws]})
             $.when(prom).done(function(data) {
                 element.rmLoading();
 
@@ -721,8 +721,10 @@ angular.module('core-directives')
         link: function(scope, element, attr) {
             var models = angular.copy(scope.models);
 
+            if (models.length) {
+                $(element).loading();
+            }
 
-            $(element).loading();
 
             /*
             var prom = kb.ws.list_objects({workspaces: ['coremodels_ATP']});
@@ -1011,7 +1013,7 @@ angular.module('core-directives')
 .directive('sidebarCollapse', function(ModelList) {
     return {
         link: function(scope, element, attr) {
-            var original_w = 250;
+            var original_w = 200;
             var new_w = 56;
 
             var collapsed = false;

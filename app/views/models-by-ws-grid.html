@@ -1,0 +1,20 @@
+
+
+
+<h1 class="page-header">Models</h1>
+
+<div ng-if="!loading">
+    <input type="text" ng-model="filterOptions.filterText" />
+
+    <div ui-grid="gridOptions" class="ui-grid" ui-grid-pagination></div>
+
+    <p>Page: {{ gridApi.pagination.getPage() }} / {{ gridApi.pagination.getTotalPages() }}</p>
+    <button type="button" class="btn btn-primary" ng-click="gridApi.pagination.previousPage()">
+        <i class="fa fa-arrow-left"></i> previous
+    </button>
+    <button type="button" class="btn btn-primary" ng-click="gridApi.pagination.nextPage()">
+        next <i class="fa fa-arrow-right"></i>
+    </button>
+</div>
+
+<md-progress-circular ng-if="loading" mode="indeterminate" diameter="40">asdf</md-progress-circular>
