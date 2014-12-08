@@ -2,6 +2,7 @@
 var UI_SERVER = 'http://0.0.0.0:8081';
 
 var gene_color = '#87CEEB';
+var fluxColors = ['#910000', '#e52222', '#ff4444', '#fc8888', '#fcabab']
 
 angular.module('core-directives', []);
 angular.module('core-directives')
@@ -23,14 +24,14 @@ angular.module('core-directives')
 .directive('modelTable', function($compile, $stateParams) {
     return {
         link: function(scope, element, attr) {
-            console.log($stateParams)            
+
             scope.tableOptions = {"columns": [
                                       { title: "Name", data: function(d) {
                                             var name = d[1];
                                             var ws = d[7];
                                             var path = "modelPage({ws: '"+ws+"', name: '"+name+"'})";
                                             var link = '<a ui-sref="'+path+'" >'+name+'</a>';
-                                            var add_btn = '<button type="button" ng-click="'+"ML.add('"+ws+"','"+name+"')"+
+                                            var add_btn = '<button type="button" ng-click="'+"MV.add('"+ws+"','"+name+"')"+
                                                         '" class="btn btn-default btn-xs btn-add-model pull-right hide">Add'+
                                                     '</button>';
                                             return link+add_btn;
@@ -61,6 +62,7 @@ angular.module('core-directives')
             $.when(p).done(function(data) {
                 console.log('model data', data)
                 element.rmLoading();
+
                 scope.tableOptions.data = data;
                 scope.tableOptions.drawCallback = scope.events;
 
@@ -72,15 +74,12 @@ angular.module('core-directives')
             })
 
             scope.events = function() {
+                $('tbody').find('tr').unbind('hover');
                 $('tbody').find('tr').hover(function() {
                     $(this).find('.btn-add-model').removeClass('hide');
                 }, function() {
                     $(this).find('.btn-add-model').addClass('hide');
                 });
-
-                // compile template again for datatables
-                $compile(table)(scope);
-                scope.$apply();
             }
 
         }
@@ -256,8 +255,6 @@ angular.module('core-directives')
             }
 
             function draw(data) {
-                var width = 800;
-                var height = 300;
                 padding_bottom = 50;
 
                 var max_end = data.max
@@ -550,146 +547,17 @@ angular.module('core-directives')
 
         }
     }
-}).directive('etc', function($stateParams) {
+})
+
+.directive('etc', function($stateParams) {
     return {
         link: function(scope, ele, attr) {
             ele.loading();
-
-
-            // canvas
-            var height = 800,
-                width = 900;
-
-            // boxes
-            var w = 100,
-                h = 30;
-
-            var start_x = 100,
-                start_y = 100;
-
-            var padding = 10;
-
-            ele.append('<div id="canvas">');
-            var svg = d3.select("#canvas").append("svg")
-                        .attr("width", width)
-                        .attr("height", height)
-
-
-            var p = kb.ws.get_objects([{workspace: 'nconrad:core', name: 'ETC_data'},
-                                       {workspace: $stateParams.ws, name: $stateParams.name }
-                                      ]);
-            $.when(p).done(function(d) {
-                ele.rmLoading();
-
-                var etc = d[0].data,
-                    model = d[1].data;
-
-                console.log('etc', etc);
-                draw(etc, model);
-            })
-
-            function draw(etc, model) {
-
-                    //.append("g")
-                        //.call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom))
-                    //.append("g");
-
-                var model_rxns = rxnDict(model);
-                var rows = etc.pathways;             
-
-                var electron_acceptors = [];
-                for (var j=0; j<rows.length; j++) {
-                    if (rows[j].type == "electron_acceptor") {
-                        electron_acceptors.push(rows[j]);
-                        continue;
-                    }
-
-                    var name = rows[j].name 
-
-                    var g = svg.append('g');
-                    g.append("text")
-                     .attr("x", start_x + w*j)
-                     .attr("y", start_y)
-                     .text(name)
-                     .attr("font-size", '12px');
-
-                    // FIXME: rename steps -> entities on backend
-                    var col_entities = rows[j].steps;
-                    for (var i in col_entities) {
-                        var entity = col_entities[i];
-
-                        var found_rxns = [];  //may need to know which rxn was found
-                        for (var k in entity.reactions) {
-                            var rxn_id = entity.reactions[i];
-
-                            if (rxn_id in model_rxns) {
-
-                                found_rxns.push(model_rxns[rxn_id]);
-                            }
-                        }
-
-
-                        var x = start_x + w*j;
-                        var y = start_y + h*i;
-                        var color = (found_rxns.length > 0 ? gene_color : 'white')
-                        drawBox(entity, x, y, color);
-                    }
-                }
-
-                console.log(electron_acceptors)
-                for (var i in electron_acceptors) {
-                    var col_entities = electron_acceptors[i].steps;
-
-                    for (var j in col_entities) {
-                        var entity = col_entities[j];
-
-                        var x = start_x + w*(rows.length+1);
-                        var y = start_y + h*i;
-                        drawBox(entity, x, y);
-                    }
-
-                }
-            } // end draw 
-
-
-            function drawBox(entity, x, y, color) {
-                var rxns = entity.reactions;
-
-                var g = svg.append('g');
-                var rect = g.append('rect')
-                            .attr('class', 'rxn')
-                            .data( [{ x: x, y: y }])
-                            .attr('x', x)
-                            .attr('y', y)
-                            .attr('width', w)
-                            .attr('height', h)
-                            .style('stroke', '#666')
-                            .style('fill', (color ? color : 'white') );
-
-
-                g.append("text")
-                 .attr("x", x+ 4)
-                 .attr("y", y + h/2)
-                 .text(entity.substrates.name) 
-                 .attr("font-size", '10px');
-
-                var content = '<b>'+entity.substrates.name+' Substrates</b><br>'+
-                               entity.substrates.compound_refs.join(', ')+'<br><br>'+
-                            '<b>'+entity.products.name+' Products</b><br>'+
-                                entity.products.compound_refs.join(', ');
-
-
-                $(g.node()).popover({content: content,
-                                     title: '<b>'+rxns.join(', ')+'</b>',
-                                     trigger: 'hover',
-                                     html: true,
-                                     placement: 'bottom',
-                                     container: 'body'});
-            }
-
         }
     }
-}).directive('mediaTabs', function($stateParams) {
+})
+
+.directive('mediaTabs', function($stateParams) {
     return {
         link: function(scope, element, attr) {
             $(element).kbaseMediaEditor({ws: $stateParams.ws, name: $stateParams.name})
@@ -716,54 +584,72 @@ angular.module('core-directives')
         }
     }
 })
-.directive('compare', function(ModelList) {
+.directive('compare', function(ModelViewer, $q, $http) {
     return {
         link: function(scope, element, attr) {
+            var MV = ModelViewer;
+
+            var width = 800,
+                height = 250;
+
             var models = angular.copy(scope.models);
 
-            if (models.length) {
+            if (models.length) $(element).loading();
+
+
+            scope.$on('updateCompare', function(e, fbas) {
+                console.log('fbas', fbas)
+                updateCompare(fbas)
+            })
+
+            // draw heatmap on load
+            //var prom = 
+            //var prom2 = $http.rpc('ws','get_objects', models);
+
+            function updateCompare(fbas) {
                 $(element).loading();
+                if (fbas) {
+                    var refs = []
+                    for (var i=0; i<models.length; i++) {
+                        if (String(i) in fbas) refs.push( {ref: fbas[String(i)].ref})
+                    }
+                    console.log('refs', refs)
+
+                    var fbaProm = $http.rpc('ws','get_objects', refs);
+                } else {
+                    var fbaProm;
+                }
+
+                var prom = MV.updateModelData()
+                $q.all([prom, fbaProm])
+                    .then(function(d) {  
+                        $(element).rmLoading();
+
+                        var models = d[0];
+                        var all_fbas = d[1];
+                        console.log('res', all_fbas)
+
+                        // null for fbas that haven't been selected
+                        for (var i=0; i<models.length; i++) {
+                            if (fbas && !(String(i) in fbas) ) {
+                                all_fbas.splice(i, 0, null)
+                            } 
+                        }
+
+
+                        console.log('models / fba', models, all_fbas)
+                        var d = parseData(models, all_fbas);
+
+                        element.html('');
+                        //element.append('<div>'+d.x.length+' x '+d.y.length+' = '+(d.x.length*d.y.length)+' boxes</div>' )
+                        element.append('<br>')                    
+                        element.append('<div id="canvas">');
+                        heatmap_d3(d.x, d.y, d.data);                
+                    })                
             }
+            updateCompare()
+         
 
-
-            /*
-            var prom = kb.ws.list_objects({workspaces: ['coremodels_ATP']});
-            $.when(prom).done(function(data) {
-                var models = []
-
-                for (var i in data.splice(0,200)) {
-                    models.push({workspace: data[i][7], name: data[i][1]})
-                }
-            */
-
-            // provenance info
-            /*
-            var p = kb.ws.get_object_provenance(models);
-
-            var prom = $.when(p).then(function(provenance){
-                var prom = kb.ui.refsToJson(provenance[0].refs);
-                return prom;
-            })
-
-            $.when(prom).done(function(data){
-                console.log('readable', data)
-
-            })*/
-            /*
-            var prom = kb.ws.get_objects(models);
-            $.when(prom).done(function(d) {
-                $(element).rmLoading();
-
-                var data = [];
-                for (var i in d) {
-                    data.push(d[i].data);
-                }
-                draw_heatmap(data);
-
-            })
-            */
-            heatmap();
-            //complete_cached()
 
 
             function heatmap() {
@@ -776,7 +662,6 @@ angular.module('core-directives')
                     //    get_set();
                     //}
 
-                    get_selected(data);
                 });
 
 
@@ -811,12 +696,83 @@ angular.module('core-directives')
                         element.rmLoading()
                         element.append('<div>'+d.x.length+' x '+d.y.length+' = '+(d.x.length*d.y.length)+' boxes</div>' )
                         element.append('<br>')                    
-                        element.append('<div id="canvas">');                        
+                        element.append('<div id="canvas">');
                         heatmap_d3(d.x, d.y, d.data);
                     })
                 }
 
+
             }
+
+            function parseData(models, fbas) {
+
+                // create heatmap data
+                var rxn_names = [];
+                var model_names = [];
+                var data = [];
+
+                // first, get union of reactions
+                for (var i=0; i < models.length; i++) {
+                    var model = models[i];
+                    model_names.push(model.name); 
+
+                    var rxns = model.modelreactions;
+                    for (var j=0; j < rxns.length; j++) {
+                        var rxn_name = rxns[j].reaction_ref.split('/')[5];
+                        if (rxn_names.indexOf(rxn_name) == -1) rxn_names.push(rxn_name);
+                    }
+                }
+
+                var rows = [];
+
+                // for each model, get data for box, left to right
+                for (var i=0; i < models.length; i++) {
+                    var rxns = models[i].modelreactions;
+
+                    // see if there is an fba result
+                    // if so, get create rxn hash
+                    var hasFBA = false;
+                    if (fbas && fbas[i]) {
+                        console.log('TRUE')
+                        hasFBA = true;
+                        var fbaRXNs = {};                        
+                        var fbaRxns = fbas[i].data.FBAReactionVariables;
+
+                        for (var j=0; j<fbaRxns.length; j++) {
+
+                            var rxnId = fbaRxns[j].modelreaction_ref.split('/')[5].split('_')[0];
+                            fbaRXNs[rxnId] = fbaRxns[j];
+                        }
+
+                    }
+
+
+                    var row = [];
+                    // for each rxn in union of rxns, try to find rxn for that model
+                    for (var j=0; j < rxn_names.length; j++) {
+                        var rxn_name = rxn_names[j];
+
+
+                        var found = false;
+                        var flux;
+                        for (var k in rxns) {
+                            if (rxns[k].reaction_ref.split('/')[5] == rxn_name) {
+                                found = true;
+                                if (hasFBA) flux = fbaRXNs[rxn_name].value;
+                                break;
+                            }
+                        }
+
+                        row.push({present: (found ? 1 : 0), flux: flux});
+                    }
+
+                    rows.push(row);
+                }
+
+                console.log('heatmap', rows)
+                return {x: rxn_names, y: model_names, data: rows};            
+            }
+
 
             function complete_cached() {
                 $.get('./node/output.json', function(d) {
@@ -831,7 +787,6 @@ angular.module('core-directives')
 
             function super_map(y_data, x_data, rows) {
                 element.append('<div id="map" class="map" style="height: 400px; width: 100%;"></div>')
-
 
 
                 var offset_x = 100;
@@ -911,6 +866,7 @@ angular.module('core-directives')
 
 
             function heatmap_d3(x_data, y_data, rows) {
+
                 element.append('<div id="canvas">');
                 var svg = d3.select("#canvas").append("svg")
                     .attr("width", width)
@@ -968,18 +924,27 @@ angular.module('core-directives')
                                                  d3.select(this).attr("font-weight", "none");});
                         }
 
-                        var val = rows[i][j];
+                        var prop = rows[i][j];
                         var rect = svg.append("rect")
                                       .attr("x", start_x+j*w)
                                       .attr("y", start_y+i*h)
                                       .attr("width", w)
                                       .attr("height", h)
-                                      .attr("fill", (val === 1 ? gene_color: 'white') )
                                       .attr("stroke", '#888')
                                       .attr('stroke-width', '.5px')
                                       .attr('class', 'model-rxn');
 
-                        $(rect.node()).popover({content: val,
+                        console.log(prop)
+
+                        if (prop.present && prop.flux) {
+                            var color = getColor(prop.flux);                            
+                            rect.attr('fill', color);
+                        } else {
+                            rect.attr("fill", (prop.present === 1 ? gene_color : 'white') );
+                        }
+
+
+                        $(rect.node()).popover({content: prop.flux,
                                 title: y_data[i],
                                 trigger: 'hover', 
                                 html: true,
@@ -990,12 +955,42 @@ angular.module('core-directives')
 
             }
 
+
+
+            function getColor(v) {
+                if (v >= 100)
+                    return fluxColors[0];
+                else if (v >= 50)
+                    return fluxColors[1];
+                else if (v >= 20)
+                    return fluxColors[2];
+                else if (v >= 5)
+                    return fluxColors[3];
+                else if (v > 0)
+                    return fluxColors[4];
+                else if (v == 0)
+                    return gene_color;
+                else if (v <= 100)
+                    return fluxColors[0];
+                else if (v <= -50)
+                    return fluxColors[1];
+                else if (v <= -20)
+                    return fluxColors[2];
+                else if (v <= 5)
+                    return fluxColors[3];
+                else if (v< 0)
+                    return fluxColors[4];
+
+                return undefined;
+            }
         }
     }
 })
 
 
-.directive('modelList', function(ModelList) {
+
+
+.directive('modelList', function() {
     return {
         link: function(scope, element, attr) {
             scope.showRm = function() {
@@ -1010,7 +1005,7 @@ angular.module('core-directives')
     }
 })
 
-.directive('sidebarCollapse', function(ModelList) {
+.directive('sidebarCollapse', function() {
     return {
         link: function(scope, element, attr) {
             var original_w = 200;
@@ -1068,22 +1063,20 @@ angular.module('core-directives')
     }
 })
 
-.directive('fbaDropdown', function(ModelList) {
+.directive('fbaDropdown', function(ModelViewer) {
     return {
-        link: function(scope, element, attr) {
+        controller: 'Compare',
+        link: function(scope, element, attrs) {
+            var ws = attrs.ws;
+            var name = attrs.name;
 
-            $(element).append('<select class="form-control">'+
-                                '<option>Some FBA 1</option>'+
-                                '<option>Some FBA 2</option>'+
-                                '<option>Some FBA 3</option>'+
-                                '<option>Some FBA 4</option>'+ 
-                              '</select>')
+
         }
     }
 })
 
 
-.directive('tooltip', function(ModelList) {
+.directive('tooltip', function() {
     return {
         link: function(scope, element, attr) {
 
@@ -1098,7 +1091,7 @@ angular.module('core-directives')
     }
 })
 
-.directive('downloadOptions', function(ModelList, $stateParams) {
+.directive('downloadOptions', function(ModelViewer, $stateParams) {
     return {
         link: function(scope, element, attr) {
             var ws = $stateParams.ws;

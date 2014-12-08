@@ -2,8 +2,11 @@
 
 
 var app = angular.module('coreModelViewer', 
-    ['core-directives', 'ui.router', 'kbase-rpc']) //'ngMaterial'
-    .config(['$locationProvider', '$stateProvider', '$httpProvider', '$urlRouterProvider',
+['core-directives', 
+ 'ui.router',
+ 'kbase-rpc',
+ 'ModelViewer'])
+.config(['$locationProvider', '$stateProvider', '$httpProvider', '$urlRouterProvider',
     function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider) {
 
 
@@ -57,7 +60,12 @@ var app = angular.module('coreModelViewer',
         .state('compare', {
             url: "/compare",
             templateUrl: 'app/views/compare.html',
-            controller: 'Compare'
+            controller: 'Compare',
+            resolve: {
+              'GetRefs': ['ModelViewer', function(ModelViewer){
+                return ModelViewer.updateRefs;  // wait for refs to be retrieved
+              }]
+            }      
         })    
 
     $urlRouterProvider.when('', '/models/')

@@ -3,19 +3,37 @@
 
 
 
-app.controller('MainCtrl', function($scope, $stateParams, $filter, ModelList) {
+app.controller('MainCtrl', function($scope, $stateParams, $filter, ModelViewer) {
 
-    $scope.ML = ModelList; 
+    $scope.MV = ModelViewer; 
 
-}).controller('SelectedModels', function($scope, $stateParams, $filter, ModelList) {
+}).controller('SelectedModels', function($scope, $stateParams, $filter, ModelViewer) {
 
-    $scope.ML = ModelList;
-    $scope.models = ModelList.models;
+    $scope.MV = ModelViewer;
+    $scope.models = ModelViewer.models;
 
-}).controller('Compare', function($scope, ModelList) {
+}).controller('Compare', function($scope, ModelViewer, GetRefs) {
 
-    $scope.ML = ModelList;
-    $scope.models = ModelList.models;
+    // selected models
+    $scope.models = ModelViewer.models;
+
+    // input model for selected FBAS; gives names;
+    $scope.selectedFBAs = {}
+
+    // update refs.  view waits for this;
+    GetRefs().then(function() {
+        $scope.getRelatedFBAS = ModelViewer.getRelatedFBAS;
+    })
+
+    $scope.fbas = [];
+    $scope.updateView = function($index, ws, name) {
+        //console.log('called', $index, $scope.selectedFBAs)
+        //$scope.fbas[$index] = {ref: $scope.selectedFBAs[$index].ref};
+
+        $scope.$broadcast('updateCompare', $scope.selectedFBAs);
+
+    }
+    
 
 }).controller('ObjectPage', function($scope, $stateParams) {
 
@@ -31,8 +49,8 @@ app.controller('MainCtrl', function($scope, $stateParams, $filter, ModelList) {
 })
 
 
-.controller('ModelsByWS', function($scope, $stateParams, $http, $log, ModelList) {
-    $scope.ML = ModelList;
+.controller('ModelsByWS', function($scope, $stateParams, $http, $log, ModelViewer) {
+    $scope.ML = ModelViewer;
     $scope.filterOptions = {
             filterText: '', 
             useExternalFilter: false,
@@ -91,28 +109,3 @@ app.controller('MainCtrl', function($scope, $stateParams, $filter, ModelList) {
         })
 
 })
-
-
-
-
-
-
-    /*
-        gridApi.selection.on.rowSelectionChanged($scope,function(row){
-            ModelList.add(row.entity.ws, row.entity.name)
-            var msg = 'row selected ' + row.isSelected;
-            $log.log(msg, row);
-        });
- 
-        gridApi.selection.on.rowSelectionChangedBatch($scope,function(rows){
-            var msg = 'rows changed ' + rows.length;
-
-            var bulk = [];
-            for (var i in rows) {
-                bulk.push(rows[i].entity.ws, rows[i].entity.name)
-            }
-            ModelList.addBulk(bulk);
-            $log.log(msg, rows);
-        })
-    */
-

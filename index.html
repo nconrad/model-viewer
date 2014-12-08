@@ -58,6 +58,7 @@
     <script src="lib/ui-common/functional-site/js/kbapi.js"></script>    
     <script src="lib/ui-common/src/kbWidget.js"></script>
     <script src="lib/ui-common/functional-site/assets/js/ws-widgets/tabs.js"></script>    
+    <script src="lib/ui-common/src/widgets/models/kbaseETCDiagram.js"></script>
     <script src="lib/ui-common/src/widgets/models/kbaseModelTabs.js"></script>
     <script src="lib/ui-common/src/widgets/maps/kbasePathway.js"></script>    
     <script src="lib/ui-common/src/widgets/maps/kbasePathways.js"></script>
@@ -123,23 +124,23 @@
                     <li>
                         <a ng-class="{ active: $state.includes('compare')}"  ui-sref="compare">
                             Compare Models
-                            <span class="badge pull-right model-count">{{ML.models.length}}</span>
+                            <span class="badge pull-right model-count">{{MV.models.length}}</span>
                         </a> 
                     </li>                    
                 </ul>
                
-                <div id="selected-models" ng-show="ML.models.length">
+                <div id="selected-models" ng-show="MV.models.length">
 
                     <h5 class="text-muted">Selected Models</h5>
                     <ul model-list>
-                        <li ng-repeat="model in ML.models" ng-mouseenter="showRm()" ng-mouseleave="hideRm()">
+                        <li ng-repeat="model in MV.models" ng-mouseenter="showRm()" ng-mouseleave="hideRm()">
                             <a ui-sref="modelPage({ws: '{{model.workspace}}', name: '{{model.name}}' })">{{model.name}}</a>
-                            <span ng-show="hoverOn" class="glyphicon glyphicon-remove pull-right hover pointer btn-rm" ng-click="ML.rm($index)"></span>
+                            <span ng-show="hoverOn" class="glyphicon glyphicon-remove pull-right hover pointer btn-rm" ng-click="MV.rm($index)"></span>
                         </li>
                     </ul>
 
                     <div> 
-                        <a class="btn btn-link pull-right" ng-click="ML.rmAll()">Clear All</a>
+                        <a class="btn btn-link pull-right" ng-click="MV.rmAll()">Clear All</a>
                     </div>
                 </div>                
             </div>
