@@ -44,7 +44,7 @@ angular.module('core-directives')
                                       }},
                                       { title: "Cpd", data: function(d){
                                             return '<span random-number></span>';
-                                      }},                                      
+                                      }},
                                   ]}
 
             var table;
@@ -601,21 +601,18 @@ angular.module('core-directives')
             var width = 800,
                 height = 250;
 
-            var models = angular.copy(scope.models);
-
-            if (models.length) $(element).loading();
-
+            scope.models = angular.copy(scope.models);
 
             scope.$on('updateCompare', function(e, fbas) {
                 console.log('fbas', fbas)
-                updateCompare(fbas)
+                updateCompare(scope.models, fbas)
             })
 
             // draw heatmap on load
             //var prom = 
             //var prom2 = $http.rpc('ws','get_objects', models);
 
-            function updateCompare(fbas) {
+            function updateCompare(models, fbas) {
                 $(element).loading();
                 if (fbas) {
                     var refs = []
@@ -656,62 +653,9 @@ angular.module('core-directives')
                         heatmap_d3(d.x, d.y, d.data);                
                     })                
             }
-            updateCompare()
+
+            if (scope.models.length) updateCompare();
          
-
-
-
-            function heatmap() {
-                var sets = []
-                var prom = kb.ws.list_objects({workspaces: ['coremodels_ATP']});
-                $.when(prom).done(function(data) {
-                    var set_count = Math.ceil(data.length / 50);
-
-                    //for (var i=0; i< set_count; i++) {
-                    //    get_set();
-                    //}
-
-                });
-
-
-                function get_pre_selected(data) {
-                    var query = ''
-                    for (var i in data.splice(0,50)) {
-                        query += data[i][7]+','+data[i][1]+'&';
-                    }
-                    query = query.substring(0, query.length - 1);
-
-
-                    $.get(UI_SERVER+'/analysis/heatmap/'+query, function(d) {
-                        element.rmLoading()
-                        element.append('<div>'+d.x.length+' x '+d.y.length+' = '+(d.x.length*d.y.length)+' boxes</div>' )
-                        element.append('<br>')                    
-                        element.append('<div id="canvas">');    
-                        
-
-                        super_map(d.x, d.y, d.data);
-                    })
-                }
-
-                function get_selected(data) {
-                    var query = ''
-                    for (var i in models) {
-                        query += models[i].workspace+','+models[i].name+'&';
-                    }
-                    query = query.substring(0, query.length - 1);
-
-
-                    $.get(UI_SERVER+'/analysis/heatmap/'+query, function(d) {
-                        element.rmLoading()
-                        element.append('<div>'+d.x.length+' x '+d.y.length+' = '+(d.x.length*d.y.length)+' boxes</div>' )
-                        element.append('<br>')                    
-                        element.append('<div id="canvas">');
-                        heatmap_d3(d.x, d.y, d.data);
-                    })
-                }
-
-
-            }
 
             function parseData(models, fbas) {
 

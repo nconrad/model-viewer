@@ -3,7 +3,7 @@
 
 <div ng-show="models.length == 0">
     <div class="text-danger">No Models Selected</div>
-    <span class="glyphicon glyphicon-arrow-left"></span> Select models from the models page.
+    Select (add) models from the models page.
 </div>
 
 <table ng-show="models.length" class="table comparison-table">
@@ -35,4 +35,7 @@
 
 
 <div class="overflow" compare></div>
-<b>Tips:</b> Use the mouse wheel while on the heatmap to zoom. Click and drag to pan<br>
+
+<div ng-if="models.length">
+    <b>Tips:</b> Use the mouse wheel while on the heatmap to zoom. Click and drag to pan<br>
+</div>
