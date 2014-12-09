@@ -21,7 +21,7 @@ angular.module('core-directives')
         }
     }
 })
-.directive('modelTable', function($compile, $stateParams) {
+.directive('modelTable', function($compile, $stateParams, ModelViewer) {
     return {
         link: function(scope, element, attr) {
 
@@ -31,7 +31,7 @@ angular.module('core-directives')
                                             var ws = d[7];
                                             var path = "modelPage({ws: '"+ws+"', name: '"+name+"'})";
                                             var link = '<a ui-sref="'+path+'" >'+name+'</a>';
-                                            var add_btn = '<button type="button" ng-click="'+"MV.add('"+ws+"','"+name+"')"+
+                                            var add_btn = '<button type="button" data-ws="'+ws+'" data-name="'+name+
                                                         '" class="btn btn-default btn-xs btn-add-model pull-right hide">Add'+
                                                     '</button>';
                                             return link+add_btn;
@@ -53,7 +53,7 @@ angular.module('core-directives')
             if ($stateParams.ws == 'janakakbase:CoreModels_ATP-eq') { 
                 var p = kb.ws.list_objects({workspaces: [$stateParams.ws], 
                                             includeMetadata: 1});
-            } else if ($stateParams.ws == 'janakakbase:CoreModels-VR') {
+            } else if ($stateParams.ws == 'janakakbase:CoreModels-VR-GP') {
                 var p = kb.ws.list_objects({workspaces: [$stateParams.ws], 
                                             type: 'KBaseFBA.FBAModel',
                                             includeMetadata: 1});
@@ -70,7 +70,7 @@ angular.module('core-directives')
                 $(element).append(t);
                 table = t.dataTable(scope.tableOptions);
                 $compile(table)(scope);
-                scope.$apply();
+                scope.$apply();  
             })
 
             scope.events = function() {
@@ -80,6 +80,15 @@ angular.module('core-directives')
                 }, function() {
                     $(this).find('.btn-add-model').addClass('hide');
                 });
+
+                $('.btn-add-model').unbind('click');
+                $('.btn-add-model').click(function() {
+                    console.log('clicked')
+                    var ws = $(this).data('ws');
+                        name = $(this).data('name');
+                    ModelViewer.add(ws, name);
+                })
+              
             }
 
         }
