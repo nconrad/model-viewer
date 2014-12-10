@@ -130,3 +130,16 @@ table.comparison-table th, table.comparison-table td {
     background: #fff !important;
 }
 
+.pathway {
+    position: absolute;
+    top: 148px;
+    left: 35px;
+    z-index: 0;
+}
+
+.pathway-png {
+    /*position: absolute;
+    top: 100px;
+    left: 0;
+    z-index: 0;*/
+}

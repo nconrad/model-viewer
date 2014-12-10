@@ -931,7 +931,7 @@ angular.module('core-directives')
                     return fluxColors[2];
                 else if (v <= 5)
                     return fluxColors[3];
-                else if (v< 0)
+                else if (v < 0)
                     return fluxColors[4];
 
                 return undefined;
