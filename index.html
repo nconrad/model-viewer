@@ -135,7 +135,7 @@
                     <ul model-list>
                         <li ng-repeat="model in MV.models" ng-mouseenter="showRm()" ng-mouseleave="hideRm()">
                             <a ui-sref="modelPage({ws: '{{model.workspace}}', name: '{{model.name}}' })">{{model.name}}</a>
-                            <span ng-show="hoverOn" class="glyphicon glyphicon-remove pull-right hover pointer btn-rm" ng-click="MV.rm($index)"></span>
+                            <span ng-show="hoverOn" class="glyphicon glyphicon-remove pull-right hover pointer btn-rm" ng-click="MV.rm($index); updateCompare();"></span>
                         </li>
                     </ul>
 

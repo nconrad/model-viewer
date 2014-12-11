@@ -25,7 +25,12 @@
             <td random-number></td>
             <td random-number></td>-->
             <td ws="{{model.workspace}}" name="{{model.name}}">
-                <select class="form-control" ng-model="selectedFBAs[$index]" ng-change="updateView($index, model.workspace, item.name)" ng-options="item.name for item in getRelatedFBAS(model.workspace, model.name)">
+
+                <select class="form-control" 
+                        ng-model="selectedFBAs[$index]" 
+                        ng-change="updateView($index, model.workspace, item.name)" 
+                        ng-options="item.name for item in MV.getRelatedFBAS(model.workspace, model.name)">
+                        <option value="">Select an fba...</option>
                 </select>
             </td>
         </tr>
@@ -34,8 +39,19 @@
 </table>
 
 
-<div class="overflow" compare></div>
+<ul ng-show="models.length" class="nav nav-tabs">
+    <li ng-class="{active: tab == 'Heatmap'}" ng-click="tab = 'Heatmap'"><a>Heatmap</a></li>
+    <li ng-class="{active: tab == 'Pathways'}" ng-click="tab = 'Pathways'"><a>Pathways</a></li>
+</ul>
 
-<div ng-if="models.length">
-    <b>Tips:</b> Use the mouse wheel while on the heatmap to zoom. Click and drag to pan<br>
+<div ng-show="tab == 'Heatmap'">
+    <div class="overflow" compare></div>
+
+    <div ng-if="models.length">
+        <b>Tips:</b> Use the mouse wheel while on the heatmap to zoom. Click and drag to pan<br>
+    </div>
+</div>
+
+<div ng-show="tab == 'Pathways'">
+    <div pathways></div>
 </div>

@@ -7,12 +7,23 @@ app.controller('MainCtrl', function($scope, $stateParams, $filter, ModelViewer) 
 
     $scope.MV = ModelViewer; 
 
+    $scope.updateCompare = function() {
+        console.log('broadcas')
+        $scope.$broadcast('updateCompare');
+    }
+
+
 }).controller('SelectedModels', function($scope, $stateParams, $filter, ModelViewer) {
 
     $scope.MV = ModelViewer;
     $scope.models = ModelViewer.models;
 
 }).controller('Compare', function($scope, ModelViewer, GetRefs) {
+
+    $scope.MV = ModelViewer;
+
+    // default tab
+    $scope.tab = 'Heatmap';
 
     // selected models
     $scope.models = ModelViewer.models;
@@ -27,13 +38,9 @@ app.controller('MainCtrl', function($scope, $stateParams, $filter, ModelViewer) 
 
     $scope.fbas = [];
     $scope.updateView = function($index, ws, name) {
-        //console.log('called', $index, $scope.selectedFBAs)
-        //$scope.fbas[$index] = {ref: $scope.selectedFBAs[$index].ref};
-
         $scope.$broadcast('updateCompare', $scope.selectedFBAs);
-
     }
-    
+
 
 }).controller('ObjectPage', function($scope, $stateParams) {
 

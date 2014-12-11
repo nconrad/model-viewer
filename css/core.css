@@ -132,14 +132,11 @@ table.comparison-table th, table.comparison-table td {
 
 .pathway {
     position: absolute;
-    top: 148px;
-    left: 35px;
-    z-index: 0;
+    top: 0;
+    left: 0;
 }
 
-.pathway-png {
-    /*position: absolute;
-    top: 100px;
-    left: 0;
-    z-index: 0;*/
+
+.path-container {
+    position: relative;
 }

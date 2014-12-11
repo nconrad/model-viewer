@@ -35,7 +35,7 @@ angular.module('core-directives')
                                                         '" class="btn btn-default btn-xs btn-add-model pull-right hide">Add'+
                                                     '</button>';
                                             return link+add_btn;
-                                      }},
+                                      }},/*
                                       { title: "Organism", data: function(d){
                                             return 'Some Organism';
                                       }},
@@ -44,7 +44,7 @@ angular.module('core-directives')
                                       }},
                                       { title: "Cpd", data: function(d){
                                             return '<span random-number></span>';
-                                      }},
+                                      }},*/
                                   ]}
 
             var table;
@@ -60,7 +60,6 @@ angular.module('core-directives')
             }
 
             $.when(p).done(function(data) {
-                console.log('model data', data)
                 element.rmLoading();
 
                 scope.tableOptions.data = data;
@@ -83,7 +82,7 @@ angular.module('core-directives')
 
                 $('.btn-add-model').unbind('click');
                 $('.btn-add-model').click(function() {
-                    console.log('clicked')
+
                     var ws = $(this).data('ws');
                         name = $(this).data('name');
                     ModelViewer.add(ws, name);
@@ -190,6 +189,62 @@ angular.module('core-directives')
                 $compile(table)(scope);                
             })
 
+
+        }
+    }
+})
+.directive('pathways', function($stateParams, ModelViewer, $q, $http) {
+    return {
+        link: function(scope, element, attr) {
+
+            scope.$on('updateCompare', function(e, fbas) {
+                pathContainer.remove();                
+                updateCompare(scope.models, fbas)
+            })
+
+            var pathContainer;
+
+            function updateCompare(models, fbas) {
+
+                pathContainer = $('<div class="path-container">')
+                $(element).html(pathContainer);
+
+
+                $(element).loading();
+                if (fbas) {
+                    var refs = []
+                    for (var i=0; i<models.length; i++) {
+                        if (String(i) in fbas) refs.push( {ref: fbas[String(i)].ref})
+                    }
+
+                    var fbaProm = $http.rpc('ws','get_objects', refs);
+                } else {
+                    var fbaProm;
+                }
+
+                var prom = ModelViewer.updateModelData()
+                $q.all([prom, fbaProm])
+                    .then(function(d) {  
+                        $(element).rmLoading();
+
+                        var models = d[0];
+                        var all_fbas = d[1];
+
+                        // null for fbas that haven't been selected
+                        for (var i=0; i<models.length; i++) {
+                            if (fbas && !(String(i) in fbas) ) {
+                                all_fbas.splice(i, 0, null)
+                            } 
+                        }
+
+                        pathContainer.kbasePathways({image: true, 
+                                                  modelData: models, 
+                                                  fbaData: all_fbas})
+
+                    })
+            }
+
+            if (scope.models.length > 0) updateCompare();
 
         }
     }
@@ -604,7 +659,6 @@ angular.module('core-directives')
             scope.models = angular.copy(scope.models);
 
             scope.$on('updateCompare', function(e, fbas) {
-                console.log('fbas', fbas)
                 updateCompare(scope.models, fbas)
             })
 
@@ -619,7 +673,6 @@ angular.module('core-directives')
                     for (var i=0; i<models.length; i++) {
                         if (String(i) in fbas) refs.push( {ref: fbas[String(i)].ref})
                     }
-                    console.log('refs', refs)
 
                     var fbaProm = $http.rpc('ws','get_objects', refs);
                 } else {
@@ -632,8 +685,8 @@ angular.module('core-directives')
                         $(element).rmLoading();
 
                         var models = d[0];
+
                         var all_fbas = d[1];
-                        console.log('res', all_fbas)
 
                         // null for fbas that haven't been selected
                         for (var i=0; i<models.length; i++) {
@@ -642,16 +695,14 @@ angular.module('core-directives')
                             } 
                         }
 
-
-                        console.log('models / fba', models, all_fbas)
                         var d = parseData(models, all_fbas);
 
                         element.html('');
                         //element.append('<div>'+d.x.length+' x '+d.y.length+' = '+(d.x.length*d.y.length)+' boxes</div>' )
                         element.append('<br>')                    
                         element.append('<div id="canvas">');
-                        heatmap_d3(d.x, d.y, d.data);                
-                    })                
+                        heatmap_d3(d.x, d.y, d.data);
+                    })
             }
 
             if (scope.models.length) updateCompare();
@@ -686,7 +737,7 @@ angular.module('core-directives')
                     // if so, get create rxn hash
                     var hasFBA = false;
                     if (fbas && fbas[i]) {
-                        console.log('TRUE')
+
                         hasFBA = true;
                         var fbaRXNs = {};                        
                         var fbaRxns = fbas[i].data.FBAReactionVariables;
@@ -722,7 +773,6 @@ angular.module('core-directives')
                     rows.push(row);
                 }
 
-                console.log('heatmap', rows)
                 return {x: rxn_names, y: model_names, data: rows};            
             }
 
@@ -886,9 +936,6 @@ angular.module('core-directives')
                                       .attr("stroke", '#888')
                                       .attr('stroke-width', '.5px')
                                       .attr('class', 'model-rxn');
-
-                        console.log(prop)
-
                         if (prop.present && prop.flux) {
                             var color = getColor(prop.flux);                            
                             rect.attr('fill', color);
@@ -903,9 +950,7 @@ angular.module('core-directives')
                                 html: true,
                                 placement: 'bottom'});
                     }
-
                 }
-
             }
 
 
@@ -1099,6 +1144,6 @@ function rxnDict(model) {
     for (var i in model.modelreactions) {
         rxns[model.modelreactions[i].reaction_ref.split('/')[5]] = model.modelreactions[i]
     }
-    console.log(rxns)
+
     return rxns;
 }

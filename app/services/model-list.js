@@ -32,7 +32,7 @@ angular.module('ModelViewer', [])
     this.rm = function(i) {
         self.models.splice(i, 1);
         localStorage.setItem(key, angular.toJson(self.models));
-        self.updateRefs();          
+        self.updateRefs();
     }
 
     this.rmAll = function() {
@@ -73,13 +73,11 @@ angular.module('ModelViewer', [])
 
                 }
             }
-
-
-            console.log('self.referencing', self.referencing)
         })
     }
 
     this.getRelatedFBAS = function(ws, name) {
+        if (!self.referencing[ws+'/'+name]) return; 
         return self.referencing[ws+'/'+name].FBAS;
     }
 
@@ -90,7 +88,7 @@ angular.module('ModelViewer', [])
             for (var i in d) models.push(d[i].data);
 
             self.modelData = models;
-            console.log('model data', self.modelData)
+
             return self.modelData;
         });
     }
