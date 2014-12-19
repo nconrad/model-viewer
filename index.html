@@ -17,24 +17,24 @@
     <link href="js/angular/material/angular-material/themes/default-theme.css" rel="stylesheet">-->
 
     <link href="css/main.css" rel="stylesheet" type="text/css">
-    <link href="css/core.css" rel="stylesheet" type="text/css">    
+    <link href="css/core.css" rel="stylesheet" type="text/css">
 
     <link href="css/font-awesome-4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="css/viz.css" rel="stylesheet" type="text/css">    
+    <link href="css/viz.css" rel="stylesheet" type="text/css">
     <link href="css/tabs.css" rel="stylesheet" type="text/css">
-  
 
 
-    <script src="js/jquery/jquery-1.11.0.min.js"></script>    
-    <script src="js/jquery/jquery-ui.min.js"></script>    
+
+    <script src="js/jquery/jquery-1.11.0.min.js"></script>
+    <script src="js/jquery/jquery-ui.min.js"></script>
     <script src="js/bootstrap/bootstrap.min.js"></script>
     <script src="js/viz/kinetic-v5.1.0.min.js"></script>
-    <script src="js/viz/d3.min.js"></script>    
+    <script src="js/viz/d3.min.js"></script>
 
     <script src="js/dataTables/jquery.dataTables.js"></script>
     <script src="js/dataTables/dataTables.bootstrap.js"></script>
 
-    <script src="app/clients/fbaModelServices.js"></script>    
+    <script src="app/clients/fbaModelServices.js"></script>
     <script src="app/clients/workspace-0.2.1.js"></script>
     <script src="app/clients/userandjobstate.js"></script>
 
@@ -48,27 +48,27 @@
     -->
 
     <script src="app/app.js"></script>
-    <script src="config.js"></script>     
+    <script src="config.js"></script>
     <script src="app/controllers.js"></script>
-    <script src="app/services/model-list.js"></script>     
-    <script src="app/directives.js"></script> 
-    <script src="lib/kbase-rpc/kbase-rpc.js"></script> 
+    <script src="app/services/model-list.js"></script>
+    <script src="app/directives.js"></script>
+    <script src="lib/kbase-rpc/kbase-rpc.js"></script>
 
     <!-- kbase pages / widgets -->
-    <script src="lib/ui-common/functional-site/js/kbapi.js"></script>    
+    <script src="lib/ui-common/functional-site/js/kbapi.js"></script>
     <script src="lib/ui-common/src/kbWidget.js"></script>
-    <script src="lib/ui-common/functional-site/assets/js/ws-widgets/tabs.js"></script>    
+    <script src="lib/ui-common/functional-site/assets/js/ws-widgets/tabs.js"></script>
     <script src="lib/ui-common/src/widgets/models/kbaseETCDiagram.js"></script>
     <script src="lib/ui-common/src/widgets/models/kbaseModelTabs.js"></script>
-    <script src="lib/ui-common/src/widgets/maps/kbasePathway.js"></script>    
+    <script src="lib/ui-common/src/widgets/maps/kbasePathway.js"></script>
     <script src="lib/ui-common/src/widgets/maps/kbasePathways.js"></script>
     <script src="lib/ui-common/src/widgets/biochemistry/kbaseRxn.js"></script>
-    <script src="lib/ui-common/src/widgets/biochemistry/kbaseCpd.js"></script>    
+    <script src="lib/ui-common/src/widgets/biochemistry/kbaseCpd.js"></script>
 
     <script src="lib/ui-common/src/widgets/fbas/kbaseFbaTabs.js"></script>
-    <script src="lib/ui-common/src/widgets/kbaseTableEditor.js"></script>      
+    <script src="lib/ui-common/src/widgets/kbaseTableEditor.js"></script>
     <script src="lib/ui-common/src/widgets/media/kbaseMediaEditor.js"></script>
-    <script src="js/forked/kbaseSEEDFunctions.js"></script>    
+    <script src="js/forked/kbaseSEEDFunctions.js"></script>
 
 
     <!--<link rel="stylesheet" href="http://openlayers.org/en/v3.0.0/css/ol.css" type="text/css">-->
@@ -99,7 +99,7 @@
                 <a class="navbar-brand pull-left" href="index.html">Core Model Viewer</a>
 
             </div>
-        
+
         </nav>
 
 
@@ -119,16 +119,16 @@
                     </li>
                     <li>
                         <a ng-class="{ active: $state.includes('fba')}" ui-sref="fba"><i class="fa fa-line-chart"></i> FBA<span class="text-muted pull-right">58,998</span></a>
-                    </li>             
+                    </li>
 
                     <li>
                         <a ng-class="{ active: $state.includes('compare')}"  ui-sref="compare">
                             Compare Models
                             <span class="badge pull-right model-count">{{MV.models.length}}</span>
-                        </a> 
-                    </li>                    
+                        </a>
+                    </li>
                 </ul>
-               
+
                 <div id="selected-models" ng-show="MV.models.length">
 
                     <h5 class="text-muted">Selected Models</h5>
@@ -139,10 +139,10 @@
                         </li>
                     </ul>
 
-                    <div> 
+                    <div>
                         <a class="btn btn-link pull-right" ng-click="MV.rmAll()">Clear All</a>
                     </div>
-                </div>                
+                </div>
             </div>
 
 
@@ -159,19 +159,19 @@
                     </li>
                     <li>
                         <a ng-class="{ active: $state.includes('fba')}" ui-sref="fba"><i class="fa fa-line-chart"></i></a>
-                    </li>             
+                    </li>
 
                     <li>
                         <a ui-sref="compare">
                             <span class="badge model-count">{{models.length}}</span>
-                        </a> 
+                        </a>
                     </li>
 
                 </ul>
 
             </div>
 
-        </nav>        
+        </nav>
 
 
         <div id="page-wrapper">
@@ -192,7 +192,7 @@
         </div>
 
     </div>
-    
+
 </body>
 
 </html>
