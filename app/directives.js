@@ -50,11 +50,11 @@ angular.module('core-directives')
             var table;
 
             element.loading('', true);
-            if ($stateParams.ws == 'janakakbase:CoreModels_ATP-eq') { 
-                var p = kb.ws.list_objects({workspaces: [$stateParams.ws], 
+            if ($stateParams.ws == 'janakakbase:CoreModels_ATP-eq') {
+                var p = kb.ws.list_objects({workspaces: [$stateParams.ws],
                                             includeMetadata: 1});
             } else if ($stateParams.ws == 'janakakbase:CoreModels-VR-GP') {
-                var p = kb.ws.list_objects({workspaces: [$stateParams.ws], 
+                var p = kb.ws.list_objects({workspaces: [$stateParams.ws],
                                             type: 'KBaseFBA.FBAModel',
                                             includeMetadata: 1});
             }
@@ -69,7 +69,7 @@ angular.module('core-directives')
                 $(element).append(t);
                 table = t.dataTable(scope.tableOptions);
                 $compile(table)(scope);
-                scope.$apply();  
+                scope.$apply();
             })
 
             scope.events = function() {
@@ -82,14 +82,14 @@ angular.module('core-directives')
 
                 $('.btn-add-model').unbind('click');
                 $('.btn-add-model').click(function() {
-
                     var ws = $(this).data('ws');
                         name = $(this).data('name');
                     ModelViewer.add(ws, name);
                 })
-              
-            }
 
+                $compile(table)(scope);
+                scope.$apply();
+            }
         }
     }
 }).directive('mediaTable', function($compile) {
@@ -110,14 +110,14 @@ angular.module('core-directives')
                 element.rmLoading();
 
                 scope.tableOptions.data = data;
-                scope.tableOptions.drawCallback = scope.events;                
+                scope.tableOptions.drawCallback = scope.events;
 
                 var t = $('<table class="table table-hover">');
                 $(element).append(t);
                 table = t.dataTable(scope.tableOptions);
                 $compile(table)(scope);
             })
-            
+
             scope.events = function() {
                 // compile template again for datatables
                 $compile(table)(scope);
@@ -145,19 +145,19 @@ angular.module('core-directives')
                 element.rmLoading();
 
                 scope.tableOptions.data = data;
-                scope.tableOptions.drawCallback = scope.events;                  
+                scope.tableOptions.drawCallback = scope.events;
 
                 var t = $('<table class="table table-hover">');
                 $(element).append(t);
                 table = t.dataTable(scope.tableOptions);
-                $compile(table)(scope);                
+                $compile(table)(scope);
             })
 
             scope.events = function() {
                 // compile template again for datatables
                 $compile(table)(scope);
                 scope.$apply();
-            }            
+            }
 
 
         }
@@ -186,7 +186,7 @@ angular.module('core-directives')
                 var t = $('<table class="table table-hover">');
                 $(element).append(t);
                 var table = t.dataTable(scope.tableOptions);
-                $compile(table)(scope);                
+                $compile(table)(scope);
             })
 
 
@@ -198,7 +198,7 @@ angular.module('core-directives')
         link: function(scope, element, attr) {
 
             scope.$on('updateCompare', function(e, fbas) {
-                pathContainer.remove();                
+                pathContainer.remove();
                 updateCompare(scope.models, fbas)
             })
 
@@ -226,7 +226,7 @@ angular.module('core-directives')
 
                 var prom = ModelViewer.updateModelData()
                 $q.all([prom, fbaProm])
-                    .then(function(d) {  
+                    .then(function(d) {
                         $(element).rmLoading();
 
                         var models = d[0];
@@ -236,11 +236,11 @@ angular.module('core-directives')
                         for (var i=0; i<models.length; i++) {
                             if (fbas && !(String(i) in fbas) ) {
                                 all_fbas.splice(i, 0, null)
-                            } 
+                            }
                         }
                         console.log('pathways called with image true')
-                        pathContainer.kbasePathways({image: true, 
-                                                     modelData: models, 
+                        pathContainer.kbasePathways({image: true,
+                                                     modelData: models,
                                                      fbaData: all_fbas})
 
                     })
@@ -294,8 +294,8 @@ angular.module('core-directives')
                         var start = end - l[0][3]
                     } else {
                         var direction = 'right';
-                        var start = l[0][1];                                            
-                        var end = start + l[0][3] 
+                        var start = l[0][1];
+                        var end = start + l[0][3]
                     }
 
 
@@ -324,9 +324,9 @@ angular.module('core-directives')
                 padding_bottom = 50;
 
                 var max_end = data.max
-                var numbers = data.numbers;                
+                var numbers = data.numbers;
 
-                var h = 10; /* height of boxes */ 
+                var h = 10; /* height of boxes */
 
 
                 $(ele).append('<div id="cdd-chart"></div>')
@@ -337,13 +337,13 @@ angular.module('core-directives')
                                 .domain([0, max_end])
                                 .range([20, width-20]);
 
-        
+
                 //Create the Axis
                 var xAxis = d3.svg.axis()
                     .scale(x)
                     .orient("bottom")
 
-                
+
                 var zoom = d3.behavior.zoom()
                     .x(x)
                     .scaleExtent([1, 700])
@@ -360,28 +360,28 @@ angular.module('core-directives')
                 svg.append("rect")
                     .attr("class", "overlay")
                     .attr("width", width)
-                    .attr("height", height);                                            
+                    .attr("height", height);
 
                 //Create an SVG group Element for the Axis elements and call the xAxis function
                 var xAxisGroup = svg.append("g")
                                 .attr("class", "x axis")
                                 .attr("transform", "translate(0," + (height - padding_bottom) + ")")
                                     .call(xAxis);
-                                
+
 
                 function zoomed() {
                     svg.select(".x.axis").call(xAxis);
-                    //svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");                
+                    //svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
                     svg.selectAll('.cdd-box').attr("x", function(d) {
-                        var start = d3.select(this).data()[0].start 
-                        var end = d3.select(this).data()[0].end         
+                        var start = d3.select(this).data()[0].start
+                        var end = d3.select(this).data()[0].end
                         return x(start);
                     })
                     .attr('width', function(){
-                        var start = d3.select(this).data()[0].start 
-                        var end = d3.select(this).data()[0].end                    
+                        var start = d3.select(this).data()[0].start
+                        var end = d3.select(this).data()[0].end
                         return ( x(end)-x(start) );
-                    });  
+                    });
                 }
 
                 function zoomed_poly() {
@@ -400,7 +400,7 @@ angular.module('core-directives')
                     })
 
                 }
-                
+
                 var ystart = 20
 
                 // create row heights
@@ -419,7 +419,7 @@ angular.module('core-directives')
                     var start = numbers[i].s;
                     var end = numbers[i].e;
                     var direction = numbers[i].direction;
-        
+
                     // go through existing rows to see if there is a good row
                     var found_row = 0 // starting with non existant key
                     for (var key in rows) {
@@ -452,7 +452,7 @@ angular.module('core-directives')
                         if (direction == 'left') {
                             drawArrowLeft(start, end, row_h[found_row])
                         } else {
-                            drawArrowRight(start, end, row_h[found_row])                            
+                            drawArrowRight(start, end, row_h[found_row])
                         }
                     } else {
                         console.error('did not find a place for ', start, end)
@@ -461,17 +461,17 @@ angular.module('core-directives')
 
                 function drawBox(start, end, height) {
                     var rect = svg.append('rect')
-                                  .data([{start: start, end: end}])   
+                                  .data([{start: start, end: end}])
                                   .attr('class', 'cdd-box')
                                   .attr('x', x(0))
                                   .attr('y', 0)
                                   .attr('width', x(0)-x(0))
-                                  .attr('height', h)                                   
+                                  .attr('height', h)
                                   .transition()
                                       .duration(1000)
                                       .ease("elastic")
                                       .attr('x', x(start))
-                                       .attr('y', height)                                  
+                                       .attr('y', height)
                                       .attr('width', x(end)-x(start))
                                       .each("end", events)
 
@@ -487,7 +487,7 @@ angular.module('core-directives')
 
                 function drawArrowRight(start, end, h) {
                     var poly = svg.append('polygon')
-                                  .data([{start: start, end: end, height: h, direction: 'right'}])   
+                                  .data([{start: start, end: end, height: h, direction: 'right'}])
                                   .attr('class', 'cdd-box')
                                       .attr('points', polyRight(start, end, h) )
                     events(poly);
@@ -495,11 +495,11 @@ angular.module('core-directives')
 
                 function drawArrowLeft(start, end, h) {
                     var poly = svg.append('polygon')
-                                  .data([{start: start, end: end, height: h, direction: 'left'}])   
+                                  .data([{start: start, end: end, height: h, direction: 'left'}])
                                   .attr('class', 'cdd-box')
                                       .attr('points', polyLeft(start, end, h) )
                     events(poly);
-                }                
+                }
 
                 function cornerRight(s, e) {
                     if ( (e-s) > 10 ) {
@@ -521,17 +521,17 @@ angular.module('core-directives')
                     return x(start)+','+h+' '+
                            cornerRight(x(start), x(end))+','+h+' '+
                            x(end) +','+(h+5)+' '+
-                           cornerRight(x(start), x(end))+','+(h+10)+' '+                                                                                          
+                           cornerRight(x(start), x(end))+','+(h+10)+' '+
                            x(start)+','+(h+10);
                 }
 
                 function polyLeft(start, end, h) {
                     return cornerLeft(x(start), x(end))+','+h+' '+
-                            x(end) +','+h+' '+                    
+                            x(end) +','+h+' '+
                             x(end) +','+(h+10)+' '+
-                           cornerLeft(x(start), x(end))+','+(h+10)+' '+ 
+                           cornerLeft(x(start), x(end))+','+(h+10)+' '+
                            x(start)+','+(h+5);
-                }                
+                }
 
 
                 function events(poly) {
@@ -552,7 +552,7 @@ angular.module('core-directives')
                             .attr('y1', 0)
                             .attr('x2', s)
                             .attr('y2', height)
-                            .attr('stroke-dasharray', "5,5" )                            
+                            .attr('stroke-dasharray', "5,5" )
 
                         svg.append('line')
                             .attr('class', 'grid-line')
@@ -574,7 +574,7 @@ angular.module('core-directives')
                             .attr('class', 'grid-label')
                            .text(end)
                             .attr('x', e+2)
-                            .attr('y', height - 10)                            
+                            .attr('y', height - 10)
 
 
                     }).on('mouseout', function(d){
@@ -641,7 +641,7 @@ angular.module('core-directives')
 }).directive('fbaTabs', function($stateParams) {
     return {
         link: function(scope, element, attr) {
-            $(element).kbaseFbaTabs({ws: $stateParams.ws, 
+            $(element).kbaseFbaTabs({ws: $stateParams.ws,
                                      name: $stateParams.name,
                                      image: true})
 
@@ -664,7 +664,7 @@ angular.module('core-directives')
             })
 
             // draw heatmap on load
-            //var prom = 
+            //var prom =
             //var prom2 = $http.rpc('ws','get_objects', models);
 
             function updateCompare(models, fbas) {
@@ -682,7 +682,7 @@ angular.module('core-directives')
 
                 var prom = MV.updateModelData()
                 $q.all([prom, fbaProm])
-                    .then(function(d) {  
+                    .then(function(d) {
                         $(element).rmLoading();
 
                         var models = d[0];
@@ -693,21 +693,21 @@ angular.module('core-directives')
                         for (var i=0; i<models.length; i++) {
                             if (fbas && !(String(i) in fbas) ) {
                                 all_fbas.splice(i, 0, null)
-                            } 
+                            }
                         }
 
                         var d = parseData(models, all_fbas);
 
                         element.html('');
                         //element.append('<div>'+d.x.length+' x '+d.y.length+' = '+(d.x.length*d.y.length)+' boxes</div>' )
-                        element.append('<br>')                    
+                        element.append('<br>')
                         element.append('<div id="canvas">');
                         heatmap_d3(d.x, d.y, d.data);
                     })
             }
 
             if (scope.models.length) updateCompare();
-         
+
 
             function parseData(models, fbas) {
 
@@ -719,7 +719,7 @@ angular.module('core-directives')
                 // first, get union of reactions
                 for (var i=0; i < models.length; i++) {
                     var model = models[i];
-                    model_names.push(model.name); 
+                    model_names.push(model.name);
 
                     var rxns = model.modelreactions;
                     for (var j=0; j < rxns.length; j++) {
@@ -740,7 +740,7 @@ angular.module('core-directives')
                     if (fbas && fbas[i]) {
 
                         hasFBA = true;
-                        var fbaRXNs = {};                        
+                        var fbaRXNs = {};
                         var fbaRxns = fbas[i].data.FBAReactionVariables;
 
                         for (var j=0; j<fbaRxns.length; j++) {
@@ -774,7 +774,7 @@ angular.module('core-directives')
                     rows.push(row);
                 }
 
-                return {x: rxn_names, y: model_names, data: rows};            
+                return {x: rxn_names, y: model_names, data: rows};
             }
 
 
@@ -782,7 +782,7 @@ angular.module('core-directives')
                 $.get('./node/output.json', function(d) {
                     element.rmLoading()
                     element.append('<div>'+d.x.length+' x '+d.y.length+' = '+(d.x.length*d.y.length)+' boxes</div>' )
-                    element.append('<br>')                    
+                    element.append('<br>')
                     element.append('<div id="test"><canvas id="canvas_ele"></canvas></div>');
                     super_map(d.x, d.y, d.data);
                 })
@@ -838,7 +838,7 @@ angular.module('core-directives')
                             canvas.fill();
                             canvas.lineWidth = .1;
                             canvas.strokeStyle = '#888';
-                            canvas.stroke();                        
+                            canvas.stroke();
                         }
                     }
                 }
@@ -855,7 +855,7 @@ angular.module('core-directives')
                          canvas.save();
                          var cx = offset_x+(i*w);
                          var cy = offset_y;
-                         canvas.textAlign = 'center'; 
+                         canvas.textAlign = 'center';
                          canvas.translate(cx, cy);
                          canvas.rotate( -(Math.PI / 4));
                          canvas.translate(-cx, -cy);
@@ -886,7 +886,7 @@ angular.module('core-directives')
 
                 // to precompute starting postion of heatmap
                 y_widths = [];
-                
+
                 for (var i in y_data) {
                     var label = svg.append("text").attr("y", start_y+i*h+h)
                                 .text(y_data[i]).attr("font-size", font_size);
@@ -913,7 +913,7 @@ angular.module('core-directives')
                     for (var j=0; j < x_data.length; j++) {
                         if (i == 0) {
                             var pos = start_x+j*w+w;
-                            
+
                             var x_label = svg.append("text")
                                              .attr("x", pos)
                                              .attr("y", start_y-3)
@@ -938,7 +938,7 @@ angular.module('core-directives')
                                       .attr('stroke-width', '.5px')
                                       .attr('class', 'model-rxn');
                         if (prop.present && prop.flux) {
-                            var color = getColor(prop.flux);                            
+                            var color = getColor(prop.flux);
                             rect.attr('fill', color);
                         } else {
                             rect.attr("fill", (prop.present === 1 ? gene_color : 'white') );
@@ -947,7 +947,7 @@ angular.module('core-directives')
 
                         $(rect.node()).popover({content: prop.flux,
                                 title: y_data[i],
-                                trigger: 'hover', 
+                                trigger: 'hover',
                                 html: true,
                                 placement: 'bottom'});
                     }
@@ -1021,13 +1021,13 @@ angular.module('core-directives')
                     var caret = $('<span class="fa fa-caret-right">').hide().fadeIn();
                     element.append(' ', caret);
 
-                    // animation for 
+                    // animation for
                     $('.sidebar-nav, .sidebar').hide('slide', {
                             direction: 'left'
                         }, 350, function() {
                             $('.sidebar').show();
                             $('.sidebar').css('width', new_w)
-                        });   
+                        });
 
                     // animation for margin of page view
                     $('#page-wrapper').animate({
@@ -1036,7 +1036,7 @@ angular.module('core-directives')
                             $('.sidebar-nav-small').fadeIn('fast');
                             collapsed = true
                         });
-                   
+
                 } else {
                     element.find('.fa-caret-right').fadeOut(function() {
                         $(this).remove();
@@ -1045,17 +1045,17 @@ angular.module('core-directives')
                     element.prepend(caret, ' ')
 
                     $('.sidebar-nav-small').fadeOut('fast');
-                    
+
                     $('#page-wrapper').animate({
                             marginLeft: original_w,
                         }, 300, function() {
                             $('.sidebar').css('width', original_w)
                             $('.sidebar-nav').fadeIn('fast')
                             collapsed = false
-                        }); 
+                        });
                 }
-                 
-                
+
+
             })
 
         }
@@ -1079,7 +1079,7 @@ angular.module('core-directives')
     return {
         link: function(scope, element, attr) {
 
-            element.tooltip({title: attr.tooltip, 
+            element.tooltip({title: attr.tooltip,
                              placement: 'bottom',
                              delay: { "show": 500}
                             })
@@ -1114,7 +1114,7 @@ angular.module('core-directives')
             /*
             var content = '<div>'+
                                 '<a href="'+'" download>JSON</a><br>'+
-                                '<a href="'+UI_SERVER+'/fba/export/'+ws+'/'+name+'/'+token+'" download>SBML</a><br>'+                              
+                                '<a href="'+UI_SERVER+'/fba/export/'+ws+'/'+name+'/'+token+'" download>SBML</a><br>'+
                           '</div>';
 
             */
@@ -1133,7 +1133,7 @@ angular.module('core-directives')
                         $(this).popover('hide');
                     }
                 });
-            });            
+            });
         }
     }
 })
