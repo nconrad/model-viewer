@@ -24,7 +24,7 @@ line,
         */
 
 /* kegg map styling */
-.line1, 
+.line1,
 .line2,
 .link {
     stroke-width: 2px;
@@ -32,8 +32,8 @@ line,
 }
 
 
-.line-start, 
-.line-middle, 
+.line-start,
+.line-middle,
 .line-end {
     fill: #F00;
     fill-opacity: 0.3;
@@ -51,7 +51,7 @@ line,
 .map {
     fill: #fff;
     stroke-width: 1px;
-    stroke: #666;    
+    stroke: #666;
 }
 .cpd-label,
 .map-label {
@@ -67,10 +67,6 @@ line,
     stroke-width: 2px;
     fill: #fff;
     stroke: #666;
-}
-
-svg {
-    shape-rendering: geometricPrecision;
 }
 
 /* cdd viewer */
