@@ -202,6 +202,8 @@ angular.module('core-directives')
                 updateCompare(scope.models, fbas)
             })
 
+            console.log
+
             var pathContainer;
 
             function updateCompare(models, fbas) {
@@ -236,10 +238,10 @@ angular.module('core-directives')
                                 all_fbas.splice(i, 0, null)
                             } 
                         }
-
+                        console.log('pathways called with image true')
                         pathContainer.kbasePathways({image: true, 
-                                                  modelData: models, 
-                                                  fbaData: all_fbas})
+                                                     modelData: models, 
+                                                     fbaData: all_fbas})
 
                     })
             }
@@ -604,10 +606,7 @@ angular.module('core-directives')
 .directive('modelTabs', function($stateParams) {
     return {
         link: function(scope, element, attr) {
-            $(element).kbaseModelTabs({ws: $stateParams.ws, name: $stateParams.name})
-
-
-
+            $(element).kbaseModelTabs({ws: $stateParams.ws, name: $stateParams.name, image:true})
 
         }
     }
@@ -642,7 +641,9 @@ angular.module('core-directives')
 }).directive('fbaTabs', function($stateParams) {
     return {
         link: function(scope, element, attr) {
-            $(element).kbaseFbaTabs({ws: $stateParams.ws, name: $stateParams.name})
+            $(element).kbaseFbaTabs({ws: $stateParams.ws, 
+                                     name: $stateParams.name,
+                                     image: true})
 
 
         }
