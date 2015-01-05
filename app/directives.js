@@ -197,20 +197,22 @@ angular.module('core-directives')
     return {
         link: function(scope, element, attr) {
 
-            scope.$on('updateCompare', function(e, fbas) {
-                pathContainer.remove();
-                updateCompare(scope.models, fbas)
-            })
-
-            console.log
-
+            //scope.$on('updateCompare', function(e, fbas) {
+            //    pathContainer.remove();
+            //    updateCompare(scope.models, fbas)
+            //})
             var pathContainer;
 
-            function updateCompare(models, fbas) {
+            scope.$watch(scope.selectedFBAs, function() {
+                if (pathContainer)
+                    pathContainer.remove();
+                updateCompare(scope.models, scope.selectedFBAs);
+            })
 
+
+            function updateCompare(models, fbas) {
                 pathContainer = $('<div class="path-container">')
                 $(element).html(pathContainer);
-
 
                 $(element).loading();
                 if (fbas) {
@@ -246,7 +248,7 @@ angular.module('core-directives')
                     })
             }
 
-            if (scope.models.length > 0) updateCompare();
+            //if (scope.models.length > 0) updateCompare();
 
         }
     }
@@ -659,9 +661,6 @@ angular.module('core-directives')
 
             scope.models = angular.copy(scope.models);
 
-            scope.$on('updateCompare', function(e, fbas) {
-                updateCompare(scope.models, fbas)
-            })
 
             // draw heatmap on load
             //var prom =
@@ -706,8 +705,10 @@ angular.module('core-directives')
                     })
             }
 
-            if (scope.models.length) updateCompare();
 
+            scope.$watch(scope.selectedFBAs, function() {
+                updateCompare(scope.models, scope.selectedFBAs);
+            })
 
             function parseData(models, fbas) {
 
@@ -792,7 +793,6 @@ angular.module('core-directives')
             function super_map(y_data, x_data, rows) {
                 element.append('<div id="map" class="map" style="height: 400px; width: 100%;"></div>')
 
-
                 var offset_x = 100;
                 var offset_y = 100;
 
@@ -870,7 +870,6 @@ angular.module('core-directives')
 
 
             function heatmap_d3(x_data, y_data, rows) {
-
                 element.append('<div id="canvas">');
                 var svg = d3.select("#canvas").append("svg")
                     .attr("width", width)
@@ -886,11 +885,13 @@ angular.module('core-directives')
 
                 // to precompute starting postion of heatmap
                 y_widths = [];
+                for (var i=0; i < y_data.length; i++) {
+                    //var label = svg.append("text").attr("y", start_y+i*h+h)
+                    //            .text(y_data[i]).attr("font-size", font_size);
 
-                for (var i in y_data) {
-                    var label = svg.append("text").attr("y", start_y+i*h+h)
-                                .text(y_data[i]).attr("font-size", font_size);
-                    y_widths.push(label.node().getBBox().width);
+                    //y_widths.push(label.node().getBBox().width);
+                    y_widths.push(y_data[i].length * 4)
+
                 }
                 $('text').remove(); //fixme
 
@@ -904,11 +905,11 @@ angular.module('core-directives')
 
                     var y_label = svg.append("text").attr("y", start_y+i*h+h-.5)
                                      .text(y_data[i]).attr("font-size", font_size)
+                                     .attr('text-anchor', 'end')
                                      .on("mouseover", function(){d3.select(this).attr("fill", "black");})
                                      .on("mouseout", function(){d3.select(this).attr("fill", "#333");});
                     var bb = y_label.node().getBBox();
-
-                    y_label.attr('transform', 'translate('+String(start_x-bb.width-4)+',0)');
+                    y_label.attr('transform', 'translate('+String(start_x-4)+',0)');
 
                     for (var j=0; j < x_data.length; j++) {
                         if (i == 0) {
