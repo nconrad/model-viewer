@@ -1,4 +1,6 @@
 components/
+.tmp/
+build/
 
 #emacs
 *~

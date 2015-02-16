@@ -13,9 +13,60 @@
     <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="components/font-awesome/css/font-awesome.min.css">
 
-    <link rel="stylesheet" href="build/style.css">
+    <!-- build:css build/style.css -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/core.css">
+    <link rel="stylesheet" href="css/viz.css">
+    <link rel="stylesheet" href="css/tabs.css">
+    <!-- endbuild -->
 
-    <script src="build/site.js"></script>
+    <!-- build:js build/site.js -->
+    <script src="components/jquery/dist/jquery.min.js"></script>
+    <script src="components/jquery-ui/jquery-ui.min.js"></script><!-- to be removed -->
+    <script src="components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="components/d3/d3.min.js"></script>
+
+    <script src="components/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="lib/datatables-bootstrap/dataTables.bootstrap.js"></script>
+
+    <script src="app/clients/fbaModelServices.js"></script>
+    <script src="app/clients/workspace-0.2.1.js"></script>
+    <script src="app/clients/userandjobstate.js"></script>
+
+    <script src="components/angular/angular.js"></script>
+    <script src="components/ui-router/release/angular-ui-router.js"></script>
+
+    <script src="config.js"></script>
+    <script src="app/app.js"></script>
+
+    <script src="app/controllers.js"></script>
+    <script src="app/services/model-list.js"></script>
+    <script src="app/directives.js"></script>
+
+    <script src="lib/kbase-rpc/kbase-rpc.js"></script>
+    <script src="lib/ui-common/functional-site/js/kbapi.js"></script>
+
+    <script src="lib/ui-common/src/kbWidget.js"></script>
+    <script src="lib/ui-common/src/widgets/kbaseAuthenticatedWidget.js"></script>
+
+    <script src="lib/ui-common/src/widgets/maps/kbasePathway.js"></script>
+    <script src="lib/ui-common/src/widgets/maps/kbasePathways.js"></script>
+
+    <!-- modeling widgets -->
+    <script src="lib/ui-common/src/widgets/modeling/KBObjects.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/kbaseTabTable.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/kbaseTabs.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/KBaseFBA.FBA.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/KBaseFBA.FBAModel.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/kbaseETCDiagram.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/KBaseBiochem.Media.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/KBasePhenotypes.PhenotypeSet.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/KBasePhenotypes.PhenotypeSimulationSet.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/KBaseSearch.GenomeSet.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/KBaseFBA.FBAModelSet.js"></script>
+    <!-- end modeling widgets -->
+
+    <!-- endbuild -->
 
 
     <!--<link rel="stylesheet" href="http://openlayers.org/en/v3.0.0/css/ol.css" type="text/css">-->

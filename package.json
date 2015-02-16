@@ -1,5 +1,5 @@
 {
-  "name": "oxcart",
+  "name": "model-viewer",
   "version": "0.1.0",
   "devDependencies": {
     "grunt": "^0.4.5",
@@ -14,24 +14,21 @@
     "grunt-usemin": "^2.5.1",
     "react-tools": "*"
   },
-  "description": "oxcart ======",
+  "description": "model-viewer ======",
   "main": "config.js",
   "directories": {
     "test": "tests"
   },
-  "scripts": {
-    "test": "protractor tests/config.js"
-  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/PATRIC3/oxcart.git"
+    "url": "https://github.com/nconrad/model-viewer.git"
   },
   "author": "nconrad@anl.gov",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/PATRIC3/oxcart/issues"
+    "url": "https://github.com/nconrad/model-viewer/issues"
   },
-  "homepage": "https://github.com/PATRIC3/oxcart",
+  "homepage": "https://github.com/nconrad/model-viewer",
   "dependencies": {
     "express": "^4.11.2"
   }
