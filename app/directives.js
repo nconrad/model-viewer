@@ -9,21 +9,18 @@ var bounds = [1000, 500, 200, 25, 0, -25, -200, -500, -100];
 
 angular.module('core-directives', []);
 angular.module('core-directives')
-.directive('kbWidget', function() {
+.directive('kbTables', function($rootScope) {
     return {
-        link: function(scope, element, attrs) {
-            // This is a wrapper for the KBase jQuery plugin-style "widgets"
-            // I recommend using this for narrative-style jQuery widgets
+        link: function(scope, elem, attr) {
+            var params = {type: attr.kbTables,
+                          ws: attr.kbTablesWs,
+                          obj: attr.kbTablesObj,
+                          token: $rootScope.USER_TOKEN};
 
-            var ws_name = attrs.ws;
-            var obj_name = attrs.obj;
-            var widget = attrs.kbWidget;
-
-            // instantiate widget
-            $(element)[widget]({ws: ws_name, name: obj_name});
+            $(elem).kbaseTabTable(params);
         }
     }
-})
+ })
 .directive('modelTable', function($compile, $stateParams, ModelViewer) {
     return {
         link: function(scope, element, attr) {
@@ -625,35 +622,7 @@ angular.module('core-directives')
     }
 })
 
-.directive('mediaTabs', function($stateParams) {
-    return {
-        link: function(scope, element, attr) {
-            $(element).kbaseMediaEditor({ws: $stateParams.ws, name: $stateParams.name})
 
-
-            /*
-            $(element).kbaseTableEditor({columns: [
-                                            {title: 'a'},
-                                            {title: 'b'},
-                                            {title: 'c'}
-                                        ], data: [[1,2,3],
-                                                  [2,3,4],
-                                                  [2345,252,6132]
-                                        ]
-                                        })*/
-        }
-    }
-}).directive('fbaTabs', function($stateParams) {
-    return {
-        link: function(scope, element, attr) {
-            $(element).kbaseFbaTabs({ws: $stateParams.ws,
-                                     name: $stateParams.name,
-                                     image: true})
-
-
-        }
-    }
-})
 .directive('compare', function(ModelViewer, $q, $http) {
     return {
         link: function(scope, element, attr) {

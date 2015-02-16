@@ -2,7 +2,6 @@
 <html ng-app="coreModelViewer" lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,17 +12,12 @@
 
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css">
 
-    <!--<link href="js/angular/material/angular-material/angular-material.css" rel="stylesheet">
-    <link href="js/angular/material/angular-material/themes/default-theme.css" rel="stylesheet">-->
-
     <link href="css/main.css" rel="stylesheet" type="text/css">
     <link href="css/core.css" rel="stylesheet" type="text/css">
 
     <link href="css/font-awesome-4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="css/viz.css" rel="stylesheet" type="text/css">
     <link href="css/tabs.css" rel="stylesheet" type="text/css">
-
-
 
     <script src="js/jquery/jquery-1.11.0.min.js"></script>
     <script src="js/jquery/jquery-ui.min.js"></script>
@@ -48,23 +42,28 @@
     <script src="app/controllers.js"></script>
     <script src="app/services/model-list.js"></script>
     <script src="app/directives.js"></script>
+
     <script src="lib/kbase-rpc/kbase-rpc.js"></script>
-
-
     <script src="lib/ui-common/functional-site/js/kbapi.js"></script>
+
     <script src="lib/ui-common/src/kbWidget.js"></script>
-    <script src="lib/ui-common/functional-site/assets/js/ws-widgets/tabs.js"></script>
-    <script src="lib/ui-common/src/widgets/models/kbaseETCDiagram.js"></script>
-    <script src="lib/ui-common/src/widgets/models/kbaseModelTabs.js"></script>
+    <script src="lib/ui-common/src/widgets/kbaseAuthenticatedWidget.js"></script>
     <script src="lib/ui-common/src/widgets/maps/kbasePathway.js"></script>
     <script src="lib/ui-common/src/widgets/maps/kbasePathways.js"></script>
-    <script src="lib/ui-common/src/widgets/biochemistry/kbaseRxn.js"></script>
-    <script src="lib/ui-common/src/widgets/biochemistry/kbaseCpd.js"></script>
 
-    <script src="lib/ui-common/src/widgets/fbas/kbaseFbaTabs.js"></script>
-    <script src="lib/ui-common/src/widgets/kbaseTableEditor.js"></script>
-    <script src="lib/ui-common/src/widgets/media/kbaseMediaEditor.js"></script>
-
+    <!-- modeling widgets -->
+    <script src="lib/ui-common/src/widgets/modeling/KBObjects.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/kbaseTabTable.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/kbaseTabs.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/KBaseFBA.FBA.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/KBaseFBA.FBAModel.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/kbaseETCDiagram.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/KBaseBiochem.Media.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/KBasePhenotypes.PhenotypeSet.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/KBasePhenotypes.PhenotypeSimulationSet.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/KBaseSearch.GenomeSet.js"></script>
+    <script src="lib/ui-common/src/widgets/modeling/KBaseFBA.FBAModelSet.js"></script>
+    <!-- end modeling widgets -->
 
 
     <!--<link rel="stylesheet" href="http://openlayers.org/en/v3.0.0/css/ol.css" type="text/css">-->
