@@ -47,14 +47,15 @@
     <script src="js/angular/material/angular-material/angular-material.js"></script>
     -->
 
-    <script src="app/app.js"></script>
     <script src="config.js"></script>
+    <script src="app/app.js"></script>
+
     <script src="app/controllers.js"></script>
     <script src="app/services/model-list.js"></script>
     <script src="app/directives.js"></script>
     <script src="lib/kbase-rpc/kbase-rpc.js"></script>
 
-    <!-- kbase pages / widgets -->
+
     <script src="lib/ui-common/functional-site/js/kbapi.js"></script>
     <script src="lib/ui-common/src/kbWidget.js"></script>
     <script src="lib/ui-common/functional-site/assets/js/ws-widgets/tabs.js"></script>
@@ -163,7 +164,7 @@
 
                     <li>
                         <a ui-sref="compare">
-                            <span class="badge model-count">{{models.length}}</span>
+                            <span class="badge model-count">{{MV.models.length}}</span>
                         </a>
                     </li>
 

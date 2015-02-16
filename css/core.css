@@ -37,7 +37,7 @@
     cursor: pointer;
 }
 
-.hover { 
+.hover {
     opacity: .6;
 }
 .hover:hover {
@@ -64,7 +64,7 @@
 
 /* end helper class */
 
-.model-count { 
+.model-count {
     background-color: #777;
 }
 
@@ -82,7 +82,7 @@ table.comparison-table thead, table.comparison-table tbody {
 }
 table.comparison-table tbody {
     overflow: auto;
-    height: 175px;
+    /*height: 175px;*/
 }
 table.comparison-table tr {
     width: 100%;

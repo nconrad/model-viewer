@@ -1,6 +1,6 @@
 
 /* service configuration settings for UI */
-angular.module('coreModelViewer').service('config', function() {
+angular.module('config', []).service('config', function() {
 
     this.ui = {name: "Core Mdoel Viewer"};
 

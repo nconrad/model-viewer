@@ -2,7 +2,10 @@
 var UI_SERVER = 'http://0.0.0.0:8081';
 
 var gene_color = '#87CEEB';
-var fluxColors = ['#910000', '#e52222', '#ff4444', '#fc8888', '#fcabab']
+var negFluxColors = ['#910000', '#e52222', '#ff4444', '#fc8888', '#fcabab'];
+var fluxColors = ['#0d8200', '#1cd104','#93e572','#99db9d', '#c7e8cd'];
+var bounds = [1000, 500, 200, 25, 0, -25, -200, -500, -100];
+
 
 angular.module('core-directives', []);
 angular.module('core-directives')
@@ -955,31 +958,29 @@ angular.module('core-directives')
                 }
             }
 
-
-
             function getColor(v) {
-                if (v >= 100)
+                if (v >= bounds[0])
                     return fluxColors[0];
-                else if (v >= 50)
+                else if (v >= bounds[1])
                     return fluxColors[1];
-                else if (v >= 20)
+                else if (v >= bounds[2])
                     return fluxColors[2];
-                else if (v >= 5)
+                else if (v >= bounds[3])
                     return fluxColors[3];
-                else if (v > 0)
+                else if (v > bounds[4])
                     return fluxColors[4];
-                else if (v == 0)
+                else if (v == bounds[4])
                     return gene_color;
-                else if (v <= 100)
-                    return fluxColors[0];
-                else if (v <= -50)
-                    return fluxColors[1];
-                else if (v <= -20)
-                    return fluxColors[2];
-                else if (v <= 5)
-                    return fluxColors[3];
+                else if (v <= bounds[5])
+                    return negFluxColors[0];
+                else if (v <= bounds[6])
+                    return negFluxColors[1];
+                else if (v <= bounds[7])
+                    return negFluxColors[2];
+                else if (v <= bounds[8])
+                    return negFluxColors[3];
                 else if (v < 0)
-                    return fluxColors[4];
+                    return negFluxColors[4];
 
                 return undefined;
             }
@@ -987,7 +988,24 @@ angular.module('core-directives')
     }
 })
 
+.directive('legend', function() {
+    return {
+        link: function(scope, elem, attr) {
+            /*
+            angular.element(elem).append('<div id="canvas">');
 
+            var svg = d3.select("#legend")
+                .append("svg")
+                .attr("width", 150)
+                .attr("height", 300);
+
+            svg.append("rect")
+               .attr("class", "overlay")
+               .attr("width", width)
+               .attr("height", height);*/
+        }
+    }
+})
 
 
 .directive('modelList', function() {

@@ -1,8 +1,9 @@
 
 
 
-var app = angular.module('coreModelViewer', 
-['core-directives', 
+var app = angular.module('coreModelViewer',
+['config',
+ 'core-directives',
  'ui.router',
  'kbase-rpc',
  'ModelViewer'])
@@ -10,7 +11,7 @@ var app = angular.module('coreModelViewer',
     function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider) {
 
 
-    $locationProvider.html5Mode(false);  
+    $locationProvider.html5Mode(false);
 
     $stateProvider
          .state('genomes', {
@@ -34,7 +35,7 @@ var app = angular.module('coreModelViewer',
             url: "/fba/:ws",
             templateUrl: 'app/views/fbaws.html',
             controller: 'FBAByWS'
-        })        
+        })
 
         // object views
         .state('modelPage', {
@@ -63,10 +64,10 @@ var app = angular.module('coreModelViewer',
             controller: 'Compare',
             resolve: {
               'GetRefs': ['ModelViewer', function(ModelViewer){
-                return ModelViewer.updateRefs;  // wait for refs to be retrieved
+                return ModelViewer.getRefs;  // wait for refs to be retrieved
               }]
-            }      
-        })    
+            }
+        })
 
     $urlRouterProvider.when('', '/models/')
                       .when('/', '/models/')

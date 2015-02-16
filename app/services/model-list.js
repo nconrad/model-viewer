@@ -26,7 +26,7 @@ angular.module('ModelViewer', [])
     this.addBulk = function(models) {
         self.models = self.models.concat(models);
         localStorage.setItem(key, angular.toJson(self.models));
-        self.updateRefs();           
+        self.updateRefs();
     }
 
     this.rm = function(i) {
@@ -44,10 +44,11 @@ angular.module('ModelViewer', [])
 
 
     this.updateRefs = function() {
-        console.log('updating refs')
-
         var params = angular.fromJson(angular.toJson(self.models));
+
+        console.log('updating refs for', params)
         return $http.rpc('ws', 'list_referencing_objects', params).then(function(refs) {
+            console.log('returned refs are', refs)
             for (var i=0; i< self.models.length; i++) {
                 var model = self.models[i];
                 var ws = model.workspace;
@@ -73,11 +74,13 @@ angular.module('ModelViewer', [])
 
                 }
             }
+        }).catch(function(e){
+            console.error('updating refs failed', e.error.message)
         })
     }
 
     this.getRelatedFBAS = function(ws, name) {
-        if (!self.referencing[ws+'/'+name]) return; 
+        if (!self.referencing[ws+'/'+name]) return;
         return self.referencing[ws+'/'+name].FBAS;
     }
 
@@ -93,7 +96,6 @@ angular.module('ModelViewer', [])
         });
     }
 
-
-
+    this.getRefs = this.updateRefs();
 
 })
