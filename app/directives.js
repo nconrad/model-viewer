@@ -22,8 +22,8 @@ angular.module('core-directives')
     }
  }])
 .directive('modelTable',
-['$compile', '$stateParams', 'ModelViewer',
-function($compile, $stateParams, ModelViewer) {
+    ['$compile', '$stateParams', 'ModelViewer',
+    function($compile, $stateParams, ModelViewer) {
     return {
         link: function(scope, element, attr) {
 
@@ -601,8 +601,8 @@ function($stateParams, ModelViewer, $q, $http) {
 }])
 
 .directive('compare',
-['(ModelViewer', '$q', '$http',
-function(ModelViewer, $q, $http) {
+    ['ModelViewer', '$q', '$http',
+    function(ModelViewer, $q, $http) {
     return {
         link: function(scope, element, attr) {
             var MV = ModelViewer;

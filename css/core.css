@@ -63,7 +63,6 @@
 }
 
 /* end helper class */
-
 .model-count {
     background-color: #777;
 }
@@ -93,41 +92,26 @@ table.comparison-table th, table.comparison-table td {
     width: 10%;
 }
 
+.dataTables_length,
+.dataTables_info {
+    float: left;
+}
+
+.dataTables_filter,
+.dataTables_paginate{
+    float: right;
+}
+
+.dataTables_paginate .pagination {
+    margin: 0;
+}
 
 .obj-grid {
     height: 100%;
 }
 
-/* ui grid styling */
-
-.ui-grid {
-    border: none;
-    height: 330px;
-}
-
-.ui-grid-header {
-    border:none;
-    border-bottom: 2px solid #dfdfdf;
-}
-.ui-grid-vertical-bar {
-    background-color: #fff !important;
-}
-.ui-grid-top-panel .ui-grid-cell-contents {
-    border:none;
-}
-
-.ui-grid-top-panel {
-    background: #fff;
-}
-
-.ui-grid-cell {
-    border-right: none;
-}
-
-.ui-grid-row:nth-child(even),
-.ui-grid-cell {
-    border-bottom: 1px solid #dfdfdf;
-    background: #fff !important;
+.dataTables_wrapper table {
+    margin-bottom: 10px;
 }
 
 .pathway {
@@ -135,7 +119,6 @@ table.comparison-table th, table.comparison-table td {
     top: 0;
     left: 0;
 }
-
 
 .path-container {
     position: relative;
