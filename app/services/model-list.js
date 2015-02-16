@@ -1,7 +1,7 @@
 
 
 angular.module('ModelViewer', [])
-.service('ModelViewer', function($http) {
+.service('ModelViewer', ['$http', function($http) {
     var key = "selectedModels";
 
     var self = this;
@@ -98,4 +98,4 @@ angular.module('ModelViewer', [])
 
     this.getRefs = this.updateRefs();
 
-})
+}])

@@ -1,23 +1,24 @@
 
+angular.module('mv-controllers', [])
+.controller('MainCtrl',
+    ['$scope', 'ModelViewer',
+    function($scope, MV) {
 
-
-
-
-app.controller('MainCtrl', function($scope, $stateParams, $filter, ModelViewer) {
-
-    $scope.MV = ModelViewer;
+    $scope.MV = MV;
 
     $scope.updateCompare = function() {
         $scope.$broadcast('updateCompare');
     }
+}])
 
-
-}).controller('SelectedModels', function($scope, $stateParams, $filter, ModelViewer) {
+.controller('SelectedModels', ['$scope', function($scope) {
 
     $scope.MV = ModelViewer;
     $scope.models = ModelViewer.models;
 
-}).controller('Compare', function($scope, ModelViewer) {
+}])
+
+.controller('Compare', ['$scope', 'ModelViewer', function($scope, ModelViewer) {
 
     $scope.MV = ModelViewer;
 
@@ -46,20 +47,26 @@ app.controller('MainCtrl', function($scope, $stateParams, $filter, ModelViewer) 
     }
 
 
-}).controller('ObjectPage', function($scope, $stateParams) {
+}])
+
+.controller('ObjectPage',
+    ['$scope', '$stateParams',
+    function($scope, $stateParams) {
 
     $scope.ws = $stateParams.ws;
     $scope.name = $stateParams.name;
 
     $scope.tab = $stateParams.tab;
 
-})
-.controller('FBAByWS', function($scope, $stateParams) {
+}])
+
+.controller('FBAByWS', function() {
 
 })
 
-
-.controller('ModelsByWS', function($scope, $stateParams, $http, $log, ModelViewer) {
+.controller('ModelsByWS',
+    ['$scope', '$stateParams', '$http', '$log', 'ModelViewer',
+    function($scope, $stateParams, $http, $log, ModelViewer) {
     $scope.ML = ModelViewer;
     $scope.filterOptions = {
             filterText: '',
@@ -118,4 +125,4 @@ app.controller('MainCtrl', function($scope, $stateParams, $filter, ModelViewer) 
 
         })
 
-})
+}])

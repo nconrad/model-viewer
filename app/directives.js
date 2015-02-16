@@ -9,7 +9,7 @@ var bounds = [1000, 500, 200, 25, 0, -25, -200, -500, -100];
 
 angular.module('core-directives', []);
 angular.module('core-directives')
-.directive('kbTables', function($rootScope) {
+.directive('kbTables', ['$rootScope', function($rootScope) {
     return {
         link: function(scope, elem, attr) {
             var params = {type: attr.kbTables,
@@ -20,8 +20,10 @@ angular.module('core-directives')
             $(elem).kbaseTabTable(params);
         }
     }
- })
-.directive('modelTable', function($compile, $stateParams, ModelViewer) {
+ }])
+.directive('modelTable',
+['$compile', '$stateParams', 'ModelViewer',
+function($compile, $stateParams, ModelViewer) {
     return {
         link: function(scope, element, attr) {
 
@@ -92,7 +94,8 @@ angular.module('core-directives')
             }
         }
     }
-}).directive('mediaTable', function($compile) {
+}])
+.directive('mediaTable', ['$compile', function($compile) {
     return {
         link: function(scope, element, attr) {
             var table;
@@ -126,7 +129,10 @@ angular.module('core-directives')
 
         }
     }
-}).directive('fbaTable', function($compile, $stateParams) {
+}])
+.directive('fbaTable',
+['$compile', '$stateParams',
+function($compile, $stateParams) {
     return {
         link: function(scope, element, attr) {
             var table;
@@ -162,7 +168,8 @@ angular.module('core-directives')
 
         }
     }
-}).directive('genomesTable', function($compile) {
+}])
+.directive('genomesTable', ['$compile', function($compile) {
     return {
         link: function(scope, element, attr) {
 
@@ -188,12 +195,12 @@ angular.module('core-directives')
                 var table = t.dataTable(scope.tableOptions);
                 $compile(table)(scope);
             })
-
-
         }
     }
-})
-.directive('pathways', function($stateParams, ModelViewer, $q, $http) {
+}])
+.directive('pathways',
+['$stateParams', 'ModelViewer', '$q', '$http',
+function($stateParams, ModelViewer, $q, $http) {
     return {
         link: function(scope, element, attr) {
 
@@ -252,17 +259,8 @@ angular.module('core-directives')
 
         }
     }
-})
-.directive('genome', function($stateParams) {
-    return {
-        link: function(scope, element, attr) {
-            element.loading()
-            $(element).KBaseSEEDFunctions({wsNameOrId: $stateParams.ws, objNameOrId: $stateParams.name})
-
-
-        }
-    }
-}).directive('contig', function($stateParams) {
+}])
+.directive('contig', ['stateParams', function($stateParams) {
     return {
         link: function(scope, ele, attr) {
             ele.loading()
@@ -600,30 +598,11 @@ angular.module('core-directives')
 
         }
     };
-})
-//
-//  Views for objects
-//
+}])
 
-.directive('modelTabs', function($stateParams) {
-    return {
-        link: function(scope, element, attr) {
-            $(element).kbaseModelTabs({ws: $stateParams.ws, name: $stateParams.name, image:true})
-
-        }
-    }
-})
-
-.directive('etc', function($stateParams) {
-    return {
-        link: function(scope, ele, attr) {
-            ele.loading();
-        }
-    }
-})
-
-
-.directive('compare', function(ModelViewer, $q, $http) {
+.directive('compare',
+['(ModelViewer', '$q', '$http',
+function(ModelViewer, $q, $http) {
     return {
         link: function(scope, element, attr) {
             var MV = ModelViewer;
@@ -955,7 +934,7 @@ angular.module('core-directives')
             }
         }
     }
-})
+}])
 
 .directive('legend', function() {
     return {
@@ -1050,14 +1029,12 @@ angular.module('core-directives')
     }
 })
 
-.directive('fbaDropdown', function(ModelViewer) {
+.directive('fbaDropdown', function() {
     return {
         controller: 'Compare',
         link: function(scope, element, attrs) {
             var ws = attrs.ws;
             var name = attrs.name;
-
-
         }
     }
 })
@@ -1077,55 +1054,6 @@ angular.module('core-directives')
         }
     }
 })
-
-.directive('downloadOptions', function(ModelViewer, $stateParams) {
-    return {
-        link: function(scope, element, attr) {
-            var ws = $stateParams.ws;
-            var name = $stateParams.name
-            var token = "un=nconrad|tokenid=b31a59b4-49a4-11e4-a3c3-12313b077182|expiry=1443729245|client_id=nconrad|token_type=Bearer|SigningSubject=https://nexus.api.globusonline.org/goauth/keys/24e59702-45a4-11e4-89f7-22000ab68755|sig=82af006736ff6a59d458beb6bb7cb1abec683d45087b661e7e0102e4d5d19e3e1ee44b923829d588a16469527e618da35b8a161cc31aa0b6686f0b6083ab6dc78a5affd14ff024181e83118ae4f72b27c46559aab908c9274a6c1d3becbda7f349da7dc9588c79be620d90ba2fac55d70da9c35206f0f6f544a4c66cf48a9f36"
-            var url = UI_SERVER+'/ws/object/'+ws+'/'+name;
-
-
-
-            $.ajax({url: url,
-                    type: 'GET',
-                    contentType: 'application/json',
-                    beforeSend: function( xhr ) {
-                        xhr.setRequestHeader("Authorization", token);
-                    }
-
-                   }).done(function(data) {
-                       console.log(data)
-                   })
-
-            /*
-            var content = '<div>'+
-                                '<a href="'+'" download>JSON</a><br>'+
-                                '<a href="'+UI_SERVER+'/fba/export/'+ws+'/'+name+'/'+token+'" download>SBML</a><br>'+
-                          '</div>';
-
-            */
-
-            element.popover({title: 'Download',
-                             placement: 'bottom',
-                             content: content,
-                             html: true
-                            })
-
-            $('body').on('click', function (e) {
-                $('[data-toggle="popover"]').each(function () {
-                    //the 'is' for buttons that trigger popups
-                    //the 'has' for icons within a button that triggers a popup
-                    if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-                        $(this).popover('hide');
-                    }
-                });
-            });
-        }
-    }
-})
-
 
 
 function rxnDict(model) {

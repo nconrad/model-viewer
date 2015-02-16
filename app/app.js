@@ -4,6 +4,7 @@
 var app = angular.module('coreModelViewer',
 ['config',
  'core-directives',
+ 'mv-controllers',
  'ui.router',
  'kbase-rpc',
  'ModelViewer'])
@@ -73,17 +74,12 @@ var app = angular.module('coreModelViewer',
                       .when('/', '/models/')
                       .when('#', '/models/');
 
-}]).config(['$httpProvider', function ($httpProvider) {
-            // enable http caching
-           $httpProvider.defaults.cache = true;
-      }])
+}])
 
-
-
-
-app.run(function ($rootScope, $state, $stateParams, $location) {
+.run(['$rootScope', '$state', '$stateParams', '$location',
+    function($rootScope, $state, $stateParams, $location) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
 
     kb = new KBCacheClient();
-});
+}]);
