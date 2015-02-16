@@ -19,7 +19,7 @@
 </ul>
 
 <div ng-show="tab == 'Selected'">
-    <table ng-show="models.length" class="table comparison-table">
+    <table ng-show="models.length" class="table selected-models">
         <thead>
             <tr>
                 <th>ID</th>
@@ -27,18 +27,14 @@
                 <th>Rxns</th>
                 <th>Cpds</th>-->
                 <th>FBA</th>
+                <th>Remove</th>
             </tr>
         </thead>
 
         <tbody>
             <tr ng-repeat="model in models track by $index">
-
                 <td><a ui-sref="modelPage({ws: '{{model.workspace}}', name: '{{model.name}}' })">{{model.name}}</a></td>
-                <!--<td>Some Organism</td>
-                <td random-number></td>
-                <td random-number></td>-->
                 <td ws="{{model.workspace}}" name="{{model.name}}">
-
                     <select class="form-control"
                             ng-model="selectedFBAs[$index]"
                             ng-change="updateView($index, model.workspace, item.name)"
@@ -46,6 +42,9 @@
                             ng-init="selectedFBAs[$index] = relatedFBAs[$index][0]">
                     </select>
                 </td>
+
+                <td><span ng-click="MV.rm($index)" class="fa fa-remove btn-rm-model hover pointer"></span></td>
+
             </tr>
         </tbody>
 
@@ -54,7 +53,7 @@
 
 
 <div ng-show="tab == 'Heatmap'">
-    <div class="overflow" compare></div>
+    <div compare></div>
 
     <div legend></div>
     <div ng-if="models.length">

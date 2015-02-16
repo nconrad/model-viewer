@@ -1,6 +1,7 @@
 
-var UI_SERVER = 'http://0.0.0.0:8081';
+'use strict';
 
+var UI_SERVER = 'http://0.0.0.0:8081';
 var gene_color = '#87CEEB';
 var negFluxColors = ['#910000', '#e52222', '#ff4444', '#fc8888', '#fcabab'];
 var fluxColors = ['#0d8200', '#1cd104','#93e572','#99db9d', '#c7e8cd'];
@@ -29,12 +30,12 @@ angular.module('core-directives')
 
             scope.tableOptions = {"columns": [
                                       { title: "Name", data: function(d) {
-                                            var name = d[1];
-                                            var ws = d[7];
-                                            var path = "modelPage({ws: '"+ws+"', name: '"+name+"'})";
-                                            var link = '<a ui-sref="'+path+'" >'+name+'</a>';
-                                            var add_btn = '<button type="button" data-ws="'+ws+'" data-name="'+name+
-                                                        '" class="btn btn-default btn-xs btn-add-model pull-right hide">Add'+
+                                            var name = d[1],
+                                                ws = d[7],
+                                                path = "modelPage({ws: '"+ws+"', name: '"+name+"'})",
+                                                link = '<a ui-sref="'+path+'" >'+name+'</a>',
+                                                add_btn = ' <button type="button" data-ws="'+ws+'" data-name="'+name+
+                                                        '" class="btn btn-default btn-xs btn-add-model hide">Add'+
                                                     '</button>';
                                             return link+add_btn;
                                       }},/*
@@ -323,14 +324,13 @@ function($stateParams, ModelViewer, $q, $http) {
             function draw(data) {
                 padding_bottom = 50;
 
-                var max_end = data.max
-                var numbers = data.numbers;
+                var max_end = data.max,
+                    numbers = data.numbers;
 
                 var h = 10; /* height of boxes */
 
 
-                $(ele).append('<div id="cdd-chart"></div>')
-
+                $(ele).append('<div id="cdd-chart">');
 
                 //Create the Scale we will use for the Axis
                 var x = d3.scale.linear()
@@ -355,7 +355,6 @@ function($stateParams, ModelViewer, $q, $http) {
                                                  .attr("height", height)
                                                 .attr("transform", "translate(" + 0 + "," + 0 + ")")
                                                 .call(zoom);
-
 
                 svg.append("rect")
                     .attr("class", "overlay")
@@ -696,7 +695,6 @@ function($stateParams, ModelViewer, $q, $http) {
                         var fbaRxns = fbas[i].data.FBAReactionVariables;
 
                         for (var j=0; j<fbaRxns.length; j++) {
-
                             var rxnId = fbaRxns[j].modelreaction_ref.split('/')[5].split('_')[0];
                             fbaRXNs[rxnId] = fbaRxns[j];
                         }
@@ -829,13 +827,10 @@ function($stateParams, ModelViewer, $q, $http) {
                         .call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom))
                     .append("g");
 
-                var w = 4;
-                var h = 4;
-                var font_size = '4px';
-                var start_y = 100;
+                var w = 4, h = 4, font_size = '4px', start_y = 100;
 
                 // to precompute starting postion of heatmap
-                y_widths = [];
+                var y_widths = [];
                 for (var i=0; i < y_data.length; i++) {
                     //var label = svg.append("text").attr("y", start_y+i*h+h)
                     //            .text(y_data[i]).attr("font-size", font_size);

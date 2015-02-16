@@ -13,6 +13,16 @@
     padding: 0px 5px;
 }
 
+.btn-rm-model {
+    font-size: 1.5em;
+}
+
+.selected-models .fa {
+    margin: 5px 0 0 0;
+}
+
+
+/*
 #selected-models {
     margin: 10px 15px 0 15px;
 }
@@ -24,7 +34,8 @@
 
 #selected-models ul li {
     border-bottom: 0px
-}
+}*/
+
 .sidebar-nav i,
 .sidebar-nav object {
     color: #666;
@@ -75,22 +86,6 @@
     margin: 10px 0 0 0;
 }
 
-table.comparison-table thead, table.comparison-table tbody {
-    float: left;
-    width: 100%;
-}
-table.comparison-table tbody {
-    overflow: auto;
-    /*height: 175px;*/
-}
-table.comparison-table tr {
-    width: 100%;
-    display: table;
-    text-align: left;
-}
-table.comparison-table th, table.comparison-table td {
-    width: 10%;
-}
 
 .dataTables_length,
 .dataTables_info {

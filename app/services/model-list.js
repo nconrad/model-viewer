@@ -63,19 +63,14 @@ angular.module('ModelViewer', [])
                     var kind = ref[2].split('-')[0].split('.')[1];
 
 
-                        //self.referencing[ws+'/'+name] = {FBA: ref[6]+'/'+ref[0]};
-                        //self.referencing[ws+'/'+name] = {Gapfilling: ref[6]+'/'+ref[0]};
                     if (kind == "FBA")
                         self.referencing[ws+'/'+name].FBAS.push({ref: ref[6]+'/'+ref[0], name: ref[1] });
-                        //self.models[i].refs.FBA = ref[6]+'/'+ref[0];
                     else if (kind == "Gapfilling")
                         self.referencing[ws+'/'+name].Gapfillings.push({ref: ref[6]+'/'+ref[0], name: ref[1] });
-                        //self.models[i].refs.Gapfilling = ref[6]+'/'+ref[0];
-
                 }
             }
         }).catch(function(e){
-            console.error('updating refs failed', e.error.message)
+            console.error('updating refs failed:', e.error.message)
         })
     }
 
@@ -86,6 +81,7 @@ angular.module('ModelViewer', [])
 
 
     this.updateModelData = function() {
+        console.log('calling')
         return $http.rpc('ws','get_objects', self.models).then(function(d){
             var models = [];
             for (var i in d) models.push(d[i].data);
@@ -96,6 +92,8 @@ angular.module('ModelViewer', [])
         });
     }
 
-    this.getRefs = this.updateRefs();
+
+    if (this.models.length)
+        this.getRefs = this.updateRefs();
 
 }])
