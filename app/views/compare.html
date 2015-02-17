@@ -8,7 +8,7 @@
 
 <ul ng-show="models.length" class="nav nav-tabs">
     <li ng-class="{active: tab == 'Selected'}" ng-click="tab = 'Selected'">
-        <a>Selected Models</a>
+        <a><span class="badge">{{MV.models.length}}</span> Selected Models</a>
     </li>
     <li ng-class="{active: tab == 'Heatmap'}" ng-click="tab = 'Heatmap'">
         <a>Heatmap</a>
@@ -32,18 +32,18 @@
         </thead>
 
         <tbody>
-            <tr ng-repeat="model in models track by $index">
+            <tr ng-repeat="model in MV.models track by $index">
                 <td><a ui-sref="modelPage({ws: '{{model.workspace}}', name: '{{model.name}}' })">{{model.name}}</a></td>
                 <td ws="{{model.workspace}}" name="{{model.name}}">
                     <select class="form-control"
                             ng-model="selectedFBAs[$index]"
-                            ng-change="updateView($index, model.workspace, item.name)"
+                            ng-change="updateViews()"
                             ng-options="item.name for item in relatedFBAs[$index]"
                             ng-init="selectedFBAs[$index] = relatedFBAs[$index][0]">
                     </select>
                 </td>
 
-                <td><span ng-click="MV.rm($index)" class="fa fa-remove btn-rm-model hover pointer"></span></td>
+                <td><span ng-click="MV.rm($index); updateViews();" class="fa fa-remove btn-rm-model hover pointer"></span></td>
 
             </tr>
         </tbody>

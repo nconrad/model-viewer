@@ -5,7 +5,7 @@ var UI_SERVER = 'http://0.0.0.0:8081';
 var gene_color = '#87CEEB';
 var negFluxColors = ['#910000', '#e52222', '#ff4444', '#fc8888', '#fcabab'];
 var fluxColors = ['#0d8200', '#1cd104','#93e572','#99db9d', '#c7e8cd'];
-var bounds = [1000, 500, 200, 25, 0, -25, -200, -500, -100];
+var bounds = [1000, 500, 200, 25, 0, -25, -200, -500, -1000];
 
 
 angular.module('core-directives', []);
@@ -201,22 +201,22 @@ function($compile, $stateParams) {
 }])
 .directive('pathways',
 ['$stateParams', 'ModelViewer', '$q', '$http',
-function($stateParams, ModelViewer, $q, $http) {
+function($stateParams, MV, $q, $http) {
     return {
         link: function(scope, element, attr) {
 
-            //scope.$on('updateCompare', function(e, fbas) {
-            //    pathContainer.remove();
-            //    updateCompare(scope.models, fbas)
-            //})
+
             var pathContainer;
 
             scope.$watch(scope.selectedFBAs, function() {
                 if (pathContainer)
                     pathContainer.remove();
-                updateCompare(scope.models, scope.selectedFBAs);
+                updateCompare(MV.models, scope.selectedFBAs);
             })
 
+            scope.$on('updateCompare', function() {
+                updateCompare(MV.models, scope.selectedFBAs);
+            })
 
             function updateCompare(models, fbas) {
                 pathContainer = $('<div class="path-container">')
@@ -234,7 +234,7 @@ function($stateParams, ModelViewer, $q, $http) {
                     var fbaProm;
                 }
 
-                var prom = ModelViewer.updateModelData()
+                var prom = MV.updateModelData()
                 $q.all([prom, fbaProm])
                     .then(function(d) {
                         $(element).rmLoading();
@@ -248,9 +248,8 @@ function($stateParams, ModelViewer, $q, $http) {
                                 all_fbas.splice(i, 0, null)
                             }
                         }
-                        console.log('pathways called with image true')
-                        pathContainer.kbasePathways({image: true,
-                                                     modelData: models,
+
+                        pathContainer.kbasePathways({modelData: models,
                                                      fbaData: all_fbas})
 
                     })
@@ -298,7 +297,6 @@ function($stateParams, ModelViewer, $q, $http) {
                         var start = l[0][1];
                         var end = start + l[0][3]
                     }
-
 
                     numbers.push({s: start, e: end, direction: direction})
 
@@ -601,20 +599,13 @@ function($stateParams, ModelViewer, $q, $http) {
 
 .directive('compare',
     ['ModelViewer', '$q', '$http',
-    function(ModelViewer, $q, $http) {
+    function(MV, $q, $http) {
     return {
         link: function(scope, element, attr) {
-            var MV = ModelViewer;
-
-            var width = 800,
+            var width = 1000,
                 height = 250;
 
-            scope.models = angular.copy(scope.models);
-
-
-            // draw heatmap on load
-            //var prom =
-            //var prom2 = $http.rpc('ws','get_objects', models);
+            scope.models = MV.models;
 
             function updateCompare(models, fbas) {
                 $(element).loading();
@@ -623,7 +614,6 @@ function($stateParams, ModelViewer, $q, $http) {
                     for (var i=0; i<models.length; i++) {
                         if (String(i) in fbas) refs.push( {ref: fbas[String(i)].ref})
                     }
-
                     var fbaProm = $http.rpc('ws','get_objects', refs);
                 } else {
                     var fbaProm;
@@ -659,6 +649,11 @@ function($stateParams, ModelViewer, $q, $http) {
             scope.$watch(scope.selectedFBAs, function() {
                 updateCompare(scope.models, scope.selectedFBAs);
             })
+
+            scope.$on('updateCompare', function() {
+                updateCompare(MV.models, scope.selectedFBAs);
+            })
+
 
             function parseData(models, fbas) {
 
@@ -745,10 +740,10 @@ function($stateParams, ModelViewer, $q, $http) {
                 var offset_x = 100;
                 var offset_y = 100;
 
-                var w = 3;
-                var h = 3;
+                var w = 10;
+                var h = 10;
 
-                var width = 960,
+                var width = 1500,
                     height = 500;
 
 
@@ -824,10 +819,10 @@ function($stateParams, ModelViewer, $q, $http) {
                     .attr("width", width)
                     .attr("height", height)
                     .append("g")
-                        .call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom))
+                        .call(d3.behavior.zoom().scaleExtent([-3, 8]).on("zoom", zoom))
                     .append("g");
 
-                var w = 4, h = 4, font_size = '4px', start_y = 100;
+                var w = 7, h = 7, font_size = '8px', start_y = 100;
 
                 // to precompute starting postion of heatmap
                 var y_widths = [];

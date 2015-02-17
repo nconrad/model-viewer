@@ -12,10 +12,8 @@ angular.module('mv-controllers', [])
 }])
 
 .controller('SelectedModels', ['$scope', function($scope) {
-
     $scope.MV = ModelViewer;
     $scope.models = ModelViewer.models;
-
 }])
 
 .controller('Compare', ['$scope', 'ModelViewer', function($scope, MV) {
@@ -24,23 +22,23 @@ angular.module('mv-controllers', [])
     // default tab
     $scope.tab = 'Selected';
 
-    // selected models
-    $scope.models = MV.models;
 
     // input model for selected FBAS; gives names;
     $scope.selectedFBAs = {};
 
-    // related fba results
+    // related fba resultsl displayed in dropdowns in UI
     var fbas = [];
-    for (var i=0; i<$scope.models.length; i++) {
-        var m = $scope.models[i];
+    for (var i=0; i< MV.models.length; i++) {
+        var m = MV.models[i];
         fbas.push( MV.getRelatedFBAS(m.workspace, m.name) );
     }
 
     $scope.relatedFBAs = fbas;
 
     // broadcast is used to update multiple views
-    $scope.updateView = function($index, ws, name) {
+    $scope.updateViews = function() {
+        console.log('broadcasting an update')
+        MV.updateRefs();
         $scope.$broadcast('updateCompare', $scope.selectedFBAs);
     }
 

@@ -69,6 +69,9 @@ angular.module('ModelViewer', [])
                         self.referencing[ws+'/'+name].Gapfillings.push({ref: ref[6]+'/'+ref[0], name: ref[1] });
                 }
             }
+
+            return self.referencing;
+
         }).catch(function(e){
             console.error('updating refs failed:', e.error.message)
         })

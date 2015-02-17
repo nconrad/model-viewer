@@ -47,4 +47,4 @@ Neal Conrad <nconrad@anl.gov>
 
 ## License
 
-Released under [the MIT license](https://github.com/blob/master/LICENSE).
+Released under [the MIT license](https://github.com/nconrad/model-viewer/blob/master/LICENSE).
