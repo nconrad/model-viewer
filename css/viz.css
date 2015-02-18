@@ -1,4 +1,5 @@
 
+/* global styling */
 
 rect:hover,
 circle:hover,
@@ -9,28 +10,13 @@ line,
     cursor: pointer;
 }
 
-/*
-        var stroke_color = '#666';
-        var stroke_color2 = '#000';
-        var stroke_width = '1.5px';
-        var highlight = 'steelblue';
-
-        var flux_threshold = 0.001;
-        var heat_colors = ['#731d1d','#8a2424', '#b35050', '#d05060', '#f28e8e'];
-        var neg_heat_colors = ['#4f4f04','#7c7c07', '#8b8d08', '#acc474', '#dded00'];
-        var gapfill_color = '#f000ff';
-        var gene_stroke = '#777';
-        var g_present_color = '#8bc7e5';
-        */
-
 /* kegg map styling */
 .line1,
 .line2,
 .link {
-    stroke-width: 2px;
+    stroke-width: 1px;
     stroke: #666;
 }
-
 
 .line-start,
 .line-middle,
@@ -41,11 +27,14 @@ line,
     style-width: 2px;
 }
 
-
 .rxn {
     fill: #fff;
-    stroke-width: 2px;
-    stroke: #666;
+    stroke-width: 1px;
+    stroke: #aaa;
+}
+.rxn-divider {
+    stroke-width: 0px;
+    stroke: #fff;
 }
 
 .map {
@@ -53,6 +42,7 @@ line,
     stroke-width: 1px;
     stroke: #666;
 }
+
 .cpd-label,
 .map-label {
     fill: #666;
@@ -64,18 +54,16 @@ line,
 }
 
 .cpd {
-    stroke-width: 2px;
+    stroke-width: 1px;
     fill: #fff;
     stroke: #666;
 }
 
 /* cdd viewer */
-
 .cdd-box {
     fill: lightsteelblue;
     stroke: steelblue;
     stroke-width: 1px;
-
 }
 
 .grid-line {
@@ -93,7 +81,6 @@ line,
     font-family: sans-serif;
     font-size: 11px;
 }
-
 
 .overlay {
   fill: none;
@@ -118,19 +105,10 @@ line,
 
 
 
- .node circle {
-   fill: #fff;
-   stroke: steelblue;
-   stroke-width: 3px;
- }
 
- .node text { font: 12px sans-serif; }
 
- .link {
-   fill: none;
-   stroke: #ccc;
-   stroke-width: 2px;
- }
+
+
 
 
 
