@@ -36,6 +36,10 @@ line,
     stroke-width: 0px;
     stroke: #fff;
 }
+.rxn-divider-stroke {
+    stroke-width: 1px;
+    stroke: #aaa;
+}
 
 .map {
     fill: #fff;
@@ -51,6 +55,11 @@ line,
 .rxn-label {
     font-size: 10px;
     stroke: #666;
+}
+
+.rxn-label-light {
+    font-size: 10px;
+    stroke: #000;
 }
 
 .cpd {
