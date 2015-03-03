@@ -59,6 +59,11 @@ var app = angular.module('coreModelViewer',
             controller: 'ObjectPage'
         })
 
+        .state('proto', {
+            url: "/proto",
+            templateUrl: 'app/views/proto.html'
+        })
+
         .state('compare', {
             url: "/compare",
             templateUrl: 'app/views/compare.html',

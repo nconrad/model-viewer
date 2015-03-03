@@ -1,27 +1,24 @@
 
 'use strict';
 
-var UI_SERVER = 'http://0.0.0.0:8081';
-var gene_color = '#87CEEB';
-var negFluxColors = ['#910000', '#e52222', '#ff4444', '#fc8888', '#fcabab'];
-var fluxColors = ['#0d8200', '#1cd104','#93e572','#99db9d', '#c7e8cd'];
-var bounds = [1000, 500, 200, 25, 0, -25, -200, -500, -1000];
-
-
 angular.module('core-directives', []);
 angular.module('core-directives')
-.directive('kbTables', ['$rootScope', function($rootScope) {
+.directive('kbTables', function() {
     return {
-        link: function(scope, elem, attr) {
-            var params = {type: attr.kbTables,
-                          ws: attr.kbTablesWs,
-                          obj: attr.kbTablesObj,
-                          token: $rootScope.USER_TOKEN};
+        link: function(scope, elem, attrs) {
+            var type = attrs.kbTables,
+                ws = attrs.kbTablesWs,
+                obj = attrs.kbTablesObj;
 
-            $(elem).kbaseTabTable(params);
+            var params = {type: type,
+                          ws: ws,
+                          obj: obj,
+                          options: {showETC: true}};
+
+            angular.element(elem).kbaseTabTable(params);
         }
     }
- }])
+ })
 .directive('modelTable',
     ['$compile', '$stateParams', 'ModelViewer',
     function($compile, $stateParams, ModelViewer) {
@@ -602,6 +599,12 @@ function($stateParams, MV, $q, $http) {
     function(MV, $q, $http) {
     return {
         link: function(scope, element, attr) {
+            var gene_color = '#87CEEB',
+                negFluxColors = ['#910000', '#e52222', '#ff4444', '#fc8888', '#fcabab'],
+                fluxColors = ['#0d8200', '#1cd104','#93e572','#99db9d', '#c7e8cd'],
+                bounds = [1000, 500, 200, 25, 0, -25, -200, -500, -1000];
+
+
             var width = 1000,
                 height = 250;
 
@@ -693,7 +696,6 @@ function($stateParams, MV, $q, $http) {
                             var rxnId = fbaRxns[j].modelreaction_ref.split('/')[5].split('_')[0];
                             fbaRXNs[rxnId] = fbaRxns[j];
                         }
-
                     }
 
 
@@ -702,13 +704,13 @@ function($stateParams, MV, $q, $http) {
                     for (var j=0; j < rxn_names.length; j++) {
                         var rxn_name = rxn_names[j];
 
-
                         var found = false;
                         var flux;
-                        for (var k in rxns) {
+                        for (var k=0; k<rxns.length; k++) {
                             if (rxns[k].reaction_ref.split('/')[5] == rxn_name) {
                                 found = true;
-                                if (hasFBA) flux = fbaRXNs[rxn_name].value;
+                                if (hasFBA && fbaRXNs[rxn_name])
+                                    flux = fbaRXNs[rxn_name].value;
                                 break;
                             }
                         }
