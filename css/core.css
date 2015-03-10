@@ -1,13 +1,164 @@
 
 
-.sidebar-collapse {
-    border-right: 1px solid #e7e7e7;
+/* navigation mods */
+.navbar-default {
+    background-color: #1CB89A; /*#46A997;*/
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.15);
 }
+
+.navbar {
+    border: none;
+}
+.navbar > li >a:hover {
+    color: #aaa !important;
+
+}
+
+.navbar-brand {
+    color: #dedede !important;
+}
+
+
+.sidebar {
+    z-index: 3000;
+    color: #fff;
+    background-color: #555;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
+}
+
+.sidebar ul li {
+    border-bottom: none;
+}
+
+.sidebar a > i,
+ .sidebar a > img{
+    color: #fff;
+    font-size: 1.2em;
+}
+
+.sidebar-nav .nav > li > a {
+    color: #fff;
+    background-color: #555;
+    font-weight: 500;
+    padding: 10px 10px 10px 15px;
+    border: none;
+}
+
+.sidebar-nav .nav > li > a.active{
+    color: #f5f5f5;
+    background-color: #676767;
+    padding-left: 9px;
+    border-left: 6px solid #1CB89A;
+    /*-webkit-box-shadow: inset 1px 0px 0px 0px rgba(0,0,0,0.05);
+    -moz-box-shadow: inset 1px 0px 0px 0px rgba(0,0,0,0.05);
+    box-shadow: inset 1px 0px 0px 0px rgba(0,0,0,0.05);    */
+}
+
+.sidebar-nav .nav > li > a:hover {
+    background-color: #666;
+}
+
+.sidebar-nav .nav > li > a.active:hover,
+.sidebar-nav .nav > li > a.active:focus{
+    background-color: #676767;
+}
+
+.sidebar-collapse {
+    color: #1CB89A !important;
+    background-color: #444 !important;
+    border-right: 1px solid #444;
+}
+
+.sidebar-collapse:hover {
+    color: #222 !important;
+}
+
+
+.navbar-brand:hover {
+    color: #f2f2f2 !important;
+    background-color: #1CB89A;
+}
+
+
+
+
+.nav .open>a {
+    background-color: #1CB89A !important;
+}
+
+.sidebar {
+    z-index: 3000;
+    color: #fff;
+    background-color: #555;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.05);
+}
+
+.sidebar ul li {
+    border-bottom: none;
+}
+
+.sidebar a > i,
+ .sidebar a > img{
+    color: #fff;
+    font-size: 1.2em;
+}
+
+.sidebar-nav .nav > li > a {
+    color: #fff;
+    background-color: #555;
+    font-weight: 500;
+    padding: 10px 10px 10px 15px;
+    border: none;
+}
+
+.sidebar-nav .nav > li > a.active{
+    color: #f5f5f5;
+    background-color: #676767;
+    padding-left: 9px;
+    border-left: 6px solid #1CB89A;
+    /*-webkit-box-shadow: inset 1px 0px 0px 0px rgba(0,0,0,0.05);
+    -moz-box-shadow: inset 1px 0px 0px 0px rgba(0,0,0,0.05);
+    box-shadow: inset 1px 0px 0px 0px rgba(0,0,0,0.05);    */
+}
+
+.sidebar-nav .nav > li > a:hover {
+    background-color: #666;
+}
+
+.sidebar-nav .nav > li > a.active:hover,
+.sidebar-nav .nav > li > a.active:focus{
+    background-color: #676767;
+}
+
+
+.navbar-brand:hover {
+    color: #f2f2f2 !important;
+    background-color: #1CB89A;
+}
+
+.navbar-top-links  li  a {
+    color: #fff !important;
+}
+
+
+.navbar-top-links > li > a:hover {
+    color: #f2f2f2 !important;
+    background-color: #1CB89A !important;
+}
+
+.navbar-top-links  {
+    color: #333 !important;
+}
+.navbar-top-links li a.active {
+    border-bottom: 5px solid #666;
+    padding-bottom: 5px;
+}
+
+/* end navigation mods */
 
 .page-header {
     margin-top: 20px; /*override bootstrap*/
 }
-
 
 .btn-add-model {
     padding: 0px 5px;
@@ -22,19 +173,25 @@
 }
 
 
-/*
+#selected-models a {
+    color: #fff;
+}
+
+#selected-models h5 {
+    color: #9f9f9f;
+}
+
 #selected-models {
     margin: 10px 15px 0 15px;
 }
 
 #selected-models ul {
     padding: 0 0 0 5px;
-    list-style: none;
 }
 
 #selected-models ul li {
     border-bottom: 0px
-}*/
+}
 
 .sidebar-nav i,
 .sidebar-nav object {
@@ -42,40 +199,8 @@
 }
 
 
-/* helper classes */s
-.pointer {
-    cursor: hand;
-    cursor: pointer;
-}
-
-.hover {
-    opacity: .6;
-}
-.hover:hover {
-    opacity: 1;
-}
-
-.hover-inverted:hover {
-    opacity: .8;
-}
-
-.link {
-    color: #428bca;
-}
-.icon {
-    color: #666;
-}
-.icon:hover {
-    color: #222;
-}
-
-.overflow {
-    overflow-x: scroll;
-}
-
-/* end helper class */
-.model-count {
-    background-color: #777;
+.badge.model-count {
+    background-color: #1CB89A;
 }
 
 #content .nav-tabs {

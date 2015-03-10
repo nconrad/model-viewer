@@ -15,7 +15,10 @@ var app = angular.module('coreModelViewer',
     $locationProvider.html5Mode(false);
 
     $stateProvider
-         .state('genomes', {
+        .state('home', {
+            url: "/",
+            templateUrl: 'app/views/home.html'
+        }).state('genomes', {
             url: "/genomes/",
             templateUrl: 'app/views/genomes.html',
         }).state('models', {
@@ -75,8 +78,9 @@ var app = angular.module('coreModelViewer',
             }
         })
 
+
+
     $urlRouterProvider.when('', '/models/')
-                      .when('/', '/models/')
                       .when('#', '/models/');
 
 }])

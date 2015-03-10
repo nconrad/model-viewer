@@ -1,0 +1,86 @@
+
+/* helper classes */
+hr.skinny {
+    margin: 10px 0px;
+}
+.point {
+    cursor: hand;
+    cursor: pointer;
+}
+
+.hidden-table {
+    visibility: hidden !important;
+}
+
+.hover {
+    opacity: .6;
+}
+.hover:hover {
+    opacity: 1;
+}
+
+.hover-inverted:hover {
+    opacity: .8;
+}
+
+.link {
+    color: #428bca;
+}
+
+.soft {
+    color: #aaa;
+}
+
+.table > thead > tr > th {
+    color: #666;
+}
+.table > tbody > tr > td {
+    vertical-align: inherit;
+}
+
+.overflow {
+    overflow-x: scroll;
+}
+
+.green {
+    color: #1CB89A;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.bold-hover:hover {
+    font-weight: 700;
+}
+
+.no-data {
+    margin: 150px 0 0 0;
+}
+
+
+/* new styling */
+.btn {
+    border-radius: 0;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+

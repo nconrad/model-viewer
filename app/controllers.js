@@ -20,7 +20,7 @@ angular.module('mv-controllers', [])
     $scope.MV = MV;
 
     // default tab
-    $scope.tab = 'Selected';
+    $scope.tab = 'Heatmap';
 
 
     // input model for selected FBAS; gives names;

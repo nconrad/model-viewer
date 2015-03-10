@@ -19,6 +19,18 @@ angular.module('core-directives')
         }
     }
  })
+
+.directive('pathTest', function() {
+    return {
+        link: function(scope, elem, attrs) {
+
+            angular.element(elem).kbasePathway({model_ws: 'janakakbase:CoreModels-VR-GP',
+                                                model_name: 'core_1000565.3_GP',
+                                                map_name: 'map00010',
+                                                map_ws: 'nconrad:paths'})
+        }
+    }
+ })
 .directive('modelTable',
     ['$compile', '$stateParams', 'ModelViewer',
     function($compile, $stateParams, ModelViewer) {

@@ -8,63 +8,70 @@
     <meta name="description" content="viewer for metabolic central carbon core models">
     <meta name="author" content="nconrad">
 
-    <title>Core Models</title>
+    <title>Core Model Viewer</title>
 
     <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="components/font-awesome/css/font-awesome.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
     <!-- build:css build/style.css -->
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/core.css">
-    <link rel="stylesheet" href="css/viz.css">
-    <link rel="stylesheet" href="css/tabs.css">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/core.css">
+        <link rel="stylesheet" href="css/oxcart.css">
+        <link rel="stylesheet" href="css/viz.css">
+        <link rel="stylesheet" href="css/tabs.css">
     <!-- endbuild -->
 
     <!-- build:js build/site.js -->
-    <script src="components/jquery/dist/jquery.min.js"></script>
-    <script src="components/jquery-ui/jquery-ui.min.js"></script><!-- to be removed -->
-    <script src="components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="components/d3/d3.min.js"></script>
+        <script src="components/jquery/dist/jquery.min.js"></script>
+        <script src="components/jquery-ui/jquery-ui.min.js"></script><!-- to be removed -->
+        <script src="components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="components/d3/d3.min.js"></script>
 
-    <script src="components/datatables/media/js/jquery.dataTables.min.js"></script>
-    <script src="lib/datatables-bootstrap/dataTables.bootstrap.js"></script>
+        <script src="components/datatables/media/js/jquery.dataTables.min.js"></script>
+        <script src="lib/datatables-bootstrap/dataTables.bootstrap.js"></script>
 
-    <script src="app/clients/fbaModelServices.js"></script>
-    <script src="app/clients/workspace-0.2.1.js"></script>
-    <script src="app/clients/userandjobstate.js"></script>
+        <script src="app/clients/fbaModelServices.js"></script>
+        <script src="app/clients/workspace-0.2.1.js"></script>
+        <script src="app/clients/userandjobstate.js"></script>
 
-    <script src="components/angular/angular.js"></script>
-    <script src="components/ui-router/release/angular-ui-router.js"></script>
+        <script src="components/angular/angular.js"></script>
+        <script src="components/ui-router/release/angular-ui-router.js"></script>
+        <script src="components/angular-aria/angular-aria.js"></script>
+        <script src="components/angular-animate/angular-animate.js"></script>
+        <script src="components/angular-material/angular-material.js"></script>
+        <script src="components/react/react-with-addons.js"></script>
 
-    <script src="config.js"></script>
-    <script src="app/app.js"></script>
+        <script src="config.js"></script>
+        <script src="app/app.js"></script>
 
-    <script src="app/controllers.js"></script>
-    <script src="app/services/model-list.js"></script>
-    <script src="app/directives.js"></script>
+        <script src="app/controllers.js"></script>
+        <script src="app/services/model-list.js"></script>
+        <script src="app/directives.js"></script>
 
-    <script src="lib/kbase-rpc/kbase-rpc.js"></script>
-    <script src="lib/ui-common/functional-site/js/kbapi.js"></script>
+        <script src="lib/kbase-rpc/kbase-rpc.js"></script>
+        <script src="lib/ui-common/functional-site/js/kbapi.js"></script>
 
-    <script src="lib/ui-common/src/kbwidget.js"></script>
-    <script src="lib/ui-common/src/widgets/kbaseAuthenticatedWidget.js"></script>
+        <script src="lib/ui-common/src/kbwidget.js"></script>
+        <script src="lib/ui-common/src/widgets/kbaseAuthenticatedWidget.js"></script>
 
-    <script src="lib/ui-common/src/widgets/maps/kbasePathway.js"></script>
-    <script src="lib/ui-common/src/widgets/maps/kbasePathways.js"></script>
+        <script src="lib/ui-common/src/widgets/maps/kbasePathway.js"></script>
+        <script src="lib/ui-common/src/widgets/maps/kbasePathways.js"></script>
 
-    <!-- modeling widgets -->
-    <script src="lib/ui-common/src/widgets/modeling/KBObjects.js"></script>
-    <script src="lib/ui-common/src/widgets/modeling/kbaseTabTable.js"></script>
-    <script src="lib/ui-common/src/widgets/modeling/kbaseTabs.js"></script>
-    <script src="lib/ui-common/src/widgets/modeling/KBaseFBA.FBA.js"></script>
-    <script src="lib/ui-common/src/widgets/modeling/KBaseFBA.FBAModel.js"></script>
-    <script src="lib/ui-common/src/widgets/modeling/kbaseETCDiagram.js"></script>
-    <script src="lib/ui-common/src/widgets/modeling/KBaseBiochem.Media.js"></script>
-    <script src="lib/ui-common/src/widgets/modeling/KBasePhenotypes.PhenotypeSet.js"></script>
-    <script src="lib/ui-common/src/widgets/modeling/KBasePhenotypes.PhenotypeSimulationSet.js"></script>
-    <script src="lib/ui-common/src/widgets/modeling/KBaseSearch.GenomeSet.js"></script>
-    <script src="lib/ui-common/src/widgets/modeling/KBaseFBA.FBAModelSet.js"></script>
-    <!-- end modeling widgets -->
+        <!-- modeling widgets -->
+        <script src="lib/ui-common/src/widgets/modeling/KBObjects.js"></script>
+        <script src="lib/ui-common/src/widgets/modeling/kbaseTabTable.js"></script>
+        <script src="lib/ui-common/src/widgets/modeling/kbaseTabs.js"></script>
+        <script src="lib/ui-common/src/widgets/modeling/KBaseFBA.FBA.js"></script>
+        <script src="lib/ui-common/src/widgets/modeling/KBaseFBA.FBAModel.js"></script>
+        <script src="lib/ui-common/src/widgets/modeling/kbaseETCDiagram.js"></script>
+        <script src="lib/ui-common/src/widgets/modeling/KBaseBiochem.Media.js"></script>
+        <script src="lib/ui-common/src/widgets/modeling/KBasePhenotypes.PhenotypeSet.js"></script>
+        <script src="lib/ui-common/src/widgets/modeling/KBasePhenotypes.PhenotypeSimulationSet.js"></script>
+        <script src="lib/ui-common/src/widgets/modeling/KBaseSearch.GenomeSet.js"></script>
+        <script src="lib/ui-common/src/widgets/modeling/KBaseFBA.FBAModelSet.js"></script>
+        <!-- end modeling widgets -->
 
     <!-- endbuild -->
 
@@ -93,20 +100,42 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand sidebar-collapse" sidebar-collapse><i class="fa fa-caret-left"></i> <i class="fa fa-bars"></i></a>
-                <a class="navbar-brand pull-left" ui-sref="home">Core Model Viewer</a>
+                <a class="navbar-brand sidebar-collapse" sidebar-collapse>
+                    <i class="fa fa-caret-left"></i> <i class="fa fa-bars"></i>
+                </a>
+                <a class="navbar-brand pull-left" href="home.html">Core Model Viewer</a>
 
             </div>
+
+            <div class="collapse navbar-collapse navbar-top-links" >
+                  <ul class="nav navbar-nav navbar-top-links">
+                    <li>
+                        <a ng-class="{ active: $state.includes('models')}" ui-sref="models">
+                            <i class="fa fa-bug"></i> Models
+                        </a>
+                    </li>
+                    <li>
+                        <a ng-class="{ active: $state.includes('media')}" ui-sref="media">
+                            <i class="fa fa-cutlery"></i> Media
+                        </a>
+                    </li>
+                    <li>
+                        <a ng-class="{ active: $state.includes('fba')}" ui-sref="fba">
+                            <i class="fa fa-line-chart"></i> FBA
+                        </a>
+                    </li>
+                  </ul>
+              </div>
 
         </nav>
 
 
         <nav class="navbar-default sidebar" role="navigation">
             <div class="sidebar-nav navbar-collapse">
-                <ul class="nav" id="side-menu">
-                    <!--<li>
+                <!--<ul class="nav" id="side-menu">
+                    <li>
                         <a ng-class="{ active: $state.includes('genomes')}" ui-sref="genomes"><object width=10 data="img/dna10.svg" type="image/svg+xml"></object> Genomes<span class="text-muted pull-right">8,179</span></a>
-                    </li>-->
+                    </li>
 
                     <li>
                         <a ng-class="{ active: $state.includes('models')}" ui-sref="models"><i class="fa fa-bug"></i> Models<span class="text-muted pull-right">11,483</span></a>
@@ -125,22 +154,33 @@
                             <span class="badge pull-right model-count">{{MV.models.length}}</span>
                         </a>
                     </li>
+                </ul>-->
+                <ul class="nav">
+                    <li>
+                        <a ng-class="{ active: $state.includes('compare')}"  ui-sref="compare">
+                            Comparative Analysis
+                            <span class="badge pull-right model-count">{{MV.models.length}}</span>
+                        </a>
+                    </li>
                 </ul>
-                <!--
-                <div id="selected-models" ng-show="MV.models.length">
-                    <h5 class="text-muted">Selected Models</h5>
-                    <ul model-list>
+
+                <div id="selected-models">
+                    <h5>Selected Models</h5>
+                    <ul ng-show="MV.models.length" class="list-unstyled" model-list>
                         <li ng-repeat="model in MV.models" ng-mouseenter="showRm()" ng-mouseleave="hideRm()">
                             <a ui-sref="modelPage({ws: '{{model.workspace}}', name: '{{model.name}}' })">{{model.name}}</a>
                             <span ng-show="hoverOn" class="glyphicon glyphicon-remove pull-right hover pointer btn-rm" ng-click="MV.rm($index); updateCompare();"></span>
                         </li>
                     </ul>
 
-                    <div>
-                        <a class="btn btn-link pull-right" ng-click="MV.rmAll()">Clear All</a>
-                    </div>
+                    <ul ng-show="!MV.models.length">
+                        <li class="text-danger">No models selected</li>
+                    </ul>
+
+                        <a  ng-show="MV.models.length" class="btn pull-right" ng-click="MV.rmAll()">Clear All</a>
+
                 </div>
-                -->
+
             </div>
 
 
