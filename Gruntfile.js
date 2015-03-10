@@ -3,14 +3,14 @@ module.exports = function(grunt) {
     // Project config
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        copy: { 
+        copy: {
             copyindex: {
-                src: 'dev.html', 
-                dest: 'index.html'
+                src: 'index.html',
+                dest: 'dev.html'
             }
-        },        
+        },
         useminPrepare: {
-            html: 'dev.html',
+            html: 'index.html',
             options: {
                 dest: './'
             }
@@ -29,10 +29,10 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-cssmin');    
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-ng-annotate');  
+    grunt.loadNpmTasks('grunt-ng-annotate');
     grunt.loadNpmTasks('grunt-usemin');
 
 
