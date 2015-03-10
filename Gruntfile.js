@@ -5,18 +5,18 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         copy: {
             copyindex: {
-                src: 'index.html',
-                dest: 'dev.html'
+                src: 'app/index.html',
+                dest: 'app/dev.html'
             }
         },
         useminPrepare: {
-            html: 'index.html',
+            html: 'app/index.html',
             options: {
-                dest: './'
+                dest: './app/'
             }
         },
         usemin: {
-            html: ['index.html'],
+            html: ['app/index.html'],
             options: {
                 assetsDirs: ['build']
             }
