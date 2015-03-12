@@ -7,6 +7,7 @@ var app = angular.module('coreModelViewer',
  'mv-controllers',
  'ui.router',
  'kbase-rpc',
+ //'ngMaterial',
  'ModelViewer'])
 .config(['$locationProvider', '$stateProvider', '$httpProvider', '$urlRouterProvider',
     function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider) {
@@ -18,17 +19,27 @@ var app = angular.module('coreModelViewer',
         .state('home', {
             url: "/",
             templateUrl: 'views/home.html'
-        }).state('genomes', {
+        })
+
+        .state('modelList', {
+            url: "/models/",
+            templateUrl: 'views/model-list.html',
+        })
+
+        /*
+        .state('genomes', {
             url: "/genomes/",
             templateUrl: 'views/genomes.html',
-        }).state('models', {
+        })
+        .state('models', {
             url: "/models/",
             templateUrl: 'views/models.html',
         }).state('modelsByWS', {
             url: "/models/:ws",
             templateUrl: 'views/modelsws.html',
-            //controller: 'ModelsByWS'
-        }).state('media', {
+        })*/
+
+        .state('media', {
             url: "/media/",
             templateUrl: 'views/media.html',
         }).state('fba', {
@@ -90,5 +101,13 @@ var app = angular.module('coreModelViewer',
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
 
-    kb = new KBCacheClient();
+    $rootScope.$on('$stateChangeSuccess',
+        function(event, toState, toParams, fromState, fromParams){
+            console.log(toState)
+            $rootScope.$subURL = toState.url.split('/')[1]
+            console.log(toState.url.split('/')[1])
+        })
+
+
+    //kb = new KBCacheClient();
 }]);

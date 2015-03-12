@@ -4,9 +4,10 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
     <meta name="description" content="viewer for metabolic central carbon core models">
     <meta name="author" content="nconrad">
+
 
     <title>Core Model Viewer</title>
 
@@ -14,11 +15,12 @@
     <link rel="stylesheet" href="../components/font-awesome/css/font-awesome.min.css">
     <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <!--<link rel="stylesheet" href="../components/angular-material/angular-material.css">-->
 
     <!-- build:css build/style.css -->
         <link rel="stylesheet" href="../css/main.css">
         <link rel="stylesheet" href="../css/core.css">
-        <link rel="stylesheet" href="../css/oxcart.css">
+        <!--<link rel="stylesheet" href="../css/oxcart.css">-->
         <link rel="stylesheet" href="../css/viz.css">
         <link rel="stylesheet" href="../css/tabs.css">
     <!-- endbuild -->
@@ -36,22 +38,7 @@
         <script src="../app/clients/workspace-0.2.1.js"></script>
         <script src="../app/clients/userandjobstate.js"></script>
 
-        <script src="../components/angular/angular.js"></script>
-        <script src="../components/ui-router/release/angular-ui-router.js"></script>
-        <script src="../components/angular-aria/angular-aria.js"></script>
-        <script src="../components/angular-animate/angular-animate.js"></script>
-        <script src="../components/angular-material/angular-material.js"></script>
-        <script src="../components/react/react-with-addons.js"></script>
-
-        <script src="../config.js"></script>
-        <script src="../app/app.js"></script>
-
-        <script src="../app/controllers.js"></script>
-        <script src="../app/services/model-list.js"></script>
-        <script src="../app/directives.js"></script>
-
-        <script src="../lib/kbase-rpc/kbase-rpc.js"></script>
-        <script src="../lib/ui-common/functional-site/js/kbapi.js"></script>
+        <!--<script src="../lib/ui-common/functional-site/js/kbapi.js"></script>-->
 
         <script src="../lib/ui-common/src/kbwidget.js"></script>
         <script src="../lib/ui-common/src/widgets/kbaseAuthenticatedWidget.js"></script>
@@ -72,6 +59,23 @@
         <script src="../lib/ui-common/src/widgets/modeling/KBaseSearch.GenomeSet.js"></script>
         <script src="../lib/ui-common/src/widgets/modeling/KBaseFBA.FBAModelSet.js"></script>
         <!-- end modeling widgets -->
+
+
+        <script src="../components/angular/angular.js"></script>
+        <script src="../components/ui-router/release/angular-ui-router.js"></script>
+
+        <script src="../components/angular-aria/angular-aria.js"></script>
+        <script src="../components/angular-animate/angular-animate.js"></script>
+        <script src="../components/angular-material/angular-material.js"></script>
+        <script src="../components/react/react-with-addons.js"></script>
+
+        <script src="../config.js"></script>
+        <script src="../app/app.js"></script>
+
+        <script src="../lib/kbase-rpc/kbase-rpc.js"></script>
+        <script src="../app/controllers.js"></script>
+        <script src="../app/services/model-list.js"></script>
+        <script src="../app/directives.js"></script>
 
     <!-- endbuild -->
 
@@ -107,25 +111,37 @@
 
             </div>
 
-            <div class="collapse navbar-collapse navbar-top-links" >
-                  <ul class="nav navbar-nav navbar-top-links">
+            <div class="collapse navbar-collapse" >
+                <ul class="nav navbar-nav navbar-top-links">
                     <li>
-                        <a ng-class="{ active: $state.includes('models')}" ui-sref="models">
-                            <i class="fa fa-bug"></i> Models
+                        <a ng-class="{ active: $subURL == 'models' }" ui-sref="modelList">
+                             Models<!--<i class="fa fa-bug"></i>-->
                         </a>
                     </li>
                     <li>
-                        <a ng-class="{ active: $state.includes('media')}" ui-sref="media">
-                            <i class="fa fa-cutlery"></i> Media
+                        <a ng-class="{ active: $subURL == 'media' }"ui-sref="media">
+                             Media <!--<i class="fa fa-cutlery"></i>-->
                         </a>
                     </li>
                     <li>
-                        <a ng-class="{ active: $state.includes('fba')}" ui-sref="fba">
-                            <i class="fa fa-line-chart"></i> FBA
+                        <a ng-class="{ active: $subURL == 'fba' }" ui-sref="fba">
+                             FBA <!-- <i class="fa fa-line-chart"></i>-->
                         </a>
                     </li>
-                  </ul>
-              </div>
+                </ul>
+
+
+                <ul class="nav navbar-nav navbar-top-links pull-right">
+                    <li>
+                        <a href="/#about">
+                             About<!--<i class="fa fa-bug"></i>-->
+                        </a>
+                    </li>
+                </ul>
+
+
+            </div>
+
 
         </nav>
 
