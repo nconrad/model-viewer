@@ -1,0 +1,41 @@
+<md-dialog>
+
+    <md-content class="fba-table">
+        <h4>FBA Results for <i>{{item.model.name}}</i></h4>
+
+
+        <table class="table-hover">
+            <thead>
+                <tr>
+                    <th>Compare?</th>
+                    <th>ID</th>
+                    <th>Media</th>
+                    <th>Objective</th>
+                    <th>Rxn Variables</th>
+                    <th>Cpd Variables</th>
+                    <th>Maximized?</th>
+                </tr>
+            </thead>
+
+            <tr ng-repeat="fba in fbas" ng-click="MV.add({model: {name: item.model.name, ws: item.model.ws}, fba: {name: fba[1], ws: fba[7]} })">
+                <td>
+                    <i class="fa {{item.fba.name == fba[1] && item.fba.ws == fba[7] ? 'fa-check-square-o':'fa-square-o'}}"></i>
+                </td>
+                <td>{{fba[1]}}</td>
+                <td>{{fba[10]['Media']}}</td>
+                <td>{{fba[10]['Objective']}}</td>
+                <td>{{fba[10]['Number reaction variables']}}</td>
+                <td>{{fba[10]['Number compound variables']}}</td>
+                <td>{{fba[10]['Maximized'] ? 'true' : 'false'}}</td>
+            </tr>
+        </table>
+
+    </md-content>
+
+    <div class="md-actions">
+        <md-button ng-click="cancel()">
+            Close
+        </md-button>
+    </div>
+
+</md-dialog>

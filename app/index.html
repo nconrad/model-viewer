@@ -11,11 +11,11 @@
 
     <title>Core Model Viewer</title>
 
+    <link rel="stylesheet" href="../components/angular-material/angular-material.css">
     <link rel="stylesheet" href="../components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../components/font-awesome/css/font-awesome.min.css">
     <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-    <!--<link rel="stylesheet" href="../components/angular-material/angular-material.css">-->
 
     <!-- build:css build/style.css -->
         <link rel="stylesheet" href="../css/main.css">
@@ -67,7 +67,7 @@
         <script src="../components/angular-aria/angular-aria.js"></script>
         <script src="../components/angular-animate/angular-animate.js"></script>
         <script src="../components/angular-material/angular-material.js"></script>
-        <script src="../components/react/react-with-addons.js"></script>
+        <!--<script src="../components/react/react-with-addons.js"></script>-->
 
         <script src="../config.js"></script>
         <script src="../app/app.js"></script>
@@ -181,20 +181,41 @@
                 </ul>
 
                 <div id="selected-models">
-                    <h5>Selected Models</h5>
-                    <ul ng-show="MV.models.length" class="list-unstyled" model-list>
-                        <li ng-repeat="model in MV.models" ng-mouseenter="showRm()" ng-mouseleave="hideRm()">
-                            <a ui-sref="modelPage({ws: '{{model.workspace}}', name: '{{model.name}}' })">{{model.name}}</a>
-                            <span ng-show="hoverOn" class="glyphicon glyphicon-remove pull-right hover pointer btn-rm" ng-click="MV.rm($index); updateCompare();"></span>
+                    <h5>Selected Data</h5>
+
+                    <ul ng-show="MV.models.length" class="list-unstyled" ng-controller="SelectedData">
+                        <li ng-repeat="item in MV.models">
+                            <div ng-mouseenter="show()" ng-mouseleave="hide()">
+                                <a ui-sref="modelPage({ws: '{{item.model.ws}}', name: '{{item.model.name}}' })"
+                                   class="model">
+                                   (Model) {{item.model.name}}
+                                </a>
+                                <span
+                                      class="fa fa-remove pull-right hover pointer"
+                                      ng-click="MV.rm(item)">
+                                </span>
+                            </div>
+
+                            <div>
+                                <a ui-sref="fbaPage({ws: '{{item.fba.ws}}', name: '{{item.fba.name}}' })"
+                                   class="fba">
+                                   (FBA) {{item.fba.name}}
+                                </a>
+                                <span class="glyphicon glyphicon-cog pull-right hover pointer"
+                                      ng-click="openFBAView($event, item)">
+                                </button>
+                            </div>
+                            <br>
                         </li>
                     </ul>
 
-                    <ul ng-show="!MV.models.length" class="list-unstyled">
-                        <li class="text-danger">No models selected</li>
-                    </ul>
+                    <div ng-show="!MV.models.length" class="text-danger">No models selected</div>
 
-                        <a  ng-show="MV.models.length" class="btn pull-right" ng-click="MV.rmAll()">Clear All</a>
 
+                    <div ng-show="MV.models.length">
+                        <!--<a class="pull-left"><small>See details...</small></a>-->
+                        <a class="pull-right" ng-click="MV.rmAll()"><small>Clear All</small></a>
+                    </div>
                 </div>
 
             </div>

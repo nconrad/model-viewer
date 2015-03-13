@@ -1,7 +1,5 @@
 body {
     overflow-x: hidden;
-
-
     -webkit-animation: fadein .5s; /* Safari, Chrome and Opera > 12.1 */
     -moz-animation: fadein .5s; /* Firefox < 16 */
     -ms-animation: fadein .5s; /* Internet Explorer */
@@ -145,6 +143,15 @@ header .intro-text .skills {
     font-weight: 300;
 }
 
+header .intro-text .sub-title {
+    font-size: 12px;
+    font-weight: 300;
+/*    margin: 0 0 0 50px;*/
+}
+header .intro-text .sub-title a {
+    font-size: 16px;
+}
+
 @media(min-width:768px) {
     header .container {
         padding-top: 200px;
@@ -229,7 +236,7 @@ section h2 {
 
 section.light {
     color: #333;
-    background: #eee;
+    background: #fff;
     border-bottom: 4px solid #bbb;
 }
 section.dark {

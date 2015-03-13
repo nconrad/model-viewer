@@ -1,7 +1,7 @@
 
 
 angular.module('ModelViewer', [])
-.service('ModelViewer', ['$http', function($http) {
+.service('ModelViewer', ['$http', '$rootScope', function($http, $rootScope) {
     var key = "selectedModels";
 
     var self = this;
@@ -17,22 +17,31 @@ angular.module('ModelViewer', [])
     // actual data cache
     this.modelData = [];
 
-    this.add = function(ws, name) {
-        self.models.push({workspace: ws, name: name});
+    this.add = function(item) {
+        // model has the form {ws: 'foo', name: bar}
+        // similary for fba
+        self.models.push(item);
         localStorage.setItem(key, angular.toJson(self.models));
-        self.updateRefs();
+        $rootScope.$broadcast('MV.event.change');
+        //self.updateRefs();
     }
 
     this.addBulk = function(models) {
         self.models = self.models.concat(models);
         localStorage.setItem(key, angular.toJson(self.models));
-        self.updateRefs();
+        //self.updateRefs();
     }
 
-    this.rm = function(i) {
-        self.models.splice(i, 1);
+    this.rm = function(item) {
+        for (var i=0; i<self.models.length; i++) {
+            if ( angular.equals(self.models[i], item) )
+                self.models.splice(i, 1);
+        }
+
+        //self.models.splice(i, 1);
         localStorage.setItem(key, angular.toJson(self.models));
-        self.updateRefs();
+        $rootScope.$broadcast('MV.event.change');
+        //self.updateRefs();
     }
 
     this.rmAll = function() {
@@ -42,6 +51,16 @@ angular.module('ModelViewer', [])
         this.referencing = {};
     }
 
+    this.isSelected = function(item) {
+        console.log('item', item)
+        for (var i=0; i<this.models.length; i++) {
+            console.log('***', this.models[i])
+            if (angular.equals(this.models[i], item))
+                return true;
+        }
+
+        return false;
+    }
 
     this.updateRefs = function() {
         var params = angular.fromJson(angular.toJson(self.models));
@@ -96,7 +115,7 @@ angular.module('ModelViewer', [])
     }
 
 
-    if (this.models.length)
-        this.getRefs = this.updateRefs();
+    //if (this.models.length)
+   //     this.getRefs = this.updateRefs();
 
 }])

@@ -6,11 +6,12 @@ html, body {
     height: 100%;
     /*background-color: #f8f8f8;*/
     font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing: subpixel-antialiased;
 }
 
 
 
-a, .pointer {
+a {
     cursor: hand;
     cursor: pointer;
 }
@@ -32,7 +33,7 @@ a, .pointer {
 @media(min-width:768px) {
     #page-wrapper {
         position: inherit;
-        margin: 0 0 0 200px;
+        margin: 0 0 0 220px;
         padding-bottom: 80px;
     }
 }
@@ -180,7 +181,7 @@ a, .pointer {
     .sidebar {
         z-index: 1;
         position: fixed;
-        width: 200px;
+        width: 220px;
         height: 100%;
         border-right: 1px solid #e7e7e7;
     }

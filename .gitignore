@@ -1,6 +1,8 @@
+app/dev.html
+build/
+
 components/
 .tmp/
-build/
 
 #emacs
 *~

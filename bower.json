@@ -24,5 +24,8 @@
     "angular-smoothscroll": "~1.1.1",
     "datatables": "~1.10.5",
     "datatables-colreorder": "~1.1.2"
+  },
+  "devDependencies": {
+    "angular-material": "~0.8.3"
   }
 }

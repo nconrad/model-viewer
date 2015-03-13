@@ -7,7 +7,7 @@ var app = angular.module('coreModelViewer',
  'mv-controllers',
  'ui.router',
  'kbase-rpc',
- //'ngMaterial',
+ 'ngMaterial',
  'ModelViewer'])
 .config(['$locationProvider', '$stateProvider', '$httpProvider', '$urlRouterProvider',
     function($locationProvider, $stateProvider, $httpProvider, $urlRouterProvider) {
@@ -82,14 +82,12 @@ var app = angular.module('coreModelViewer',
             url: "/compare",
             templateUrl: 'views/compare.html',
             controller: 'Compare',
-            resolve: {
+            /*resolve: {
               'GetRefs': ['ModelViewer', function(ModelViewer){
                 return ModelViewer.getRefs;  // wait for refs to be retrieved
               }]
-            }
+            }*/
         })
-
-
 
     $urlRouterProvider.when('', '/models/')
                       .when('#', '/models/');
@@ -103,9 +101,7 @@ var app = angular.module('coreModelViewer',
 
     $rootScope.$on('$stateChangeSuccess',
         function(event, toState, toParams, fromState, fromParams){
-            console.log(toState)
             $rootScope.$subURL = toState.url.split('/')[1]
-            console.log(toState.url.split('/')[1])
         })
 
 

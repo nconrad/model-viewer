@@ -1,4 +1,15 @@
 
+.hover:hover {
+    opacity: .5;
+}
+
+
+.pointer {
+    cursor: hand;
+    cursor: pointer;
+}
+
+
 
 /* navigation mods */
 .navbar-default {
@@ -172,9 +183,13 @@
     margin: 5px 0 0 0;
 }
 
-
 #selected-models a {
     color: #fff;
+}
+
+#selected-models .fa {
+    margin: .1em 0 0 0;
+    font-size: 1.3em;
 }
 
 #selected-models h5 {
@@ -190,6 +205,7 @@
 }
 
 #selected-models ul li {
+    font-size: .85em;
     border-bottom: 0px
 }
 
@@ -197,7 +213,6 @@
 .sidebar-nav object {
     color: #666;
 }
-
 
 #content .nav-tabs {
     margin: 10px 0 0 0;
@@ -207,11 +222,11 @@
     margin: 10px 0 0 0;
 }
 
-
+/*
 .dataTables_length,
 .dataTables_info {
     float: left;
-}
+}*/
 
 .dataTables_filter,
 .dataTables_paginate{
@@ -239,3 +254,27 @@
 .path-container {
     position: relative;
 }
+
+/* tables */
+.fba-table h5 {
+    margin-left: 25px;
+}
+
+.fba-table table {
+    margin-left: 50px;
+}
+
+.fba-table table td,
+.fba-table table th {
+    padding: 0 10px;
+}
+
+.fba-table .fa-square-o {
+    font-weight: 900;
+    opacity: .5;
+}
+
+.md-dialog-container {
+    z-index: 3000;
+}
+
