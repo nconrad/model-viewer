@@ -1,5 +1,8 @@
 
-'use strict';
+
+
+(function() {
+"use strict";
 
 angular.module('core-directives', []);
 angular.module('core-directives')
@@ -118,7 +121,7 @@ angular.module('core-directives')
                     for (var j=0; j<MV.models.length; j++) {
                         var item = MV.models[j];
 
-                        if (item.fba.ws == ws && item.fba.name == name) {
+                        if (item.fba.ws === ws && item.fba.name === name) {
                             cb = '<i class="fa fa-check-square-o"></i>';
                             break
                         }
@@ -130,7 +133,7 @@ angular.module('core-directives')
                                '<td>'+meta['Objective']+'</td>'+
                                '<td>'+meta['Number reaction variables']+'</td>'+
                                '<td>'+meta['Number compound variables']+'</td>'+
-                               '<td>'+(meta['Maximized'] == "1" ? 'true':'false')+'</td>')
+                               '<td>'+(meta['Maximized'] === "1" ? 'true':'false')+'</td>')
 
                     table.append(row);
                 }
@@ -261,7 +264,7 @@ angular.module('core-directives')
                         var item = MV.models[i];
                         console.log(item, item)
 
-                        if (item.fba.name == name && item.fba.ws == ws) {
+                        if (item.fba.name === name && item.fba.ws === ws) {
                             found = true;
                             break
                         }
@@ -319,10 +322,10 @@ angular.module('core-directives')
 
             elem.loading('', true);
             /*
-            if ($stateParams.ws == 'janakakbase:CoreModels_ATP-eq') {
+            if ($stateParams.ws === 'janakakbase:CoreModels_ATP-eq') {
                 var p = $http.rpc('ws', 'list_objects', {workspaces: [$stateParams.ws],
                                                          includeMetadata: 1});
-            } else if ($stateParams.ws == 'janakakbase:CoreModels-VR-GP') {
+            } else if ($stateParams.ws === 'janakakbase:CoreModels-VR-GP') {
                 var p = $http.rpc('ws', 'list_objects', {workspaces: [$stateParams.ws],
                                                           type: 'KBaseFBA.FBAModel',
                                                           includeMetadata: 1});
@@ -354,7 +357,7 @@ angular.module('core-directives')
 
                 $(elem).find('.btn-add-model').unbind('click');
                 $(elem).find('.btn-add-model').click(function() {
-                    var ws = $(this).data('ws');
+                    var ws = $(this).data('ws'),
                         name = $(this).data('name');
                     ModelViewer.add(ws, name);
                 })
@@ -490,15 +493,14 @@ function($stateParams, MV, $q, $http) {
                 $(element).html(pathContainer);
 
                 $(element).loading();
+                var fbaProm;
                 if (fbas) {
                     var refs = []
                     for (var i=0; i<models.length; i++) {
                         if (String(i) in fbas) refs.push( {ref: fbas[String(i)].ref})
                     }
 
-                    var fbaProm = $http.rpc('ws','get_objects', refs);
-                } else {
-                    var fbaProm;
+                    fbaProm = $http.rpc('ws','get_objects', refs);
                 }
 
                 var prom = MV.updateModelData()
@@ -531,8 +533,9 @@ function($stateParams, MV, $q, $http) {
     return {
         link: function(scope, ele, attr) {
             ele.loading()
-            var ref = $stateParams.ws+'/'+$stateParams.name
+            //var ref = $stateParams.ws+'/'+$stateParams.name
             var ref = "chenrydemo/kb|g.422"
+
             var p = kb.ws.get_objects([{ref: ref}])
             $.when(p).done(function(d) {
                 ele.rmLoading();
@@ -554,15 +557,15 @@ function($stateParams, MV, $q, $http) {
 
                     var l = f.location;
 
-                    var start = l[0][1];
-                    if (l[0][2] == '-') {
-                        var direction = 'left';
-                        var end = l[0][1];
-                        var start = end - l[0][3]
+                    var start = l[0][1], end, direction;
+                    if (l[0][2] === '-') {
+                        direction = 'left';
+                        end = l[0][1];
+                        start = end - l[0][3]
                     } else {
-                        var direction = 'right';
-                        var start = l[0][1];
-                        var end = start + l[0][3]
+                        direction = 'right';
+                        start = l[0][1];
+                        end = start + l[0][3]
                     }
 
                     numbers.push({s: start, e: end, direction: direction})
@@ -655,8 +658,9 @@ function($stateParams, MV, $q, $http) {
                             var start = d3.select(this).data()[0].start;
                             var end = d3.select(this).data()[0].end;
                             var h = d3.select(this).data()[0].height;
-                            var d = d3.select(this).data()[0].direction;
-                            if (d == 'left') {
+
+                            d = d3.select(this).data()[0].direction;
+                            if (d === 'left') {
                                 return polyLeft(start, end, h);
                             } else {
                                 return polyRight(start, end, h);
@@ -713,7 +717,7 @@ function($stateParams, MV, $q, $http) {
                     }
 
                     if (found_row) {
-                        if (direction == 'left') {
+                        if (direction === 'left') {
                             drawArrowLeft(start, end, row_h[found_row])
                         } else {
                             drawArrowRight(start, end, row_h[found_row])
@@ -882,14 +886,13 @@ function($stateParams, MV, $q, $http) {
 
             function updateCompare(models, fbas) {
                 $(element).loading();
+                var fbaProm;
                 if (fbas) {
                     var refs = []
                     for (var i=0; i<models.length; i++) {
                         if (String(i) in fbas) refs.push( {ref: fbas[String(i)].ref})
                     }
-                    var fbaProm = $http.rpc('ws','get_objects', refs);
-                } else {
-                    var fbaProm;
+                    fbaProm = $http.rpc('ws','get_objects', refs);
                 }
 
                 var prom = MV.updateModelData()
@@ -943,7 +946,7 @@ function($stateParams, MV, $q, $http) {
                     var rxns = model.modelreactions;
                     for (var j=0; j < rxns.length; j++) {
                         var rxn_name = rxns[j].reaction_ref.split('/')[5];
-                        if (rxn_names.indexOf(rxn_name) == -1) rxn_names.push(rxn_name);
+                        if (rxn_names.indexOf(rxn_name) === -1) rxn_names.push(rxn_name);
                     }
                 }
 
@@ -955,12 +958,13 @@ function($stateParams, MV, $q, $http) {
 
                     // see if there is an fba result
                     // if so, get create rxn hash
-                    var hasFBA = false;
+
+                    var hasFBA = false,
+                        fbaRXNs = {};
                     if (fbas && fbas[i]) {
 
                         hasFBA = true;
-                        var fbaRXNs = {};
-                        var fbaRxns = fbas[i].data.FBAReactionVariables;
+                        fbaRxns = fbas[i].data.FBAReactionVariables;
 
                         for (var j=0; j<fbaRxns.length; j++) {
                             var rxnId = fbaRxns[j].modelreaction_ref.split('/')[5].split('_')[0];
@@ -977,7 +981,7 @@ function($stateParams, MV, $q, $http) {
                         var found = false;
                         var flux;
                         for (var k=0; k<rxns.length; k++) {
-                            if (rxns[k].reaction_ref.split('/')[5] == rxn_name) {
+                            if (rxns[k].reaction_ref.split('/')[5] === rxn_name) {
                                 found = true;
                                 if (hasFBA && fbaRXNs[rxn_name])
                                     flux = fbaRXNs[rxn_name].value;
@@ -1052,7 +1056,7 @@ function($stateParams, MV, $q, $http) {
 
                             canvas.fillStyle = (val === 1 ? gene_color : 'white');
                             canvas.fill();
-                            canvas.lineWidth = .1;
+                            canvas.lineWidth = 0.1;
                             canvas.strokeStyle = '#888';
                             canvas.stroke();
                         }
@@ -1116,7 +1120,7 @@ function($stateParams, MV, $q, $http) {
 
                 for (var i=0; i < y_data.length; i++) {
 
-                    var y_label = svg.append("text").attr("y", start_y+i*h+h-.5)
+                    var y_label = svg.append("text").attr("y", start_y+i*h+h-0.5)
                                      .text(y_data[i]).attr("font-size", font_size)
                                      .attr('text-anchor', 'end')
                                      .on("mouseover", function(){d3.select(this).attr("fill", "black");})
@@ -1125,7 +1129,7 @@ function($stateParams, MV, $q, $http) {
                     y_label.attr('transform', 'translate('+String(start_x-4)+',0)');
 
                     for (var j=0; j < x_data.length; j++) {
-                        if (i == 0) {
+                        if (i === 0) {
                             var pos = start_x+j*w+w;
 
                             var x_label = svg.append("text")
@@ -1179,7 +1183,7 @@ function($stateParams, MV, $q, $http) {
                     return fluxColors[3];
                 else if (v > bounds[4])
                     return fluxColors[4];
-                else if (v == bounds[4])
+                else if (v === bounds[4])
                     return gene_color;
                 else if (v <= bounds[5])
                     return negFluxColors[0];
@@ -1332,7 +1336,7 @@ $.fn.loading = function(text, big) {
     $(this).rmLoading()
 
     if (big) {
-        if (typeof text != 'undefined') {
+        if (typeof text !== 'undefined') {
             $(this).append('<p class="text-center text-muted loader"><br>'+
                  '<img src="../img/ajax-loader-big.gif"> '+text+'</p>');
         } else {
@@ -1340,7 +1344,7 @@ $.fn.loading = function(text, big) {
                  '<img src="../img/ajax-loader-big.gif"> loading...</p>')
         }
     } else {
-        if (typeof text != 'undefined') {
+        if (typeof text !== 'undefined') {
             $(this).append('<p class="text-muted loader">'+
                  '<img src="../img/ajax-loader.gif"> '+text+'</p>');
         } else {
@@ -1354,3 +1358,6 @@ $.fn.loading = function(text, big) {
 $.fn.rmLoading = function() {
     $(this).find('.loader').remove();
 }
+
+
+}());

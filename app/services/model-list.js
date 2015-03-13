@@ -82,9 +82,9 @@ angular.module('ModelViewer', [])
                     var kind = ref[2].split('-')[0].split('.')[1];
 
 
-                    if (kind == "FBA")
+                    if (kind === "FBA")
                         self.referencing[ws+'/'+name].FBAS.push({ref: ref[6]+'/'+ref[0], name: ref[1] });
-                    else if (kind == "Gapfilling")
+                    else if (kind === "Gapfilling")
                         self.referencing[ws+'/'+name].Gapfillings.push({ref: ref[6]+'/'+ref[0], name: ref[1] });
                 }
             }

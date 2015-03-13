@@ -6,14 +6,12 @@ angular.module('mv-controllers', [])
 
     $scope.MV = MV;
 
-
 }])
 
 .controller('SelectedData', ['$scope', '$mdDialog',
 function($scope, $dialog) {
 
     $scope.openFBAView = function(ev, item) {
-
         $dialog.show({
             templateUrl: 'views/dialogs/fba.html',
             targetEvent: ev,
@@ -24,7 +22,6 @@ function($scope, $dialog) {
 
                 $http.rpc('ws', 'list_referencing_objects', [{workspace: item.model.ws, name: item.model.name}])
                     .then(function(fbas) {
-
                         $scope.fbas = fbas[0];
                     })
 
@@ -114,10 +111,10 @@ function($scope, $dialog) {
     }
 
 
-    if ($stateParams.ws == 'coremodels_ATP') {
+    if ($stateParams.ws === 'coremodels_ATP') {
         var params = {workspaces: [$stateParams.ws],
                                     includeMetadata: 1};
-    } else if ($stateParams.ws == 'coremodels') {
+    } else if ($stateParams.ws === 'coremodels') {
         var params = {workspaces: [$stateParams.ws],
                                     type: 'KBaseFBA.FBAModel',
                                     includeMetadata: 1};
@@ -169,7 +166,7 @@ function($scope, $dialog) {
     };
     $scope.removeTab = function (tab) {
       for (var j = 0; j < tabs.length; j++) {
-        if (tab.title == tabs[j].title) {
+        if (tab.title === tabs[j].title) {
           $scope.tabs.splice(j, 1);
           break;
         }
