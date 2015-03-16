@@ -8,7 +8,6 @@
     <meta name="description" content="viewer for metabolic central carbon core models">
     <meta name="author" content="nconrad">
 
-
     <title>Core Model Viewer</title>
 
     <link rel="stylesheet" href="../components/angular-material/angular-material.css">
@@ -115,19 +114,19 @@
                 <ul class="nav navbar-nav navbar-top-links">
                     <li>
                         <a ng-class="{ active: $subURL == 'models' }" ui-sref="modelList">
-                             Models<!--<i class="fa fa-bug"></i>-->
+                             Models
                         </a>
                     </li>
                     <li>
                         <a ng-class="{ active: $subURL == 'media' }"ui-sref="media">
-                             Media <!--<i class="fa fa-cutlery"></i>-->
+                             Media
                         </a>
                     </li>
-                    <li>
+                    <!--<li>
                         <a ng-class="{ active: $subURL == 'fba' }" ui-sref="fba">
-                             FBA <!-- <i class="fa fa-line-chart"></i>-->
+                             FBA
                         </a>
-                    </li>
+                    </li>-->
                 </ul>
 
 
@@ -174,7 +173,7 @@
                 <ul class="nav">
                     <li>
                         <a ng-class="{ active: $state.includes('compare')}"  ui-sref="compare">
-                            Comparative Analysis
+                            Comparative Viewer
                             <span class="pull-right model-count">({{MV.models.length}})</span>
                         </a>
                     </li>
@@ -226,7 +225,7 @@
                     <!--<li>
                         <a ng-class="{ active: $state.includes('genomes')}" ui-sref="genomes"><object width=10 data="img/dna10.svg" type="image/svg+xml"></object></a>
                     </li>-->
-                    <li>
+                    <!--<li>
                         <a ng-class="{ active: $state.includes('models')}" ui-sref="models"><i class="fa fa-bug"></i></a>
                     </li>
                     <li>
@@ -234,7 +233,7 @@
                     </li>
                     <li>
                         <a ng-class="{ active: $state.includes('fba')}" ui-sref="fba"><i class="fa fa-line-chart"></i></a>
-                    </li>
+                    </li>-->
 
                     <li>
                         <a ui-sref="compare">

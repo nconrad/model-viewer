@@ -20,9 +20,9 @@ function($scope, $dialog) {
                 $scope.MV = MV;
                 $scope.item = item;
 
-                $http.rpc('ws', 'list_referencing_objects', [{workspace: item.model.ws, name: item.model.name}])
+                MV.getRelatedObjects([{workspace: item.model.ws, name: item.model.name}], 'KBaseFBA.FBA')
                     .then(function(fbas) {
-                        $scope.fbas = fbas[0];
+                        $scope.fbas = fbas;
                     })
 
 
@@ -156,8 +156,8 @@ function($scope, $dialog) {
 
     $scope.tabs = tabs;
     $scope.selectedIndex = 2;
-    $scope.$watch('selectedIndex', function(current, old){
-      if ( old && (old != current)) $log.debug('Goodbye ' + tabs[old].title + '!');
+    $scope.$watch('select!=edIndex', function(current, old){
+      if ( old && (old = current)) $log.debug('Goodbye ' + tabs[old].title + '!');
       if ( current )                $log.debug('Hello ' + tabs[current].title + '!');
     });
     $scope.addTab = function (title, view) {

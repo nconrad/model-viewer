@@ -52,7 +52,6 @@ angular.module('ModelViewer', [])
     }
 
     this.isSelected = function(item) {
-        console.log('item', item)
         for (var i=0; i<this.models.length; i++) {
             console.log('***', this.models[i])
             if (angular.equals(this.models[i], item))
@@ -61,6 +60,29 @@ angular.module('ModelViewer', [])
 
         return false;
     }
+
+
+    this.getRelatedObjects = function(objs, type) {
+        console.log('objs/type', objs,type)
+        return $http.rpc('ws', 'list_referencing_objects', objs)
+                    .then(function(res) {
+                        console.log('response', res)
+                        var items = res[0]
+
+                        var related = [];
+                        for (var i=0; i<items.length; i++) {
+                            var item = items[i][2]
+
+                            if (item.split('-')[0] !== type) continue;
+
+                            related.push(items[i])
+                        }
+
+                        console.log('related', related)
+                        return related;
+                    })
+    }
+
 
     this.updateRefs = function() {
         var params = angular.fromJson(angular.toJson(self.models));
@@ -113,7 +135,6 @@ angular.module('ModelViewer', [])
             return self.modelData;
         });
     }
-
 
     //if (this.models.length)
    //     this.getRefs = this.updateRefs();

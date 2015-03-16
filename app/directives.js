@@ -87,7 +87,6 @@ angular.module('core-directives')
              })
 
             function format(d, rowData) {
-                // `d` is the original data object for the row
                 var container = $('<div class="fba-table">');
 
                 container.append('<h5>FBA Results</h5>')
@@ -107,11 +106,9 @@ angular.module('core-directives')
                                '</tr>'+
                              '</thead>');
 
-
                 for (var i=0; i<d.length; i++) {
                     var ws = d[i][7],
                         name = d[i][1];
-                    console.log('ws/name!!!!!!!!', ws, name)
 
                     var row = $('<tr data-ws="'+ws+'" data-name="'+name+'">');
                     var meta = d[i][10];
@@ -126,11 +123,12 @@ angular.module('core-directives')
                             break
                         }
                     }
+                    var link = "fbaPage({ws: '"+ws+"', name: '"+name+"'})";
 
                     row.append('<td>'+cb+'</td>'+
-                               '<td>'+d[i][1]+'</td>'+
+                               '<td><a ui-sref="'+link+'" >' +name+'</a></td>'+
                                '<td>'+meta['Media']+'</td>'+
-                               '<td>'+meta['Objective']+'</td>'+
+                               '<td>'+(meta['Objective'] == 10000000 ? 0:meta['Objective'])+'</td>'+
                                '<td>'+meta['Number reaction variables']+'</td>'+
                                '<td>'+meta['Number compound variables']+'</td>'+
                                '<td>'+(meta['Maximized'] === "1" ? 'true':'false')+'</td>')
@@ -178,6 +176,7 @@ angular.module('core-directives')
                     scope.$apply();
                 })
 
+                $compile(container)(scope);
                 return container;
             }
 
@@ -218,16 +217,16 @@ angular.module('core-directives')
                     }
                     else {
                         // open row
-                        console.log(row.child())
-
                         caret.hide()
                         caret.parent().loading('');
-                        $http.rpc('ws', 'list_referencing_objects', [{workspace: ws, name: name}])
+
+                        //$http.rpc('ws', 'list_referencing_objects', [{workspace: ws, name: name}])
+                        MV.getRelatedObjects([{workspace: ws, name: name}], 'KBaseFBA.FBA')
                             .then(function(data) {
                                 caret.parent().rmLoading()
                                 caret.show().toggleClass('fa-caret-right fa-caret-down')
 
-                                row.child( format( data[0], row.data() ) ).show();
+                                row.child( format( data, row.data() ) ).show();
                             })
 
                         tr.addClass('shown');
@@ -257,12 +256,9 @@ angular.module('core-directives')
                     var ws = $(this).data('ws'),
                         name = $(this).data('name');
 
-                    console.log('ws/name', ws, name)
-
                     var found = false;
                     for (var i=0; i<MV.models.length; i++) {
                         var item = MV.models[i];
-                        console.log(item, item)
 
                         if (item.fba.name === name && item.fba.ws === ws) {
                             found = true;
