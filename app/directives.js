@@ -70,8 +70,8 @@ angular.module('core-directives')
 
             elem.loading('', true);
             var p = $http.rpc('ws', 'list_objects', {workspaces: workspaces, includeMetadata: 1});
-
             p.then(function(data) {
+                console.log('data', data)
                 elem.rmLoading();
 
                 scope.tableOptions.data = data;
