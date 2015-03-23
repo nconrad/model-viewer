@@ -1,7 +1,6 @@
 
 
-
-var app = angular.module('coreModelViewer',
+angular.module('coreModelViewer',
 ['config',
  'core-directives',
  'mv-controllers',

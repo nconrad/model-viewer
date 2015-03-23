@@ -1,7 +1,4 @@
 
-(function() {
-"use strict";
-
 angular.module('core-directives', []);
 angular.module('core-directives')
 .directive('kbTables', function() {
@@ -1254,7 +1251,3 @@ function($stateParams, MV, $q, $http) {
         }
     }
 })
-
-
-
-})();
