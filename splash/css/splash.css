@@ -229,6 +229,24 @@ header .intro-text .sub-title a {
     color: #666;
 }
 
+.navbar-default .navbar-nav>li>a {
+  color: #fff;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+
+.navbar-default .navbar-nav>li>a:hover {
+    color: #f2f2f2;
+}
+
+.navbar-default .navbar-nav>.active>a,
+.navbar-default .navbar-nav>.active>a:focus,
+.navbar-default .navbar-nav>.active>a:hover {
+    background-color: transparent;
+    font-weight: 700;
+}
+
+
 section {
     padding: 100px 0;
 }

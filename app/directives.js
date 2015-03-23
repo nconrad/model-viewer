@@ -1136,8 +1136,9 @@ function($stateParams, MV, $q, $http) {
 .directive('legend', function() {
     return {
         link: function(scope, elem, attr) {
-            /*
-            angular.element(elem).append('<div id="canvas">');
+
+
+            angular.element(elem).append('<div id="legend">');
 
             var svg = d3.select("#legend")
                 .append("svg")
@@ -1145,9 +1146,8 @@ function($stateParams, MV, $q, $http) {
                 .attr("height", 300);
 
             svg.append("rect")
-               .attr("class", "overlay")
-               .attr("width", width)
-               .attr("height", height);*/
+               .attr("width", 10)
+               .attr("height", 10);
         }
     }
 })
