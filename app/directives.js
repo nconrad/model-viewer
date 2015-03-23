@@ -1,6 +1,4 @@
 
-
-
 (function() {
 "use strict";
 
@@ -1259,4 +1257,4 @@ function($stateParams, MV, $q, $http) {
 
 
 
-}());
+})();

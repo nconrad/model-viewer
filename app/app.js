@@ -87,13 +87,11 @@ var app = angular.module('coreModelViewer',
                       .when('#', '/models/');
 
 }])
-.config(function($mdThemingProvider) {
-  $mdThemingProvider.theme('default')
-    .primaryPalette('cyan')
-    .accentPalette('light-blue');
-}
-
-)
+.config(['$mdThemingProvider', function($mdThemingProvider) {
+    $mdThemingProvider.theme('default')
+        .primaryPalette('cyan')
+        .accentPalette('light-blue');
+}])
 
 .run(['$rootScope', '$state', '$stateParams', '$location',
     function($rootScope, $state, $stateParams, $location) {
