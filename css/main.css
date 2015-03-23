@@ -4,7 +4,6 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    /*background-color: #f8f8f8;*/
     font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
     -webkit-font-smoothing: subpixel-antialiased;
 }
@@ -25,7 +24,7 @@ a {
 #page-wrapper {
     /*padding: 0 15px;*/
     /* min-height: 568px; */ /*removed for footer */
-    background-color: #fff;
+    /*background-color: #fff;*/
     padding: 10px;
     padding-bottom: 100px;
 }
@@ -43,7 +42,6 @@ a {
 }
 
 #content {
-    padding: 0 20px;
     padding-bottom: 10px;
 }
 
@@ -183,7 +181,7 @@ a {
         position: fixed;
         width: 220px;
         height: 100%;
-        border-right: 1px solid #e7e7e7;
+        /*border-right: 1px solid #e7e7e7;*/
     }
 
     .navbar-top-links .dropdown-messages,
@@ -227,54 +225,43 @@ a {
     color: #fff;
 }
 
-.chat {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+/* experiment */
+/*.nav-tabs {
+  width: 110%;
+  margin-left: -40px !important;
+  padding-left: 40px;
+}*/
+.nav-tabs>li {
+  float: left;
+  margin-bottom: -2px;
 }
 
-.chat li {
-    margin-bottom: 10px;
-    padding-bottom: 5px;
-    border-bottom: 1px dotted #999;
+.nav-tabs {
+    border-bottom: 2px solid #ddd;
 }
 
-.chat li.left .chat-body {
-    margin-left: 60px;
+.nav-tabs>li>a {
+    border: 2px solid transparent;
 }
 
-.chat li.right .chat-body {
-    margin-right: 60px;
+.nav-tabs>li>a:hover {
+    border-radius: 0px;
+    background-color: #fafafa;
 }
 
-.chat li .chat-body p {
-    margin: 0;
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:hover  {
+    border-radius: 0 0 0 0;
+    /*background-color: #fafafa;*/
+    border: 2px solid #ddd;
+    border-bottom-color: transparent;
 }
 
-.panel .slidedown .glyphicon,
-.chat .glyphicon {
-    margin-right: 5px;
-}
 
-.chat-panel .panel-body {
-    height: 350px;
-    overflow-y: scroll;
-}
 
-.login-panel {
-    margin-top: 25%;
+table {
+    /*background-color: #fafafa !important;*/
 }
-
-.flot-chart {
-    display: block;
-    height: 400px;
-}
-
-.flot-chart-content {
-    width: 100%;
-    height: 100%;
-}
-
 table.dataTable thead .sorting,
 table.dataTable thead .sorting_asc,
 table.dataTable thead .sorting_desc,
@@ -341,61 +328,5 @@ table.dataTable thead .sorting:after {
     margin: 15px 0;
 }
 
-.huge {
-    font-size: 40px;
-}
 
-.panel-green {
-    border-color: #5cb85c;
-}
-
-.panel-green .panel-heading {
-    border-color: #5cb85c;
-    color: #fff;
-    background-color: #5cb85c;
-}
-
-.panel-green a {
-    color: #5cb85c;
-}
-
-.panel-green a:hover {
-    color: #3d8b3d;
-}
-
-.panel-red {
-    border-color: #d9534f;
-}
-
-.panel-red .panel-heading {
-    border-color: #d9534f;
-    color: #fff;
-    background-color: #d9534f;
-}
-
-.panel-red a {
-    color: #d9534f;
-}
-
-.panel-red a:hover {
-    color: #b52b27;
-}
-
-.panel-yellow {
-    border-color: #f0ad4e;
-}
-
-.panel-yellow .panel-heading {
-    border-color: #f0ad4e;
-    color: #fff;
-    background-color: #f0ad4e;
-}
-
-.panel-yellow a {
-    color: #f0ad4e;
-}
-
-.panel-yellow a:hover {
-    color: #df8a13;
-}
 

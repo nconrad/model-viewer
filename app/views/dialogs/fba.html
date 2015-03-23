@@ -17,9 +17,12 @@
                 </tr>
             </thead>
 
-            <tr ng-repeat="fba in fbas" ng-click="MV.add({model: {name: item.model.name, ws: item.model.ws}, fba: {name: fba[1], ws: fba[7]} })">
+            <tr ng-repeat="fba in fbas track by $index"
+                ng-click="selectFBA($index, fba, item);"
+                ng-class="{active: selected == $index}"
+                >
                 <td>
-                    <i class="fa {{item.fba.name == fba[1] && item.fba.ws == fba[7] ? 'fa-check-square-o':'fa-square-o'}}"></i>
+                    <i class="fa {{selected == $index ? 'fa-dot-circle-o':'fa-circle-o'}}"></i>
                 </td>
                 <td>{{fba[1]}}</td>
                 <td>{{fba[10]['Media']}}</td>

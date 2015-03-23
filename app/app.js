@@ -30,13 +30,6 @@ var app = angular.module('coreModelViewer',
         .state('genomes', {
             url: "/genomes/",
             templateUrl: 'views/genomes.html',
-        })
-        .state('models', {
-            url: "/models/",
-            templateUrl: 'views/models.html',
-        }).state('modelsByWS', {
-            url: "/models/:ws",
-            templateUrl: 'views/modelsws.html',
         })*/
 
         .state('media', {
@@ -65,9 +58,7 @@ var app = angular.module('coreModelViewer',
             url: "/fba/:ws/:name",
             templateUrl: 'views/fbaPage.html',
             controller: 'ObjectPage'
-        })
-
-        .state('genome', {
+        }).state('genome', {
             url: "/genomes/:ws/:name/:tab",
             templateUrl: 'views/genomePage.html',
             controller: 'ObjectPage'
@@ -88,11 +79,21 @@ var app = angular.module('coreModelViewer',
               }]
             }*/
         })
+        /*.state('compare.tab', {
+            url: "^/compare/:tab",
+        })*/
 
     $urlRouterProvider.when('', '/models/')
                       .when('#', '/models/');
 
 }])
+.config(function($mdThemingProvider) {
+  $mdThemingProvider.theme('default')
+    .primaryPalette('cyan')
+    .accentPalette('light-blue');
+}
+
+)
 
 .run(['$rootScope', '$state', '$stateParams', '$location',
     function($rootScope, $state, $stateParams, $location) {
@@ -103,7 +104,6 @@ var app = angular.module('coreModelViewer',
         function(event, toState, toParams, fromState, fromParams){
             $rootScope.$subURL = toState.url.split('/')[1]
         })
-
 
     //kb = new KBCacheClient();
 }]);

@@ -19,7 +19,6 @@
     <!-- build:css build/style.css -->
         <link rel="stylesheet" href="../css/main.css">
         <link rel="stylesheet" href="../css/core.css">
-        <!--<link rel="stylesheet" href="../css/oxcart.css">-->
         <link rel="stylesheet" href="../css/viz.css">
         <link rel="stylesheet" href="../css/tabs.css">
     <!-- endbuild -->
@@ -46,7 +45,7 @@
         <script src="../lib/ui-common/src/widgets/maps/kbasePathways.js"></script>
 
         <!-- modeling widgets -->
-        <script src="../lib/ui-common/src/widgets/modeling/KBObjects.js"></script>
+        <script src="../lib/ui-common/src/widgets/modeling/KBModeling.js"></script>
         <script src="../lib/ui-common/src/widgets/modeling/kbaseTabTable.js"></script>
         <script src="../lib/ui-common/src/widgets/modeling/kbaseTabs.js"></script>
         <script src="../lib/ui-common/src/widgets/modeling/KBaseFBA.FBA.js"></script>
@@ -112,16 +111,22 @@
 
             <div class="collapse navbar-collapse" >
                 <ul class="nav navbar-nav navbar-top-links">
-                    <li>
-                        <a ng-class="{ active: $subURL == 'models' }" ui-sref="modelList">
+                    <li ng-class="{ active: $subURL == 'models' }">
+                        <a ui-sref="modelList">
                              Models
                         </a>
                     </li>
-                    <li>
-                        <a ng-class="{ active: $subURL == 'media' }"ui-sref="media">
+                    <li ng-class="{ active: $subURL == 'media' }">
+                        <a ui-sref="media">
                              Media
                         </a>
                     </li>
+                    <li ng-class="{ active: $state.includes('compare')}" >
+                        <a ui-sref="compare">
+                             Compare <span class="model-count">({{MV.models.length}})</span>
+                        </a>
+                    </li>
+
                     <!--<li>
                         <a ng-class="{ active: $subURL == 'fba' }" ui-sref="fba">
                              FBA
@@ -132,7 +137,7 @@
 
                 <ul class="nav navbar-nav navbar-top-links pull-right">
                     <li>
-                        <a href="/#about">
+                        <a href="../#about">
                              About<!--<i class="fa fa-bug"></i>-->
                         </a>
                     </li>
@@ -170,6 +175,7 @@
                         </a>
                     </li>
                 </ul>-->
+                <!--
                 <ul class="nav">
                     <li>
                         <a ng-class="{ active: $state.includes('compare')}"  ui-sref="compare">
@@ -178,9 +184,16 @@
                         </a>
                     </li>
                 </ul>
+                -->
 
                 <div id="selected-models">
-                    <h5>Selected Data</h5>
+                    <div class="header">SELECTED DATA
+                        <div class="pull-right" ng-if="MV.models.length" >(
+                            <a ng-click="MV.rmAll()">
+                                <small>Clear All</small>
+                            </a>)
+                        </div>
+                    </div>
 
                     <ul ng-show="MV.models.length" class="list-unstyled" ng-controller="SelectedData">
                         <li ng-repeat="item in MV.models">
@@ -208,13 +221,14 @@
                         </li>
                     </ul>
 
-                    <div ng-show="!MV.models.length" class="text-danger">No models selected</div>
+                    <div ng-if="!MV.models.length" class="text-danger">No data selected</div>
 
-
-                    <div ng-show="MV.models.length">
-                        <!--<a class="pull-left"><small>See details...</small></a>-->
-                        <a class="pull-right" ng-click="MV.rmAll()"><small>Clear All</small></a>
-                    </div>
+                    <!--
+                    <div ng-if="MV.models.length">
+                        <a ui-sref="compare" class="pull-left btn btn-outline">
+                            Compare Selected <span class="model-count">({{MV.models.length}})</span>
+                        </a>
+                    </div>-->
                 </div>
 
             </div>

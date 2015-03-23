@@ -22,42 +22,50 @@ function($scope, $dialog) {
 
                 MV.getRelatedObjects([{workspace: item.model.ws, name: item.model.name}], 'KBaseFBA.FBA')
                     .then(function(fbas) {
+                        for (var i=0; i<fbas.length; i++) {
+                            if ( $scope.item.fba.name === fbas[i][1] &&
+                                 $scope.item.fba.ws === fbas[i][7])
+
+                                 $scope.selected = i;
+                        }
                         $scope.fbas = fbas;
                     })
 
+                $scope.selectFBA = function($index, newFBA, oldItem) {
+                    MV.rm({model: {name: item.model.name, ws: item.model.ws},
+                                   fba: {name: oldItem.fba.name, ws: oldItem.fba.ws} })
+                    MV.add({model: {name: item.model.name, ws: item.model.ws},
+                                    fba: {name: newFBA[1], ws: newFBA[7]} });
+
+
+                    $scope.selected = $index;
+                }
 
                 $scope.cancel = function(){
                     $dialog.hide();
                 }
+
                 $scope.select = function(item){
 
                 }
             }]
         })
     }
-
 }])
 
-.controller('Compare', ['$scope', 'ModelViewer', function($scope, MV) {
+.controller('Compare', ['$state', '$scope', 'ModelViewer', '$stateParams',
+function($state, $scope, MV, $stateParams) {
     $scope.MV = MV;
 
-    // default tab
-    $scope.tab = 'Heatmap';
+    // map table
+    $scope.predicate = 'id';
+    $scope.reverse = false;
 
-
-    // input model for selected FBAS; gives names;
-    $scope.selectedFBAs = {};
-
-    // related fba resultsl displayed in dropdowns in UI
-    var fbas = [];
-    for (var i=0; i< MV.models.length; i++) {
-        var m = MV.models[i];
-        fbas.push( MV.getRelatedFBAS(m.workspace, m.name) );
-    }
-
-    $scope.relatedFBAs = fbas;
-
-
+    $scope.loading = true;
+    MV.getMaps().then(function(d) {
+        $scope.loading = false;
+        $scope.maps = d;
+    })
 }])
 
 .controller('ObjectPage',
@@ -85,7 +93,6 @@ function($scope, $dialog) {
             showFilter: true
           };
 
-
     $scope.gridOptions = {//enableFiltering: true,
                           //enableRowSelection: true,
                           //enableSelectAll: false,
@@ -111,14 +118,15 @@ function($scope, $dialog) {
     }
 
 
+    var params;
     if ($stateParams.ws === 'coremodels_ATP') {
-        var params = {workspaces: [$stateParams.ws],
-                                    includeMetadata: 1};
+        params = {workspaces: [$stateParams.ws],
+                  includeMetadata: 1};
     } else if ($stateParams.ws === 'coremodels') {
-        var params = {workspaces: [$stateParams.ws],
-                                    type: 'KBaseFBA.FBAModel',
-                                    includeMetadata: 1};
-    }
+        params = {workspaces: [$stateParams.ws],
+                  type: 'KBaseFBA.FBAModel',
+                  includeMetadata: 1};
+}
 
 
     $scope.loading = true;
@@ -133,37 +141,49 @@ function($scope, $dialog) {
             }
 
             $scope.gridOptions.data = data;
-
         })
 
 }])
 
-  .controller('AppCtrl', ['$scope', '$log', function ($scope, $log) {
+.controller('CompareTabs', ['$scope', '$log', '$timeout', 'ModelViewer', '$compile',
+function ($scope, $log, $timeout, MV, $compile) {
     var tabs = [
-        { title: 'One', content: "Tabs will become paginated if there isn't enough room for them."},
-        { title: 'Two', content: "You can swipe left and right on a mobile device to change tabs."},
-        { title: 'Three', content: "You can bind the selected tab via the selected attribute on the md-tabs element."},
-        { title: 'Four', content: "If you set the selected tab binding to -1, it will leave no tab selected."},
-        { title: 'Five', content: "If you remove a tab, it will try to select a new one."},
-        { title: 'Six', content: "There's an ink bar that follows the selected tab, you can turn it off if you want."},
-        { title: 'Seven', content: "If you set ng-disabled on a tab, it becomes unselectable. If the currently selected tab becomes disabled, it will try to select the next tab."},
-        { title: 'Eight', content: "If you look at the source, you're using tabs to look at a demo for tabs. Recursion!"},
-        { title: 'Nine', content: "If you set md-theme=\"green\" on the md-tabs element, you'll get green tabs."},
-        { title: 'Ten', content: "If you're still reading this, you should just go check out the API docs for tabs!"}
+        { title: 'Heatmap'},
+        { title: 'Pathways'}
     ];
 
-
-
     $scope.tabs = tabs;
-    $scope.selectedIndex = 2;
-    $scope.$watch('select!=edIndex', function(current, old){
-      if ( old && (old = current)) $log.debug('Goodbye ' + tabs[old].title + '!');
-      if ( current )                $log.debug('Hello ' + tabs[current].title + '!');
-    });
-    $scope.addTab = function (title, view) {
-      view = view || title + " Content View";
-      tabs.push({ title: title, content: view, disabled: false});
+    $scope.selectedIndex = 0;
+
+    $scope.addTab = function (map) {
+        // if is already open, go to it
+        for (var i=0; i<tabs.length; i++) {
+            if (tabs[i].map === map.id) {
+                $scope.selectedIndex = i
+                return;
+            }
+        }
+
+        tabs.push({ title: map.name.slice(0,10)+'...',
+                    removable: true,
+                    map: map.id});
+
+        $timeout(function() {
+            $scope.selectedIndex = tabs.length-1;
+
+            $scope.loadingMap = true;
+            console.log('data!', MV.data)
+
+            $('#'+map.id).kbasePathway({models: MV.data.FBAModel,
+                                        fbas: MV.data.FBA,
+                                        map_ws: 'nconrad:paths',
+                                        map_name: map.id,
+                                        cb: function() {
+                                            $scope.loadingMap = false;
+                                        }});
+        })
     };
+
     $scope.removeTab = function (tab) {
       for (var j = 0; j < tabs.length; j++) {
         if (tab.title === tabs[j].title) {

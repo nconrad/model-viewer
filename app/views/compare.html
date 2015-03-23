@@ -1,68 +1,121 @@
 
-<h2>Comparitive Viewer</h2>
-
-Coming soon.
-<!--
-<div ng-show="models.length == 0">
-    <div class="text-danger">No Models Selected</div>
-    Select (add) models from the models page.
-</div>
-
-<ul ng-show="models.length" class="nav nav-tabs">
-    <li ng-class="{active: tab == 'Selected'}" ng-click="tab = 'Selected'">
-        <a><span class="badge">{{MV.models.length}}</span> Selected Data</a>
-    </li>
-    <li ng-class="{active: tab == 'Heatmap'}" ng-click="tab = 'Heatmap'">
-        <a>Heatmap</a>
-    </li>
-    <li ng-class="{active: tab == 'Pathways'}" ng-click="tab = 'Pathways'">
-        <a>Pathways</a>
-    </li>
-</ul>
-
-<div ng-show="tab == 'Selected'">
-    <table ng-show="models.length" class="table selected-models">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Organism</th>
-                <th>Rxns</th>
-                <th>Cpds</th>
-                <th>FBA</th>
-                <th>Remove</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <tr ng-repeat="model in MV.models track by $index">
-                <td><a ui-sref="modelPage({ws: '{{model.workspace}}', name: '{{model.name}}' })">{{model.name}}</a></td>
-                <td ws="{{model.workspace}}" name="{{model.name}}">
-                    <select class="form-control"
-                            ng-model="selectedFBAs[$index]"
-                            ng-change="updateViews()"
-                            ng-options="item.name for item in relatedFBAs[$index]"
-                            ng-init="selectedFBAs[$index] = relatedFBAs[$index][0]">
-                    </select>
-                </td>
-
-                <td><span ng-click="MV.rm($index); updateViews();" class="fa fa-remove btn-rm-model hover pointer"></span></td>
-
-            </tr>
-        </tbody>
-
-    </table>
-</div>
 
 
-<div ng-show="tab == 'Heatmap'">
-    <div compare></div>
+    <h1 class="page-header">Comparitive Viewer</h2>
 
-    <div legend></div>
-    <div ng-if="models.length">
-        <b>Tips:</b> Use the mouse wheel while on the heatmap to zoom. Click and drag to pan<br>
+    <div ng-if="MV.models.length == 0">
+        <div class="text-danger">No data selected</div>
+        Add data by selecting FBA results from the models page.
     </div>
-</div>
 
-<div ng-show="tab == 'Pathways'">
-    <div pathways></div>
-</div>-->
+
+    <div ng-if="MV.models.length > 0" ng-controller="CompareTabs"  layout="column">
+        <md-tabs md-selected="selectedIndex" flex >
+            <md-tab ng-repeat="tab in tabs">
+                {{tab.title}}
+                <span ng-if="tab.removable"
+                      ng-click="removeTab(tab)"
+                      class="fa fa-remove hover">
+                </span>
+
+            </md-tab>
+
+
+        </md-tabs>
+
+
+        <section class="md-tabs-content">
+            <div role="tabpanel"
+                 id="tab1-content"
+                 aria-labelledby="tab1"
+                 ng-show="selectedIndex == 0"
+                 md-swipe-left="next()"
+                 md-swipe-right="previous()">
+
+                <div heatmap>
+                    <md-progress-circular ng-if="loading"
+                                          md-mode="indeterminate"
+                                          class="text-center"
+                                          md-diameter="40">
+                    </md-progress-circular>
+                </div>
+
+                <div legend></div>
+                <div ng-if="models.length">
+                    <b>Tips:</b> Use the mouse wheel to zoom. Click and drag to pan.<br>
+                </div>
+
+            </div>
+
+            <div role="tabpanel"
+                 id="tab2-content"
+                 aria-labelledby="tab2"
+                 ng-show="selectedIndex == 1"
+                 md-swipe-left="next()"
+                 md-swipe-right="previous()">
+
+                <table class="table table-bordered table-striped map-table">
+                    <thead>
+                        <tr>
+                            <th ng-click="predicate = 'name'; reverse=!reverse;" class="point">Name
+                                <span ng-if="predicate == 'name'">
+                                    <i ng-if="reverse" class="fa fa-caret-down"></i>
+                                    <i ng-if="!reverse" class="fa fa-caret-up"></i>
+                                </span>
+                            </th>
+
+                            <th ng-click="predicate = 'id'; reverse=!reverse;" class="point">ID
+                                <span ng-if="predicate == 'id'">
+                                    <i ng-if="reverse" class="fa fa-caret-down"></i>
+                                    <i ng-if="!reverse" class="fa fa-caret-up"></i>
+                                </span>
+                            </th>
+                            <th ng-click="predicate = 'rxnCount'; reverse=!reverse;" class="point">Rxn Count
+                                <span ng-if="predicate == 'rxnCount'">
+                                    <i ng-if="reverse" class="fa fa-caret-down"></i>
+                                    <i ng-if="!reverse" class="fa fa-caret-up"></i>
+                                </span>
+                            </th>
+                            <th ng-click="predicate = 'cpdCount'; reverse=!reverse;" class="point">Cpd Count
+                                <span ng-if="predicate == 'cpdCount'">
+                                    <i ng-if="reverse" class="fa fa-caret-down"></i>
+                                    <i ng-if="!reverse" class="fa fa-caret-up"></i>
+                                </span>
+                            </th>
+                            <th ng-click="predicate = 'source'; reverse=!reverse;" class="point">Source
+                                <span ng-if="predicate == 'source'">
+                                    <i ng-if="reverse" class="fa fa-caret-down"></i>
+                                    <i ng-if="!reverse" class="fa fa-caret-up"></i>
+                                </span>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tr ng-repeat="map in maps | orderBy : predicate : reverse">
+                        <td><a ng-click="addTab(map)">{{map.name}}</a></td>
+                        <td>{{map.id}}</td>
+                        <td>{{map.rxnCount}}</td>
+                        <td>{{map.cpdCount}}</td>
+                        <td>{{map.source}}</td>
+                    </tr>
+                </table>
+
+                <div ng-if="loading">loading...</div>
+
+            </div>
+        </section>
+
+        <div ng-repeat="tab in tabs">
+            <div ng-show="selectedIndex == $index" id="{{tab.map}}" class="path-container">
+
+            <div>
+        </div>
+
+        <md-progress-circular ng-if="loadingMap"
+                              md-mode="indeterminate"
+                              class="text-center"
+                              md-diameter="40">
+        </md-progress-circular>
+
+    </div>
+

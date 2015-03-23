@@ -18,7 +18,7 @@ angular.module('core-directives')
                           obj: obj,
                           options: {showETC: true}};
 
-            angular.element(elem).kbaseTabTable(params);
+            $(elem).kbaseTabTable(params);
         }
     }
  })
@@ -39,12 +39,15 @@ angular.module('core-directives')
     function($compile, $stateParams, MV, $http, $timeout) {
     return {
         link: function(scope, elem, attr) {
+            var workspaces = ['janakakbase:CM-ATP-eq'];
+
+
             var table;
             var tableElem;
 
             scope.tableOptions = {columns: [
                                       { sortable: false, title: "", data: function(d){
-                                            return '<i class="fa fa-caret-right"></i>';
+                                            return '<i class="fa fa-caret-right" style="opacity: 0.5;"></i>';
                                       }},
                                       { title: "Organism", data: function(d){
                                             return d[10].Name;
@@ -65,13 +68,12 @@ angular.module('core-directives')
                                       { title: "Compounds", data: function(d){
                                             return d[10]['Number compounds'];
                                       }}],
-                                  order: [[ 1, "desc" ]],
+                                  order: [[ 1, "asc" ]],
                                   language: {search: "_INPUT_",
                                              searchPlaceholder: 'Search models'}
                                  }
 
             elem.loading('', true);
-            var workspaces = ['janakakbase:CM-ATP-eq'];
             var p = $http.rpc('ws', 'list_objects', {workspaces: workspaces, includeMetadata: 1});
 
             p.then(function(data) {
@@ -87,6 +89,7 @@ angular.module('core-directives')
              })
 
             function format(d, rowData) {
+                console.log('fba', d)
                 var container = $('<div class="fba-table">');
 
                 container.append('<h5>FBA Results</h5>')
@@ -102,13 +105,16 @@ angular.module('core-directives')
                                   '<th>Objective</th>'+
                                   '<th>Rxn Variables</th>'+
                                   '<th>Cpd Variables</th>'+
-                                  '<th>Maximized?</th>'+
                                '</tr>'+
                              '</thead>');
 
                 for (var i=0; i<d.length; i++) {
                     var ws = d[i][7],
-                        name = d[i][1];
+                        name = d[i][1],
+                        type = d[i][2].split('-')[0]
+
+                    if (ws === 'core_VR_FBA_Glucose_aerobic')
+                        continue
 
                     var row = $('<tr data-ws="'+ws+'" data-name="'+name+'">');
                     var meta = d[i][10];
@@ -127,24 +133,26 @@ angular.module('core-directives')
 
                     row.append('<td>'+cb+'</td>'+
                                '<td><a ui-sref="'+link+'" >' +name+'</a></td>'+
-                               '<td>'+meta['Media']+'</td>'+
-                               '<td>'+(meta['Objective'] == 10000000 ? 0:meta['Objective'])+'</td>'+
+                               '<td>'+meta['Media name']+'</td>'+
+                               '<td>'+(meta['Objective'] === 10000000 ? 0:meta['Objective'])+'</td>'+
                                '<td>'+meta['Number reaction variables']+'</td>'+
-                               '<td>'+meta['Number compound variables']+'</td>'+
-                               '<td>'+(meta['Maximized'] === "1" ? 'true':'false')+'</td>')
+                               '<td>'+meta['Number compound variables']+'</td>')
 
                     table.append(row);
                 }
 
-                table.find('tr').unbind('hover');
-                table.find('tr').hover(function(e) {
-                    var checkBox = $(this).find('i');
-                    checkBox.css('opacity', 1.0);
-                }, function(e) {
-                    var checkBox = $(this).find('i');
-                    if (!checkBox.hasClass('fa-check-square-o'))
-                        checkBox.css('opacity', 0.5);
-                })
+
+                    table.find('tr').unbind('hover');
+                    table.find('tr').hover(function(e) {
+                        var checkBox = $(this).find('i');
+                        checkBox.css('opacity', 1.0);
+                    }, function(e) {
+                        var checkBox = $(this).find('i');
+                        if (!checkBox.hasClass('fa-check-square-o'))
+                            checkBox.css('opacity', 0.5);
+                    })
+
+
 
                 table.find('tr').unbind('click');
                 table.find('tr').click(function(e) {
@@ -165,12 +173,12 @@ angular.module('core-directives')
                                     name: name
                                 }};
 
-                    if (checkBox.hasClass('fa-check-square-o')){
-                        checkBox.css('opacity', 1.0)
-                        MV.add(data)
+                    if (checkBox.hasClass('fa-check-square-o')) {
+                        checkBox.css('opacity', 1.0);
+                        MV.add(data);
                     } else {
-                        checkBox.css('opacity', 0.5)
-                        MV.rm(data)
+                        checkBox.css('opacity', 0.5);
+                        MV.rm(data);
                     }
 
                     scope.$apply();
@@ -179,24 +187,6 @@ angular.module('core-directives')
                 $compile(container)(scope);
                 return container;
             }
-
-            /*
-            Combination deletions   0
-            Maximized   1
-            Number compound bounds  0
-            Number additional compounds 0
-            Model   6370/14/1
-            Media   290/11/7
-            Minimize reactions  0
-            Number biomass objectives   1
-            Number reaction variables   120
-            Number gene KO  0
-            Number reaction bounds  0
-            Number constraints  0
-            Number compound variables   17
-            Objective   10000000
-            Number reaction KO  0
-            */
 
             function events() {
                 // Add event listener for opening and closing details
@@ -214,8 +204,7 @@ angular.module('core-directives')
                         row.child.hide();
                         tr.removeClass('shown');
                         caret.toggleClass('fa-caret-down fa-caret-right')
-                    }
-                    else {
+                    } else {
                         // open row
                         caret.hide()
                         caret.parent().loading('');
@@ -240,9 +229,11 @@ angular.module('core-directives')
                 // custom hover styling due to row expanding
                 $(elem).find('tbody tr').unbind('hover')
                 $(elem).find('tbody tr').hover(function() {
+                    $(this).find('.fa-caret-right').css('opacity', "1.0")
                     $(this).css('background-color', '#f8f8f8')
                 }, function() {
                     $(this).css('background-color', '#fff')
+                    $(this).find('.fa-caret-right').css('opacity', "0.5")
                 })
 
                 $compile(tableElem)(scope);
@@ -269,9 +260,11 @@ angular.module('core-directives')
                     if (found) {
                         cb.removeClass('fa-square-o');
                         cb.addClass('fa-check-square-o');
+                        cb.css('opacity', 1.0);
                     } else {
                         cb.removeClass('fa-check-square-o');
                         cb.addClass('fa-square-o');
+                        cb.css('opacity', 0.5);
                     }
                 })
             }
@@ -285,85 +278,6 @@ angular.module('core-directives')
     }
 }])
 
-
-.directive('modelTable',
-    ['$compile', '$stateParams', 'ModelViewer', '$http',
-    function($compile, $stateParams, MV, $http) {
-    return {
-        link: function(scope, elem, attr) {
-
-            scope.tableOptions = {"columns": [
-                                      { title: "Name", data: function(d) {
-                                            var name = d[1],
-                                                ws = d[7],
-                                                path = "modelPage({ws: '"+ws+"', name: '"+name+"'})",
-                                                link = '<a ui-sref="'+path+'" >'+name+'</a>',
-                                                add_btn = ' <button type="button" data-ws="'+ws+'" data-name="'+name+
-                                                        '" class="btn btn-default btn-xs btn-add-model hide">Add'+
-                                                    '</button>';
-                                            return link+add_btn;
-                                      }},/*
-                                      { title: "Organism", data: function(d){
-                                            return 'Some Organism';
-                                      }},
-                                      { title: "Rxn", data: function(d){
-                                            return '<span random-number></span>'
-                                      }},
-                                      { title: "Cpd", data: function(d){
-                                            return '<span random-number></span>';
-                                      }},*/
-                                  ]}
-
-            var table;
-
-            elem.loading('', true);
-            /*
-            if ($stateParams.ws === 'janakakbase:CoreModels_ATP-eq') {
-                var p = $http.rpc('ws', 'list_objects', {workspaces: [$stateParams.ws],
-                                                         includeMetadata: 1});
-            } else if ($stateParams.ws === 'janakakbase:CoreModels-VR-GP') {
-                var p = $http.rpc('ws', 'list_objects', {workspaces: [$stateParams.ws],
-                                                          type: 'KBaseFBA.FBAModel',
-                                                          includeMetadata: 1});
-            }*/
-
-            var workspaces = ['janakakbase:CoreModels_ATP-eq', 'janakakbase:CoreModels-VR-GP'];
-
-            var p = $http.rpc('ws', 'list_objects', {workspaces: workspaces, includeMetadata: 1});
-
-            p.then(function(data) {
-                elem.rmLoading();
-
-                scope.tableOptions.data = data;
-                scope.tableOptions.drawCallback = events;
-
-                var t = $('<table class="table table-hover">');
-                $(elem).append(t);
-                table = t.dataTable(scope.tableOptions);
-                $compile(table)(scope);
-             })
-
-            function events() {
-                $(elem).find('tbody tr').unbind('hover');
-                $(elem).find('tbody tr').hover(function() {
-                    $(this).find('.btn-add-model').removeClass('hide');
-                }, function() {
-                    $(this).find('.btn-add-model').addClass('hide');
-                });
-
-                $(elem).find('.btn-add-model').unbind('click');
-                $(elem).find('.btn-add-model').click(function() {
-                    var ws = $(this).data('ws'),
-                        name = $(this).data('name');
-                    ModelViewer.add(ws, name);
-                })
-
-                $compile(table)(scope);
-                //scope.$apply();
-            }
-        }
-    }
-}])
 .directive('mediaTable', ['$compile', '$http', function($compile, $http) {
     return {
         link: function(scope, elem, attr) {
@@ -374,11 +288,15 @@ angular.module('core-directives')
                                         var path = "mediaPage({ws: '"+d[7]+"', name: '"+d[1]+"'})";
                                         return '<a ui-sref="'+path+'" >'+d[1]+'</a>';
                                       }}
-                                  ]}
+                                  ],
+                                  language: {search: "_INPUT_",
+                                             searchPlaceholder: 'Search media'}
+                                 }
 
             elem.loading('', true);
-            var prom = $http.rpc('ws', 'list_objects', {workspaces: ['coremodels_media']})
+            var prom = $http.rpc('ws', 'list_objects', {workspaces: ['coremodels_media'], includeMetadata: 1})
             prom.then(function(data) {
+                console.log('media', data)
                 elem.rmLoading();
 
                 scope.tableOptions.data = data;
@@ -393,7 +311,6 @@ angular.module('core-directives')
             function events() {
                 $compile(table)(scope);
             }
-
         }
     }
 }])
@@ -469,59 +386,102 @@ function($compile, $stateParams) {
 ['$stateParams', 'ModelViewer', '$q', '$http',
 function($stateParams, MV, $q, $http) {
     return {
-        link: function(scope, element, attr) {
-
-
+        link: function(scope, elem, attr) {
             var pathContainer;
 
-            scope.$watch(scope.selectedFBAs, function() {
-                if (pathContainer)
-                    pathContainer.remove();
-                updateCompare(MV.models, scope.selectedFBAs);
-            })
-
-            scope.$on('updateCompare', function() {
-                updateCompare(MV.models, scope.selectedFBAs);
-            })
-
-            function updateCompare(models, fbas) {
+            function update() {
                 pathContainer = $('<div class="path-container">')
-                $(element).html(pathContainer);
+                $(elem).html(pathContainer);
 
-                $(element).loading();
-                var fbaProm;
-                if (fbas) {
-                    var refs = []
-                    for (var i=0; i<models.length; i++) {
-                        if (String(i) in fbas) refs.push( {ref: fbas[String(i)].ref})
-                    }
+                $(elem).loading();
+                MV.updateData().then(function(d) {
+                        $(elem).rmLoading();
 
-                    fbaProm = $http.rpc('ws','get_objects', refs);
-                }
+                        var models = d.FBAModel,
+                            all_fbas = d.FBA;
 
-                var prom = MV.updateModelData()
-                $q.all([prom, fbaProm])
-                    .then(function(d) {
-                        $(element).rmLoading();
 
-                        var models = d[0];
-                        var all_fbas = d[1];
+                        drawMapTable()
 
-                        // null for fbas that haven't been selected
-                        for (var i=0; i<models.length; i++) {
-                            if (fbas && !(String(i) in fbas) ) {
-                                all_fbas.splice(i, 0, null)
-                            }
-                        }
-
-                        pathContainer.kbasePathways({modelData: models,
-                                                     fbaData: all_fbas})
-
-                    })
+                })
             }
 
-            //if (scope.models.length > 0) updateCompare();
+            update();
+            scope.$on('MV.event.change', update)
 
+
+            function drawMapTable() {
+                // load table for maps
+                $(elem).loading();
+                $http.rpc('ws', 'list_objects', {workspaces: ['nconrad:paths'], includeMetadata: 1})
+                     .then(function(d){
+                        $(elem).rmLoading();
+
+
+                        var settings = {
+                            "aaData": d,
+                            "fnDrawCallback": events,
+                            "aaSorting": [[ 1, "asc" ]],
+                            "aoColumns": [
+                                { sTitle: 'Name', mData: function(d) {
+                                    return '<a class="pathway-link" data-map-id="'+d[1]+'">'+d[10].name+'</a>';
+                                }},
+                                { sTitle: 'Map ID', mData: 1},
+                                { sTitle: 'Rxn Count', sWidth: '10%', mData: function(d){
+                                    if ('reaction_ids' in d[10])
+                                        return d[10].reaction_ids.split(',').length;
+                                    else
+                                        return 'N/A';
+                                }},
+                                { sTitle: 'Cpd Count', sWidth: '10%', mData: function(d) {
+                                    if ('compound_ids' in d[10])
+                                        return d[10].compound_ids.split(',').length;
+                                    else
+                                        return 'N/A';
+
+                                }} ,
+                                { sTitle: "Source","sWidth": "10%", mData: function(d) {
+                                    return "KEGG";
+                                }},
+                            ],
+                            language: {search: "_INPUT_",
+                                       searchPlaceholder: 'Search maps'}
+                        }
+
+                        var selectionTable = $('<table class="table table-bordered table-striped">');
+                        $(elem).append(selectionTable)
+                        var table = selectionTable.DataTable(settings);
+
+                    }).catch(function(e){
+                        $(elem).prepend('<div class="alert alert-danger">'+
+                                    e.error.message+'</div>')
+                    });
+            }
+
+
+
+            function events() {
+                // event for clicking on pathway link
+                $(elem).find('.pathway-link').unbind('click')
+                $(elem).find('.pathway-link').click(function() {
+                    var mapID = $(this).data('map-id'),
+                        name = $(this).text();
+                    var exists;
+
+                    var container = $('<div id="path-'+mapID+'" class="path-container">');
+                    container.loading();
+                    tabs.addTab({name: name, removable: true, content: container});
+                    load_map(mapID, container);
+                    tabs.showTab(name);
+                });
+
+                // tooltip for hover on pathway name
+                $(elem).find('.pathway-link')
+                         .tooltip({title: 'Open path tab',
+                                   placement: 'right', delay: {show: 1000}});
+            } // end events
+
+            //if (scope.models.length > 0) updateCompare();
         }
     }
 }])
@@ -864,7 +824,7 @@ function($stateParams, MV, $q, $http) {
     };
 }])
 
-.directive('compare',
+.directive('heatmap',
     ['ModelViewer', '$q', '$http',
     function(MV, $q, $http) {
     return {
@@ -880,59 +840,36 @@ function($stateParams, MV, $q, $http) {
 
             scope.models = MV.models;
 
-            function updateCompare(models, fbas) {
-                $(element).loading();
-                var fbaProm;
-                if (fbas) {
-                    var refs = []
-                    for (var i=0; i<models.length; i++) {
-                        if (String(i) in fbas) refs.push( {ref: fbas[String(i)].ref})
-                    }
-                    fbaProm = $http.rpc('ws','get_objects', refs);
-                }
+            function update() {
+                scope.loading = true;
+                MV.updateData().then(function(d) {
+                    scope.loading = false;
 
-                var prom = MV.updateModelData()
-                $q.all([prom, fbaProm])
-                    .then(function(d) {
-                        $(element).rmLoading();
+                    var models = d.FBAModel,
+                        all_fbas = d.FBA;
 
-                        var models = d[0];
+                    var d = parseData(models, all_fbas);
 
-                        var all_fbas = d[1];
-
-                        // null for fbas that haven't been selected
-                        for (var i=0; i<models.length; i++) {
-                            if (fbas && !(String(i) in fbas) ) {
-                                all_fbas.splice(i, 0, null)
-                            }
-                        }
-
-                        var d = parseData(models, all_fbas);
-
-                        element.html('');
-                        //element.append('<div>'+d.x.length+' x '+d.y.length+' = '+(d.x.length*d.y.length)+' boxes</div>' )
-                        element.append('<br>')
-                        element.append('<div id="canvas">');
-                        heatmap_d3(d.x, d.y, d.data);
-                    })
+                    element.html('');
+                    //element.append('<div>'+d.x.length+' x '+d.y.length+' = '+(d.x.length*d.y.length)+' boxes</div>' )
+                    element.append('<br>')
+                    element.append('<div id="canvas">');
+                    heatmap_d3(d.x, d.y, d.data);
+                })
             }
 
+            update();
 
-            scope.$watch(scope.selectedFBAs, function() {
-                updateCompare(scope.models, scope.selectedFBAs);
+
+            scope.$on('MV.event.change', function() {
+                update()
             })
-
-            scope.$on('updateCompare', function() {
-                updateCompare(MV.models, scope.selectedFBAs);
-            })
-
 
             function parseData(models, fbas) {
-
                 // create heatmap data
-                var rxn_names = [];
-                var model_names = [];
-                var data = [];
+                var rxn_names = [],
+                    model_names = [],
+                    data = [];
 
                 // first, get union of reactions
                 for (var i=0; i < models.length; i++) {
@@ -960,7 +897,7 @@ function($stateParams, MV, $q, $http) {
                     if (fbas && fbas[i]) {
 
                         hasFBA = true;
-                        fbaRxns = fbas[i].data.FBAReactionVariables;
+                        var fbaRxns = fbas[i].FBAReactionVariables;
 
                         for (var j=0; j<fbaRxns.length; j++) {
                             var rxnId = fbaRxns[j].modelreaction_ref.split('/')[5].split('_')[0];
@@ -1022,7 +959,7 @@ function($stateParams, MV, $q, $http) {
                 var canvas = d3.select("#canvas_ele")
                     .attr("width", width)
                     .attr("height", height)
-                    .call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom))
+                    .call( d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom) )
                   .node().getContext("2d");
 
                 draw();
@@ -1084,15 +1021,20 @@ function($stateParams, MV, $q, $http) {
                 }
             }
 
-
             function heatmap_d3(x_data, y_data, rows) {
                 element.append('<div id="canvas">');
                 var svg = d3.select("#canvas").append("svg")
                     .attr("width", width)
                     .attr("height", height)
                     .append("g")
-                        .call(d3.behavior.zoom().scaleExtent([-3, 8]).on("zoom", zoom))
-                    .append("g");
+
+                // ability to zoom
+                d3.select("#canvas")
+                  .call(d3.behavior.zoom().scaleExtent([-3, 8]).on("zoom", zoom))
+
+                function zoom() {
+                    svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+                }
 
                 var w = 7, h = 7, font_size = '8px', start_y = 100;
 
@@ -1110,9 +1052,6 @@ function($stateParams, MV, $q, $http) {
 
                 var start_x = Math.max.apply(Math, y_widths) + 5;
 
-                function zoom() {
-                    svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-                }
 
                 for (var i=0; i < y_data.length; i++) {
 
@@ -1318,42 +1257,6 @@ function($stateParams, MV, $q, $http) {
     }
 })
 
-
-function rxnDict(model) {
-    var rxns = {};
-    for (var i in model.modelreactions) {
-        rxns[model.modelreactions[i].reaction_ref.split('/')[5]] = model.modelreactions[i];
-    }
-
-    return rxns;
-}
-
-$.fn.loading = function(text, big) {
-    $(this).rmLoading()
-
-    if (big) {
-        if (typeof text !== 'undefined') {
-            $(this).append('<p class="text-center text-muted loader"><br>'+
-                 '<img src="../img/ajax-loader-big.gif"> '+text+'</p>');
-        } else {
-            $(this).append('<p class="text-center text-muted loader"><br>'+
-                 '<img src="../img/ajax-loader-big.gif"> loading...</p>')
-        }
-    } else {
-        if (typeof text !== 'undefined') {
-            $(this).append('<p class="text-muted loader">'+
-                 '<img src="../img/ajax-loader.gif"> '+text+'</p>');
-        } else {
-            $(this).append('<p class="text-muted loader">'+
-                 '<img src="../img/ajax-loader.gif"> loading...</p>')
-        }
-
-    }
-    return this;
-}
-$.fn.rmLoading = function() {
-    $(this).find('.loader').remove();
-}
 
 
 }());
