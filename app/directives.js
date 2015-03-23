@@ -68,20 +68,21 @@ angular.module('core-directives')
                                              searchPlaceholder: 'Search models'}
                                  }
 
-            elem.loading('', true);
-            var p = $http.rpc('ws', 'list_objects', {workspaces: workspaces, includeMetadata: 1});
-            p.then(function(data) {
-                console.log('data', data)
-                elem.rmLoading();
+            //var p = $http.rpc('ws', 'list_objects', {workspaces: workspaces, includeMetadata: 1});
 
-                scope.tableOptions.data = data;
-                scope.tableOptions.drawCallback = events;
+            scope.loading = true;
+            $http.get('/data/app/modelList.json')
+                 .then(function(data) {
+                    scope.loading = false;
 
-                tableElem = $('<table class="table">');
-                $(elem).append(tableElem);
-                table = tableElem.DataTable(scope.tableOptions);
-                $compile(tableElem)(scope);
-             })
+                    scope.tableOptions.data = data.data;
+                    scope.tableOptions.drawCallback = events;
+
+                    tableElem = $('<table class="table">');
+                    $(elem).append(tableElem);
+                    table = tableElem.DataTable(scope.tableOptions);
+                    $compile(tableElem)(scope);
+                 })
 
             function format(d, rowData) {
                 console.log('fba', d)
