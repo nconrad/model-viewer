@@ -1202,7 +1202,7 @@ function($stateParams, MV, $q, $http) {
             g.append('text')
                .attr('x', start+(len*(w+boxPad)))
                .attr('y', yOffset+h)
-               .text('Postive Flux')
+               .text('Pos Flux')
                .attr('font-size', '10px')
 
 
