@@ -197,7 +197,6 @@ header .intro-text .sub-title a {
 
 .navbar {
     font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-weight: 700;
 }
 
 .navbar a:focus {
@@ -232,7 +231,7 @@ header .intro-text .sub-title a {
 .navbar-default .navbar-nav>li>a {
   color: #fff;
   font-weight: 300;
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: non-antialiased;
 }
 
 .navbar-default .navbar-nav>li>a:hover {
@@ -242,8 +241,8 @@ header .intro-text .sub-title a {
 .navbar-default .navbar-nav>.active>a,
 .navbar-default .navbar-nav>.active>a:focus,
 .navbar-default .navbar-nav>.active>a:hover {
+    color: #555;
     background-color: transparent;
-    font-weight: 700;
 }
 
 
