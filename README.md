@@ -18,7 +18,7 @@ Then point your favorite webserver at `model-viewer`
 
 ### Build
 
-This step creates an `index.html` with concatenated/minimized CSS/JS files (located in `build/`).
+This step creates an `index.html` with concatenated/minimized CSS/JS files (located in `/app/build/`).
 
 From `model-viewer`:
 
