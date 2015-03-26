@@ -32,12 +32,8 @@ function($http, $q, $rootScope) {
         $rootScope.$broadcast('MV.event.change');
     }
 
-    this.rm = function(item, broadcast) {
-        for (var i=0; i<self.models.length; i++) {
-            if ( angular.equals(self.models[i], item) )
-                self.models.splice(i, 1);
-        }
-
+    this.rm = function(i) {
+        self.models.splice(i, 1);
         localStorage.setItem(key, angular.toJson(self.models));
         $rootScope.$broadcast('MV.event.change');
     }
@@ -123,6 +119,9 @@ function($http, $q, $rootScope) {
             var item = items[i];
 
             for (var type in item) {
+                if (typeof item[type] === 'string')
+                    continue; //fixme!
+
                 var ws = item[type].ws,
                     name = item[type].name;
 

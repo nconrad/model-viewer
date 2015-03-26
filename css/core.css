@@ -106,11 +106,21 @@
 
 #selected-models a {
     color: #fff;
+    position: relative;
 }
 
-#selected-models .fa {
+#selected-models .fa,
+#selected-models .glyphicon{
     margin: .1em 0 0 0;
     font-size: 1.3em;
+    display: inline-block;
+    position: absolute;
+    right: 10px;
+    top: auto; /* override bootstrap */
+    line-height: .8em;
+}
+#selected-models .glyphicon {
+    right: 8px;
 }
 
 #selected-models .header {
@@ -132,6 +142,13 @@
 #selected-models ul li {
     font-size: .85em;
     border-bottom: 0px
+}
+
+.ellipsis {
+  width: 175px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sidebar-nav i,

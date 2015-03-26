@@ -193,26 +193,27 @@
 
                     <ul ng-show="MV.models.length" class="list-unstyled" ng-controller="SelectedData">
                         <li ng-repeat="item in MV.models track by $index">
-                            <div ng-mouseenter="show()" ng-mouseleave="hide()">
+
+                            <div class="ellipsis">
                                 <a ui-sref="modelPage({ws: '{{item.model.ws}}', name: '{{item.model.name}}' })"
-                                   class="model">
-                                   (Model) {{item.model.name}}
+                               class="model">
+                                   {{item.org}}
                                 </a>
-                                <span
-                                      class="fa fa-remove pull-right hover pointer"
-                                      ng-click="MV.rm(item)">
+                                <span class="fa fa-remove hover pointer"
+                                      ng-click="MV.rm($index)">
                                 </span>
                             </div>
 
-                            <div>
+                            <div class="ellipsis">
                                 <a ui-sref="fbaPage({ws: '{{item.fba.ws}}', name: '{{item.fba.name}}' })"
-                                   class="fba sample-show-hide">
-                                   (FBA) {{item.fba.name}}
+                                   class="fba">
+                                   {{item.media}}
                                 </a>
-                                <span class="glyphicon glyphicon-cog pull-right hover pointer"
+                                <span class="glyphicon glyphicon-cog hover pointer"
                                       ng-click="openFBAView($event, $index, item)">
-                                </button>
+                                </span>
                             </div>
+
                             <br>
                         </li>
                     </ul>

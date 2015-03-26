@@ -33,18 +33,18 @@ function($scope, $dialog) {
                     })
 
                 $scope.selectFBA = function($index, newFBA) {
-                    //var oldItem = {model: {name: item.model.name, ws: item.model.ws},
-                    //               fba: {name: oldItem.fba.name, ws: oldItem.fba.ws}};
                     var newItem = {model: {name: item.model.name, ws: item.model.ws },
-                                   fba: {name: newFBA.name, ws: newFBA.ws }};
+                                   fba: {name: newFBA.name, ws: newFBA.ws},
+                                   org: item.org,
+                                   media: newFBA.media};
+
 
                     MV.swapItem($scope.selectedIndex, newItem);
-
                     $scope.activeFBAIndex = $index;
                     $scope.item = newItem;
                     $dialog.hide();
-                    angular.element(ev.target).parent()
-                           .fadeOut('fast').fadeIn('fast')
+                    angular.element(ev.target).parent().fadeOut(150)
+                           .fadeIn(200)
                 }
 
                 $scope.cancel = function(){

@@ -92,8 +92,8 @@ angular.module('core-directives')
                 table.append('<thead>'+
                                 '<tr>'+
                                   '<th>Compare?</th>'+
-                                  '<th>ID</th>'+
                                   '<th>Media</th>'+
+                                  '<th>ID</th>'+
                                   '<th>Objective</th>'+
                                   '<th>Rxn Variables</th>'+
                                   '<th>Cpd Variables</th>'+
@@ -103,13 +103,14 @@ angular.module('core-directives')
                 for (var i=0; i<d.length; i++) {
                     var ws = d[i][7],
                         name = d[i][1],
-                        type = d[i][2].split('-')[0]
+                        type = d[i][2].split('-')[0];
+                    var meta = d[i][10];
 
                     if (ws === 'core_VR_FBA_Glucose_aerobic')
                         continue
 
-                    var row = $('<tr data-ws="'+ws+'" data-name="'+name+'">');
-                    var meta = d[i][10];
+                    var row = $('<tr data-ws="'+ws+'" data-name="'+
+                                    name+'" data-media="'+meta['Media name']+'">');
 
                     // mark anything selected as checked
                     var cb = '<i class="fa fa-square-o"></i>';
@@ -124,8 +125,8 @@ angular.module('core-directives')
                     var link = "fbaPage({ws: '"+ws+"', name: '"+name+"'})";
 
                     row.append('<td>'+cb+'</td>'+
-                               '<td><a ui-sref="'+link+'" >' +name+'</a></td>'+
                                '<td>'+meta['Media name']+'</td>'+
+                               '<td><a ui-sref="'+link+'" >' +name+'</a></td>'+
                                '<td>'+(meta['Objective'] === 10000000 ? 0:meta['Objective'])+'</td>'+
                                '<td>'+meta['Number reaction variables']+'</td>'+
                                '<td>'+meta['Number compound variables']+'</td>')
@@ -152,7 +153,8 @@ angular.module('core-directives')
                     var checkBox = $(this).find('i');
 
                     var ws = $(this).data('ws'),
-                        name = $(this).data('name');
+                        name = $(this).data('name')
+                        media = $(this).data('media');
 
                     checkBox.toggleClass('fa-square-o fa-check-square-o');
 
@@ -163,7 +165,9 @@ angular.module('core-directives')
                                 fba: {
                                     ws: ws,
                                     name: name
-                                }};
+                                },
+                                org: rowData[10].Name,
+                                media: media};
 
                     if (checkBox.hasClass('fa-check-square-o')) {
                         checkBox.css('opacity', 1.0);
