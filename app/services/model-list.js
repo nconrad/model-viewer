@@ -105,8 +105,8 @@ function($http, $q, $rootScope) {
                                         rxnCount: meta['Number reaction variables'],
                                         cpdCount: meta['Number compound variables'],
                                         maximized: meta['Maximized'] ? 'true' : 'false',
+                                        biomass: meta['Biomass function']
                                        })
-
                         }
 
                         return items;

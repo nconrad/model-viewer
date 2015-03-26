@@ -1,3 +1,8 @@
+
+<style>
+    .fba-table table {margin-left: 0;}
+</style>
+
 <md-dialog>
 
     <md-content class="fba-table">
@@ -6,12 +11,13 @@
         <table class="table-hover">
             <thead>
                 <tr>
-                    <th>Compare?</th>
+                    <th></th>
                     <th>Media</th>
                     <th>ID</th>
                     <th>Objective</th>
-                    <th>Rxn Variables</th>
-                    <th>Cpd Variables</th>
+                    <th>Rxn Vars</th>
+                    <th>Cpd Vars</th>
+                    <th>Biomass Function</th>
                 </tr>
             </thead>
 
@@ -27,6 +33,7 @@
                 <td>{{fba.objective}}</td>
                 <td>{{fba.rxnCount}}</td>
                 <td>{{fba.cpdCount}}</td>
+                <td>{{fba.biomass}}</td>
             </tr>
         </table>
 

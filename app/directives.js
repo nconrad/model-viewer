@@ -102,15 +102,14 @@ angular.module('core-directives')
                              '</thead>');
 
                 for (var i=0; i<d.length; i++) {
-                    var ws = d[i][7],
-                        name = d[i][1],
-                        type = d[i][2].split('-')[0];
-                    var meta = d[i][10];
+                    var item = d[i];
+                    var ws = item.ws,
+                        name = item.name;
 
                     if (ws === 'core_VR_FBA_Glucose_aerobic')
-                        continue
+                        continue;
 
-                    var row = $('<tr data-ws="'+ws+'" data-name="'+name+'" data-media="'+meta['Media name']+'">');
+                    var row = $('<tr data-ws="'+ws+'" data-name="'+name+'" data-media="'+item.media+'">');
 
                     // mark anything selected as checked
                     var cb = '<i class="fa fa-square-o"></i>';
@@ -119,23 +118,22 @@ angular.module('core-directives')
 
                         if (item.fba.ws === ws && item.fba.name === name) {
                             cb = '<i class="fa fa-check-square-o"></i>';
-                            break
+                            break;
                         }
                     }
                     var fbaLink = "fbaPage({ws: '"+ws+"', name: '"+name+"'})",
-                        mediaLink = "mediaPage({ws: 'coremodels_media', name: '"+meta['Media name']+"'})";
+                        mediaLink = "mediaPage({ws: 'coremodels_media', name: '"+item.media+"'})";
 
                     row.append('<td>'+cb+'</td>'+
-                               '<td><a ui-sref="'+mediaLink+'">'+meta['Media name']+'</a></td>'+
+                               '<td><a ui-sref="'+mediaLink+'">'+item.media+'</a></td>'+
                                '<td><a ui-sref="'+fbaLink+'">'+name+'</a></td>'+
-                               '<td>'+(meta['Objective'] === '10000000' ? 0 : meta['Objective'])+'</td>'+
-                               '<td>'+meta['Number reaction variables']+'</td>'+
-                               '<td>'+meta['Number compound variables']+'</td>'+
-                               '<td>'+meta['Biomass function']+'</td>')
+                               '<td>'+(item.objective === '10000000' ? 0 : item.objective)+'</td>'+
+                               '<td>'+item.rxnCount+'</td>'+
+                               '<td>'+item.cpdCount+'</td>'+
+                               '<td>'+item.biomass+'</td>');
 
                     table.append(row);
                 }
-
 
                 table.find('tbody tr').unbind('hover');
                 table.find('tbody tr').hover(function(e) {
@@ -150,7 +148,7 @@ angular.module('core-directives')
 
                 table.find('tbody tr').unbind('click');
                 table.find('tbody tr').click(function(e) {
-                    e.preventDefault()
+                    e.preventDefault();
                     var checkBox = $(this).find('i');
 
                     var ws = $(this).data('ws'),
@@ -206,9 +204,9 @@ angular.module('core-directives')
                         caret.hide()
                         caret.parent().loading('');
 
-                        //$http.rpc('ws', 'list_referencing_objects', [{workspace: ws, name: name}])
-                        MV.getRelatedObjects([{workspace: ws, name: name}], 'KBaseFBA.FBA')
+                        MV.getRelatedFBAs([{workspace: ws, name: name}])
                             .then(function(data) {
+                                console.log('data', data)
                                 caret.parent().rmLoading()
                                 caret.show().toggleClass('fa-caret-right fa-caret-down')
 
