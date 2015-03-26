@@ -127,7 +127,7 @@ angular.module('core-directives')
                     row.append('<td>'+cb+'</td>'+
                                '<td>'+meta['Media name']+'</td>'+
                                '<td><a ui-sref="'+link+'" >' +name+'</a></td>'+
-                               '<td>'+(meta['Objective'] === 10000000 ? 0:meta['Objective'])+'</td>'+
+                               '<td>'+(meta['Objective'] === '10000000' ? 0:meta['Objective'])+'</td>'+
                                '<td>'+meta['Number reaction variables']+'</td>'+
                                '<td>'+meta['Number compound variables']+'</td>')
 
