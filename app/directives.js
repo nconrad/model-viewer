@@ -174,7 +174,7 @@ angular.module('core-directives')
                         MV.add(data);
                     } else {
                         checkBox.css('opacity', 0.5);
-                        MV.rm(data);
+                        MV.rm(data, true);
                     }
 
                     scope.$apply();

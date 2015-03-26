@@ -32,8 +32,18 @@ function($http, $q, $rootScope) {
         $rootScope.$broadcast('MV.event.change');
     }
 
-    this.rm = function(i) {
-        self.models.splice(i, 1);
+    this.rm = function(item, anyMatch) {
+        // if anyMatch is true, an object comparison will occur
+
+        if (!anyMatch) {
+            self.models.splice(item, 1);
+        } else {
+            for (var i=0; i<this.models.length; i++) {
+                if (angular.equals(this.models[i], item))
+                    self.models.splice(i, 1);
+            }
+        }
+
         localStorage.setItem(key, angular.toJson(self.models));
         $rootScope.$broadcast('MV.event.change');
     }
