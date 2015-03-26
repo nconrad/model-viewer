@@ -5,6 +5,7 @@ angular.module('coreModelViewer',
  'core-directives',
  'mv-controllers',
  'ui.router',
+ 'ngAnimate',
  'kbase-rpc',
  'ngMaterial',
  'ModelViewer'])

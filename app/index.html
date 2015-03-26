@@ -192,7 +192,7 @@
                     </div>
 
                     <ul ng-show="MV.models.length" class="list-unstyled" ng-controller="SelectedData">
-                        <li ng-repeat="item in MV.models">
+                        <li ng-repeat="item in MV.models track by $index">
                             <div ng-mouseenter="show()" ng-mouseleave="hide()">
                                 <a ui-sref="modelPage({ws: '{{item.model.ws}}', name: '{{item.model.name}}' })"
                                    class="model">
@@ -206,11 +206,11 @@
 
                             <div>
                                 <a ui-sref="fbaPage({ws: '{{item.fba.ws}}', name: '{{item.fba.name}}' })"
-                                   class="fba">
+                                   class="fba sample-show-hide">
                                    (FBA) {{item.fba.name}}
                                 </a>
                                 <span class="glyphicon glyphicon-cog pull-right hover pointer"
-                                      ng-click="openFBAView($event, item)">
+                                      ng-click="openFBAView($event, $index, item)">
                                 </button>
                             </div>
                             <br>

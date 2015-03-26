@@ -11,7 +11,7 @@ angular.module('mv-controllers', [])
 .controller('SelectedData', ['$scope', '$mdDialog',
 function($scope, $dialog) {
 
-    $scope.openFBAView = function(ev, item) {
+    $scope.openFBAView = function(ev, $index, item) {
         $dialog.show({
             templateUrl: 'views/dialogs/fba.html',
             targetEvent: ev,
@@ -19,26 +19,32 @@ function($scope, $dialog) {
                 function($scope, $http, MV) {
                 $scope.MV = MV;
                 $scope.item = item;
+                $scope.selectedIndex = $index;
 
-                MV.getRelatedObjects([{workspace: item.model.ws, name: item.model.name}], 'KBaseFBA.FBA')
+                MV.getRelatedFBAs([{workspace: item.model.ws, name: item.model.name}])
                     .then(function(fbas) {
                         for (var i=0; i<fbas.length; i++) {
-                            if ( $scope.item.fba.name === fbas[i][1] &&
-                                 $scope.item.fba.ws === fbas[i][7])
+                            if ( $scope.item.fba.name === fbas[i].name &&
+                                 $scope.item.fba.ws === fbas[i].ws)
 
-                                 $scope.selected = i;
+                                 $scope.activeFBAIndex = i;
                         }
                         $scope.fbas = fbas;
                     })
 
-                $scope.selectFBA = function($index, newFBA, oldItem) {
-                    MV.rm({model: {name: item.model.name, ws: item.model.ws},
-                                   fba: {name: oldItem.fba.name, ws: oldItem.fba.ws} })
-                    MV.add({model: {name: item.model.name, ws: item.model.ws},
-                                    fba: {name: newFBA[1], ws: newFBA[7]} });
+                $scope.selectFBA = function($index, newFBA) {
+                    //var oldItem = {model: {name: item.model.name, ws: item.model.ws},
+                    //               fba: {name: oldItem.fba.name, ws: oldItem.fba.ws}};
+                    var newItem = {model: {name: item.model.name, ws: item.model.ws },
+                                   fba: {name: newFBA.name, ws: newFBA.ws }};
 
+                    MV.swapItem($scope.selectedIndex, newItem);
 
-                    $scope.selected = $index;
+                    $scope.activeFBAIndex = $index;
+                    $scope.item = newItem;
+                    $dialog.hide();
+                    angular.element(ev.target).parent()
+                           .fadeOut('fast').fadeIn('fast')
                 }
 
                 $scope.cancel = function(){
@@ -51,6 +57,8 @@ function($scope, $dialog) {
             }]
         })
     }
+
+
 }])
 
 .controller('Compare', ['$state', '$scope', 'ModelViewer', '$stateParams',
@@ -172,8 +180,8 @@ function ($scope, $log, $timeout, MV, $compile) {
             $scope.selectedIndex = tabs.length-1;
 
             $scope.loadingMap = true;
-            console.log('data!', MV.data)
 
+            //fixme
             $('#'+map.id).kbasePathway({models: MV.data.FBAModel,
                                         fbas: MV.data.FBA,
                                         map_ws: 'nconrad:paths',

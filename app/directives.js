@@ -85,7 +85,6 @@ angular.module('core-directives')
                  })
 
             function format(d, rowData) {
-                console.log('fba', d)
                 var container = $('<div class="fba-table">');
 
                 container.append('<h5>FBA Results</h5>')
@@ -292,7 +291,6 @@ angular.module('core-directives')
             elem.loading('', true);
             var prom = $http.rpc('ws', 'list_objects', {workspaces: ['coremodels_media'], includeMetadata: 1})
             prom.then(function(data) {
-                console.log('media', data)
                 elem.rmLoading();
 
                 scope.tableOptions.data = data;
@@ -378,109 +376,7 @@ function($compile, $stateParams) {
         }
     }
 }])
-.directive('pathways',
-['$stateParams', 'ModelViewer', '$q', '$http',
-function($stateParams, MV, $q, $http) {
-    return {
-        link: function(scope, elem, attr) {
-            var pathContainer;
 
-            function update() {
-                pathContainer = $('<div class="path-container">')
-                $(elem).html(pathContainer);
-
-                $(elem).loading();
-                MV.updateData().then(function(d) {
-                        $(elem).rmLoading();
-
-                        var models = d.FBAModel,
-                            all_fbas = d.FBA;
-
-
-                        drawMapTable()
-
-                })
-            }
-
-            update();
-            scope.$on('MV.event.change', update)
-
-
-            function drawMapTable() {
-                // load table for maps
-                $(elem).loading();
-                $http.rpc('ws', 'list_objects', {workspaces: ['nconrad:paths'], includeMetadata: 1})
-                     .then(function(d){
-                        $(elem).rmLoading();
-
-
-                        var settings = {
-                            "aaData": d,
-                            "fnDrawCallback": events,
-                            "aaSorting": [[ 1, "asc" ]],
-                            "aoColumns": [
-                                { sTitle: 'Name', mData: function(d) {
-                                    return '<a class="pathway-link" data-map-id="'+d[1]+'">'+d[10].name+'</a>';
-                                }},
-                                { sTitle: 'Map ID', mData: 1},
-                                { sTitle: 'Rxn Count', sWidth: '10%', mData: function(d){
-                                    if ('reaction_ids' in d[10])
-                                        return d[10].reaction_ids.split(',').length;
-                                    else
-                                        return 'N/A';
-                                }},
-                                { sTitle: 'Cpd Count', sWidth: '10%', mData: function(d) {
-                                    if ('compound_ids' in d[10])
-                                        return d[10].compound_ids.split(',').length;
-                                    else
-                                        return 'N/A';
-
-                                }} ,
-                                { sTitle: "Source","sWidth": "10%", mData: function(d) {
-                                    return "KEGG";
-                                }},
-                            ],
-                            language: {search: "_INPUT_",
-                                       searchPlaceholder: 'Search maps'}
-                        }
-
-                        var selectionTable = $('<table class="table table-bordered table-striped">');
-                        $(elem).append(selectionTable)
-                        var table = selectionTable.DataTable(settings);
-
-                    }).catch(function(e){
-                        $(elem).prepend('<div class="alert alert-danger">'+
-                                    e.error.message+'</div>')
-                    });
-            }
-
-
-
-            function events() {
-                // event for clicking on pathway link
-                $(elem).find('.pathway-link').unbind('click')
-                $(elem).find('.pathway-link').click(function() {
-                    var mapID = $(this).data('map-id'),
-                        name = $(this).text();
-                    var exists;
-
-                    var container = $('<div id="path-'+mapID+'" class="path-container">');
-                    container.loading();
-                    tabs.addTab({name: name, removable: true, content: container});
-                    load_map(mapID, container);
-                    tabs.showTab(name);
-                });
-
-                // tooltip for hover on pathway name
-                $(elem).find('.pathway-link')
-                         .tooltip({title: 'Open path tab',
-                                   placement: 'right', delay: {show: 1000}});
-            } // end events
-
-            //if (scope.models.length > 0) updateCompare();
-        }
-    }
-}])
 .directive('contig', ['stateParams', function($stateParams) {
     return {
         link: function(scope, ele, attr) {

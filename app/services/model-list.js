@@ -10,7 +10,6 @@ function($http, $q, $rootScope) {
     // models that are displayed in sidebar
     var current = localStorage.getItem(key);
     this.models = (current ? angular.fromJson(current) : []);
-    console.log('stored items', this.models)
 
     // models for things in compare view
     this.referencing = {};
@@ -18,7 +17,6 @@ function($http, $q, $rootScope) {
 
     // actual data cache
     this.data = {};
-
 
     this.add = function(item) {
         // model has the form {ws: 'foo', name: bar}
@@ -34,7 +32,7 @@ function($http, $q, $rootScope) {
         $rootScope.$broadcast('MV.event.change');
     }
 
-    this.rm = function(item) {
+    this.rm = function(item, broadcast) {
         for (var i=0; i<self.models.length; i++) {
             if ( angular.equals(self.models[i], item) )
                 self.models.splice(i, 1);
@@ -48,6 +46,12 @@ function($http, $q, $rootScope) {
         self.models.splice(0, self.models.length);
         localStorage.setItem(key, '[]');
         this.referencing = {};
+        $rootScope.$broadcast('MV.event.change');
+    }
+
+    this.swapItem = function(index, newItem) {
+        self.models[index] = newItem;
+        localStorage.setItem(key, angular.toJson(self.models));
         $rootScope.$broadcast('MV.event.change');
     }
 
@@ -78,6 +82,31 @@ function($http, $q, $rootScope) {
                     })
     }
 
+    this.getRelatedFBAs = function(objs) {
+        return self.getRelatedObjects(objs, 'KBaseFBA.FBA')
+                   .then(function(d) {
+                        var items = [];
+
+                        for (var i=0; i<d.length; i++) {
+                            var obj = d[i],
+                                meta = d[i][10];
+
+                            items.push({name: obj[1],
+                                        ws: obj[7],
+                                        media: obj['media'],
+                                        objective: (meta['Objective'] === '10000000' ?
+                                                        0 : meta['Objective']),
+                                        rxnCount: meta['Number reaction variables'],
+                                        cpdCount: meta['Number compound variables'],
+                                        maximized: meta['Maximized'] ? 'true' : 'false',
+                                       })
+
+                        }
+
+                        return items;
+                   })
+
+    }
 
     // This uses this.models (organized by type)
     // and updates this.data
