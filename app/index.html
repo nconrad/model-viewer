@@ -43,7 +43,6 @@
         <script src="../lib/ui-common/src/widgets/maps/kbasePathway.js"></script>
         <script src="../lib/ui-common/src/widgets/maps/kbasePathways.js"></script>
 
-        <!-- modeling widgets -->
         <script src="../lib/ui-common/src/widgets/modeling/KBModeling.js"></script>
         <script src="../lib/ui-common/src/widgets/modeling/kbaseTabTable.js"></script>
         <script src="../lib/ui-common/src/widgets/modeling/kbaseTabs.js"></script>
@@ -56,8 +55,6 @@
         <script src="../lib/ui-common/src/widgets/modeling/KBaseSearch.GenomeSet.js"></script>
         <script src="../lib/ui-common/src/widgets/modeling/KBaseFBA.FBAModelSet.js"></script>
         <script src="../app/viz/modelSeedVizConfig.js"></script>
-        <!-- end modeling widgets -->
-
 
         <script src="../components/angular/angular.js"></script>
         <script src="../components/ui-router/release/angular-ui-router.js"></script>
@@ -73,7 +70,6 @@
         <script src="../app/controllers.js"></script>
         <script src="../app/services/model-list.js"></script>
         <script src="../app/directives.js"></script>
-
     <!-- endbuild -->
 
 
@@ -148,40 +144,6 @@
 
         <nav class="navbar-default sidebar" role="navigation">
             <div class="sidebar-nav navbar-collapse">
-                <!--<ul class="nav" id="side-menu">
-                    <li>
-                        <a ng-class="{ active: $state.includes('genomes')}" ui-sref="genomes"><object width=10 data="img/dna10.svg" type="image/svg+xml"></object> Genomes<span class="text-muted pull-right">8,179</span></a>
-                    </li>
-
-                    <li>
-                        <a ng-class="{ active: $state.includes('models')}" ui-sref="models"><i class="fa fa-bug"></i> Models<span class="text-muted pull-right">11,483</span></a>
-                    </li>
-
-                    <li>
-                        <a ng-class="{ active: $state.includes('media')}" ui-sref="media"><i class="fa fa-cutlery"></i> Media<span class="text-muted pull-right">17</span></a>
-                    </li>
-                    <li>
-                        <a ng-class="{ active: $state.includes('fba')}" ui-sref="fba"><i class="fa fa-line-chart"></i> FBA<span class="text-muted pull-right">58,998</span></a>
-                    </li>
-
-                    <li>
-                        <a ng-class="{ active: $state.includes('compare')}"  ui-sref="compare">
-                            Compare Models
-                            <span class="badge pull-right model-count">{{MV.models.length}}</span>
-                        </a>
-                    </li>
-                </ul>-->
-                <!--
-                <ul class="nav">
-                    <li>
-                        <a ng-class="{ active: $state.includes('compare')}"  ui-sref="compare">
-                            Comparative Viewer
-                            <span class="pull-right model-count">({{MV.models.length}})</span>
-                        </a>
-                    </li>
-                </ul>
-                -->
-
                 <div id="selected-models">
                     <div class="header">SELECTED DATA
                         <div class="pull-right" ng-if="MV.models.length" >(
@@ -196,7 +158,7 @@
 
                             <div class="ellipsis">
                                 <a ui-sref="modelPage({ws: '{{item.model.ws}}', name: '{{item.model.name}}' })"
-                               class="model">
+                                   class="model">
                                    {{item.org}}
                                 </a>
                                 <span class="fa fa-remove hover pointer"
@@ -218,14 +180,9 @@
                         </li>
                     </ul>
 
-                    <div ng-if="!MV.models.length" class="text-danger">No data selected</div>
-
-                    <!--
-                    <div ng-if="MV.models.length">
-                        <a ui-sref="compare" class="pull-left btn btn-outline">
-                            Compare Selected <span class="model-count">({{MV.models.length}})</span>
-                        </a>
-                    </div>-->
+                    <div ng-if="!MV.models.length" class="text-danger">
+                        No data selected
+                    </div>
                 </div>
 
             </div>
@@ -233,27 +190,12 @@
 
             <div class="sidebar-nav-small" style="display: none;">
                 <ul class="nav">
-                    <!--<li>
-                        <a ng-class="{ active: $state.includes('genomes')}" ui-sref="genomes"><object width=10 data="img/dna10.svg" type="image/svg+xml"></object></a>
-                    </li>-->
-                    <!--<li>
-                        <a ng-class="{ active: $state.includes('models')}" ui-sref="models"><i class="fa fa-bug"></i></a>
-                    </li>
-                    <li>
-                        <a ng-class="{ active: $state.includes('media')}" ui-sref="media"><i class="fa fa-cutlery"></i></a>
-                    </li>
-                    <li>
-                        <a ng-class="{ active: $state.includes('fba')}" ui-sref="fba"><i class="fa fa-line-chart"></i></a>
-                    </li>-->
-
                     <li>
                         <a ui-sref="compare">
                             <span class="badge model-count">{{MV.models.length}}</span>
                         </a>
                     </li>
-
                 </ul>
-
             </div>
 
         </nav>
@@ -277,7 +219,6 @@
             </span>
         </div>
         -->
-
     </div>
 
 

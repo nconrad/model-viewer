@@ -182,7 +182,6 @@ function ($scope, $log, $timeout, MV, $compile) {
         })
 
         $scope.$on('MV.event.change', function() {
-            console.log('updating')
             MV.updateData().then(function() {
                 $scope.loadMap(map);
             })
@@ -199,9 +198,9 @@ function ($scope, $log, $timeout, MV, $compile) {
     };
 
     $scope.loadMap = function(map) {
-        $scope.loadingMap = true;
         $('#'+map.id).find('.path-container').remove();
         $('#'+map.id).append('<div class="path-container">')
+        $scope.loadingMap = true;
         $('#'+map.id).find('.path-container').kbasePathway({models: MV.data.FBAModel,
                                     fbas: MV.data.FBA,
                                     map_ws: 'nconrad:paths',

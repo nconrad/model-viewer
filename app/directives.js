@@ -21,11 +21,10 @@ angular.module('core-directives')
 .directive('pathTest', function() {
     return {
         link: function(scope, elem, attrs) {
-
             angular.element(elem).kbasePathway({model_ws: 'janakakbase:CoreModels-VR-GP',
                                                 model_name: 'core_1000565.3_GP',
                                                 map_name: 'map00010',
-                                                map_ws: 'nconrad:paths'})
+                                                map_ws: 'nconrad:paths'});
         }
     }
  })
@@ -82,21 +81,23 @@ angular.module('core-directives')
                  })
 
             function format(d, rowData) {
+                console.log('row', d)
                 var container = $('<div class="fba-table">');
 
-                container.append('<h5>FBA Results</h5>')
+                container.append('<h5><b>FBA Results</b></h5>')
                 var table = $('<table class="table-hover">');
                 container.append(table);
 
                 // header
                 table.append('<thead>'+
                                 '<tr>'+
-                                  '<th>Compare?</th>'+
+                                  '<th><i class="fa fa-check-square-o" style="visibility:hidden;"></i></th>'+
                                   '<th>Media</th>'+
                                   '<th>ID</th>'+
                                   '<th>Objective</th>'+
                                   '<th>Rxn Variables</th>'+
                                   '<th>Cpd Variables</th>'+
+                                  '<th>Biomass Function</th>'+
                                '</tr>'+
                              '</thead>');
 
@@ -109,8 +110,7 @@ angular.module('core-directives')
                     if (ws === 'core_VR_FBA_Glucose_aerobic')
                         continue
 
-                    var row = $('<tr data-ws="'+ws+'" data-name="'+
-                                    name+'" data-media="'+meta['Media name']+'">');
+                    var row = $('<tr data-ws="'+ws+'" data-name="'+name+'" data-media="'+meta['Media name']+'">');
 
                     // mark anything selected as checked
                     var cb = '<i class="fa fa-square-o"></i>';
@@ -122,33 +122,34 @@ angular.module('core-directives')
                             break
                         }
                     }
-                    var link = "fbaPage({ws: '"+ws+"', name: '"+name+"'})";
+                    var fbaLink = "fbaPage({ws: '"+ws+"', name: '"+name+"'})",
+                        mediaLink = "mediaPage({ws: 'coremodels_media', name: '"+meta['Media name']+"'})";
 
                     row.append('<td>'+cb+'</td>'+
-                               '<td>'+meta['Media name']+'</td>'+
-                               '<td><a ui-sref="'+link+'" >' +name+'</a></td>'+
-                               '<td>'+(meta['Objective'] === '10000000' ? 0:meta['Objective'])+'</td>'+
+                               '<td><a ui-sref="'+mediaLink+'">'+meta['Media name']+'</a></td>'+
+                               '<td><a ui-sref="'+fbaLink+'">'+name+'</a></td>'+
+                               '<td>'+(meta['Objective'] === '10000000' ? 0 : meta['Objective'])+'</td>'+
                                '<td>'+meta['Number reaction variables']+'</td>'+
-                               '<td>'+meta['Number compound variables']+'</td>')
+                               '<td>'+meta['Number compound variables']+'</td>'+
+                               '<td>'+meta['Biomass function']+'</td>')
 
                     table.append(row);
                 }
 
 
-                    table.find('tr').unbind('hover');
-                    table.find('tr').hover(function(e) {
-                        var checkBox = $(this).find('i');
-                        checkBox.css('opacity', 1.0);
-                    }, function(e) {
-                        var checkBox = $(this).find('i');
-                        if (!checkBox.hasClass('fa-check-square-o'))
-                            checkBox.css('opacity', 0.5);
-                    })
+                table.find('tbody tr').unbind('hover');
+                table.find('tbody tr').hover(function(e) {
+                    var checkBox = $(this).find('i');
+                    checkBox.css('opacity', 1.0);
+                }, function(e) {
+                    var checkBox = $(this).find('i');
+                    if (!checkBox.hasClass('fa-check-square-o'))
+                        checkBox.css('opacity', 0.5);
+                })
 
 
-
-                table.find('tr').unbind('click');
-                table.find('tr').click(function(e) {
+                table.find('tbody tr').unbind('click');
+                table.find('tbody tr').click(function(e) {
                     e.preventDefault()
                     var checkBox = $(this).find('i');
 
@@ -238,7 +239,7 @@ angular.module('core-directives')
 
             // annoying goodness to keep datatables in sync
             function updateSelectedInView() {
-                $(elem).find('.fba-table tr').each(function() {
+                $(elem).find('.fba-table tbody tr').each(function() {
                     var cb = $(this).find('i');
                     var ws = $(this).data('ws'),
                         name = $(this).data('name');

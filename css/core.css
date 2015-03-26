@@ -228,7 +228,7 @@ table tr.active {
 }
 
 .fba-table table {
-    margin-left: 50px;
+    margin-left: 25px;
 }
 
 .fba-table table td,
@@ -236,7 +236,7 @@ table tr.active {
     padding: 0 10px;
 }
 
-.fba-table tr:hover {
+.fba-table tbody tr:hover {
     cursor: pointer;
     cursor: hand;
 }
