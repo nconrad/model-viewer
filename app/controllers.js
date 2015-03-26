@@ -178,26 +178,38 @@ function ($scope, $log, $timeout, MV, $compile) {
 
         $timeout(function() {
             $scope.selectedIndex = tabs.length-1;
+            $scope.loadMap(map); //fixme!
+        })
 
-            $scope.loadingMap = true;
-
-            //fixme
-            $('#'+map.id).kbasePathway({models: MV.data.FBAModel,
-                                        fbas: MV.data.FBA,
-                                        map_ws: 'nconrad:paths',
-                                        map_name: map.id,
-                                        cb: function() {
-                                            $scope.loadingMap = false;
-                                        }});
+        $scope.$on('MV.event.change', function() {
+            console.log('updating')
+            MV.updateData().then(function() {
+                $scope.loadMap(map);
+            })
         })
     };
 
     $scope.removeTab = function (tab) {
-      for (var j = 0; j < tabs.length; j++) {
-        if (tab.title === tabs[j].title) {
-          $scope.tabs.splice(j, 1);
-          break;
+        for (var j = 0; j < tabs.length; j++) {
+            if (tab.title === tabs[j].title) {
+                $scope.tabs.splice(j, 1);
+                break;
+            }
         }
-      }
     };
+
+    $scope.loadMap = function(map) {
+        $scope.loadingMap = true;
+        $('#'+map.id).find('.path-container').remove();
+        $('#'+map.id).append('<div class="path-container">')
+        $('#'+map.id).find('.path-container').kbasePathway({models: MV.data.FBAModel,
+                                    fbas: MV.data.FBA,
+                                    map_ws: 'nconrad:paths',
+                                    map_name: map.id,
+                                    cb: function() {
+                                        $scope.$apply(function() {
+                                            $scope.loadingMap = false;
+                                        })
+                                    }});
+    }
 }]);
