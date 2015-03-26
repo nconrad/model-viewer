@@ -34,7 +34,7 @@ angular.module('core-directives')
     function($compile, $stateParams, MV, $http, $timeout) {
     return {
         link: function(scope, elem, attr) {
-            var workspaces = ['janakakbase:CM-ATP-eq'];
+            var workspaces = ['janakakbase:CM-VR'];
 
 
             var table;
@@ -52,9 +52,6 @@ angular.module('core-directives')
                                                 ws = d[7],
                                                 path = "modelPage({ws: '"+ws+"', name: '"+name+"'})",
                                                 link = '<a ui-sref="'+path+'" >'+name+'</a>';
-                                                //add_btn = ' <button type="button" data-ws="'+ws+'" data-name="'+name+
-                                                //        '" class="btn btn-default btn-xs btn-add-model hide">Add'+
-                                                //  '</button>';
                                             return link;
                                       }},
                                       { title: "Reactions", data: function(d){

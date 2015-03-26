@@ -93,7 +93,7 @@ function($http, $q, $rootScope) {
 
                             items.push({name: obj[1],
                                         ws: obj[7],
-                                        media: obj['media'],
+                                        media: meta['Media name'],
                                         objective: (meta['Objective'] === '10000000' ?
                                                         0 : meta['Objective']),
                                         rxnCount: meta['Number reaction variables'],
