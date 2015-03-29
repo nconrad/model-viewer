@@ -81,11 +81,11 @@ angular.module('core-directives')
                  })
 
             function format(d, rowData) {
-                console.log('row', d)
+
                 var container = $('<div class="fba-table">');
 
-                container.append('<h5><b>FBA Results</b></h5>')
-                var table = $('<table class="table-hover">');
+                container.append('<h5>FBA Results</h5>')
+                var table = $('<table class="table table-borderless table-hover table-condensed">');
                 container.append(table);
 
                 // header
@@ -95,21 +95,21 @@ angular.module('core-directives')
                                   '<th>Media</th>'+
                                   '<th>ID</th>'+
                                   '<th>Objective</th>'+
-                                  '<th>Rxn Variables</th>'+
-                                  '<th>Cpd Variables</th>'+
+                                  '<th>Rxn Vars</th>'+
+                                  '<th>Cpd Vars</th>'+
                                   '<th>Biomass Function</th>'+
                                '</tr>'+
                              '</thead>');
 
                 for (var i=0; i<d.length; i++) {
-                    var item = d[i];
-                    var ws = item.ws,
-                        name = item.name;
+                    var obj = d[i];
+                    var ws = obj.ws,
+                        name = obj.name;
 
                     if (ws === 'core_VR_FBA_Glucose_aerobic')
                         continue;
 
-                    var row = $('<tr data-ws="'+ws+'" data-name="'+name+'" data-media="'+item.media+'">');
+                    var row = $('<tr data-ws="'+ws+'" data-name="'+name+'" data-media="'+obj.media+'">');
 
                     // mark anything selected as checked
                     var cb = '<i class="fa fa-square-o"></i>';
@@ -121,16 +121,17 @@ angular.module('core-directives')
                             break;
                         }
                     }
+
                     var fbaLink = "fbaPage({ws: '"+ws+"', name: '"+name+"'})",
-                        mediaLink = "mediaPage({ws: 'coremodels_media', name: '"+item.media+"'})";
+                        mediaLink = "mediaPage({ws: 'coremodels_media', name: '"+obj.media+"'})";
 
                     row.append('<td>'+cb+'</td>'+
-                               '<td><a ui-sref="'+mediaLink+'">'+item.media+'</a></td>'+
+                               '<td><a ui-sref="'+mediaLink+'">'+obj.media+'</a></td>'+
                                '<td><a ui-sref="'+fbaLink+'">'+name+'</a></td>'+
-                               '<td>'+(item.objective === '10000000' ? 0 : item.objective)+'</td>'+
-                               '<td>'+item.rxnCount+'</td>'+
-                               '<td>'+item.cpdCount+'</td>'+
-                               '<td>'+item.biomass+'</td>');
+                               '<td>'+(obj.objective === '10000000' ? 0 : obj.objective)+'</td>'+
+                               '<td>'+obj.rxnCount+'</td>'+
+                               '<td>'+obj.cpdCount+'</td>'+
+                               '<td>'+obj.biomass+'</td>');
 
                     table.append(row);
                 }
@@ -206,7 +207,6 @@ angular.module('core-directives')
 
                         MV.getRelatedFBAs([{workspace: ws, name: name}])
                             .then(function(data) {
-                                console.log('data', data)
                                 caret.parent().rmLoading()
                                 caret.show().toggleClass('fa-caret-right fa-caret-down')
 
@@ -740,7 +740,6 @@ function($compile, $stateParams) {
 
                     elem.html('');
                     //element.append('<div>'+d.x.length+' x '+d.y.length+' = '+(d.x.length*d.y.length)+' boxes</div>' )
-                    elem.append('<br>')
                     elem.append('<div id="canvas">');
                     heatmap_d3(d.x, d.y, d.data);
                 })
@@ -753,6 +752,7 @@ function($compile, $stateParams) {
             })
 
             function parseData(models, fbas) {
+                console.log('fbas',fbas)
                 // create heatmap data
                 var rxn_names = [],
                     model_names = [],
@@ -827,7 +827,7 @@ function($compile, $stateParams) {
                 })
             }
 
-
+            // canvas map, for use with viz service
             function super_map(y_data, x_data, rows) {
                 elem.append('<div id="map" class="map" style="height: 400px; width: 100%;"></div>')
 
@@ -905,7 +905,8 @@ function($compile, $stateParams) {
                 }
             }
 
-            function heatmap_d3(x_data, y_data, rows) {
+            // basic, zoomable svg map
+            function heatmap_d3(xData, yData, rows) {
                 elem.append('<div id="canvas">');
                 var svg = d3.select("#canvas").append("svg")
                     .attr("width", width)
@@ -924,37 +925,39 @@ function($compile, $stateParams) {
 
                 // to precompute starting postion of heatmap
                 var y_widths = [];
-                for (var i=0; i < y_data.length; i++) {
+                for (var i=0; i < yData.length; i++) {
                     //var label = svg.append("text").attr("y", start_y+i*h+h)
-                    //            .text(y_data[i]).attr("font-size", font_size);
+                    //            .text(yData[i]).attr("font-size", font_size);
 
                     //y_widths.push(label.node().getBBox().width);
-                    y_widths.push(y_data[i].length * 4)
+                    y_widths.push(yData[i].length * 4)
 
                 }
                 $(elem).find('text').remove(); // fixme
 
                 var start_x = Math.max.apply(Math, y_widths) + 5;
 
+                // for each row, plot each column entity
+                for (var i=0; i < yData.length; i++) {
 
-                for (var i=0; i < y_data.length; i++) {
-
-                    var y_label = svg.append("text").attr("y", start_y+i*h+h-0.5)
-                                     .text(y_data[i]).attr("font-size", font_size)
+                    var y_label = svg.append("text")
+                                     .attr("y", start_y+i*h+h-0.5)
+                                     .text(yData[i])
+                                     .attr("font-size", font_size)
                                      .attr('text-anchor', 'end')
                                      .on("mouseover", function(){d3.select(this).attr("fill", "black");})
                                      .on("mouseout", function(){d3.select(this).attr("fill", "#333");});
                     var bb = y_label.node().getBBox();
                     y_label.attr('transform', 'translate('+String(start_x-4)+',0)');
 
-                    for (var j=0; j < x_data.length; j++) {
+                    for (var j=0; j < xData.length; j++) {
                         if (i === 0) {
                             var pos = start_x+j*w+w;
 
                             var x_label = svg.append("text")
                                              .attr("x", pos)
                                              .attr("y", start_y-3)
-                                             .text(x_data[j])
+                                             .text(xData[j])
                                              .attr("font-size", font_size)
                                              .attr("transform", 'rotate(-45,'+pos+','+start_y+')')
                                              .on("mouseover", function(){
@@ -973,6 +976,7 @@ function($compile, $stateParams) {
                                       .attr("height", h)
                                       .attr("stroke", msConfig.stroke)
                                       .attr('stroke-width', '.5px')
+                                      .attr('data-row-num', i)
                                       .attr('class', 'model-rxn');
                         if (prop.present && prop.flux) {
                             var color = msConfig.getColor(prop.flux);
@@ -981,12 +985,32 @@ function($compile, $stateParams) {
                             rect.attr("fill", (prop.present === 1 ? msConfig.geneColor : 'white') );
                         }
 
+                        // tool tips
+                        var title = xData[j];
+                        var content = '<b>Flux:</b> '+prop.flux+'<br>'+
+                                      '<b>Org:</b> '+yData[i]+'<br>';
+                        $(rect.node()).popover({html: true, content: content,
+                                                animation: false, title: title,
+                                                container: 'body', trigger: 'hover'});
 
+                        // highlight object in selected data
+                        $(rect.node()).hover(function() {
+                            var i = $(this).attr('data-row-num')
+                            $('#selected-models ul li:eq('+i+')').find('a.fba')
+                            .addClass('selected-data-highlight')
+                        },
+                        function() {
+                            var i = $(this).attr('data-row-num')
+                            $('#selected-models ul li:eq('+i+')').find('a.fba')
+                                .removeClass('selected-data-highlight');
+                        })
+                        /*
                         $(rect.node()).popover({content: prop.flux,
-                                title: y_data[i],
+                                title: yData[i],
                                 trigger: 'hover',
                                 html: true,
                                 placement: 'bottom'});
+                        */
                     }
                 }
             }

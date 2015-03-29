@@ -8,13 +8,13 @@ angular.module('mv-controllers', [])
 
 }])
 
-.controller('SelectedData', ['$scope', '$mdDialog',
-function($scope, $dialog) {
+.controller('SelectedData', ['$scope', '$mdDialog', '$compile',
+function($scope, $dialog, $compile) {
 
     $scope.openFBAView = function(ev, $index, item) {
         $dialog.show({
             templateUrl: 'views/dialogs/fba.html',
-            targetEvent: ev,
+            // targetEvent: ev, //fixme
             controller: ['$scope', '$http', 'ModelViewer',
                 function($scope, $http, MV) {
                 $scope.MV = MV;
@@ -22,15 +22,14 @@ function($scope, $dialog) {
                 $scope.selectedIndex = $index;
 
                 MV.getRelatedFBAs([{workspace: item.model.ws, name: item.model.name}])
-                    .then(function(fbas) {
-                        for (var i=0; i<fbas.length; i++) {
-                            if ( $scope.item.fba.name === fbas[i].name &&
-                                 $scope.item.fba.ws === fbas[i].ws)
-
-                                 $scope.activeFBAIndex = i;
-                        }
-                        $scope.fbas = fbas;
-                    })
+                  .then(function(fbas) {
+                      for (var i=0; i<fbas.length; i++) {
+                          if ( $scope.item.fba.name === fbas[i].name &&
+                               $scope.item.fba.ws === fbas[i].ws)
+                               $scope.activeFBAIndex = i;
+                      }
+                      $scope.fbas = fbas;
+                  })
 
                 $scope.selectFBA = function($index, newFBA) {
                     var newItem = {model: {name: item.model.name, ws: item.model.ws },
@@ -38,13 +37,13 @@ function($scope, $dialog) {
                                    org: item.org,
                                    media: newFBA.media};
 
-
                     MV.swapItem($scope.selectedIndex, newItem);
                     $scope.activeFBAIndex = $index;
                     $scope.item = newItem;
                     $dialog.hide();
-                    angular.element(ev.target).parent().fadeOut(150)
-                           .fadeIn(200)
+
+                    //angular.element(ev.target).parent().fadeOut(150)
+                    //       .fadeIn(200);
                 }
 
                 $scope.cancel = function(){

@@ -169,7 +169,7 @@
                             <div class="ellipsis">
                                 <a ui-sref="fbaPage({ws: '{{item.fba.ws}}', name: '{{item.fba.name}}' })"
                                    class="fba">
-                                   {{item.media}}
+                                   <span class="label label-fba">FBA</span> {{item.media}}
                                 </a>
                                 <span class="glyphicon glyphicon-cog hover pointer"
                                       ng-click="openFBAView($event, $index, item)">

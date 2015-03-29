@@ -100,13 +100,18 @@
     font-size: 1.5em;
 }
 
-.selected-models .fa {
-    margin: 5px 0 0 0;
+#selected-models {
+    margin: 15px 7px;
 }
 
 #selected-models a {
+    text-decoration: none;
     color: #fff;
     position: relative;
+}
+
+#selected-models a:hover {
+    color: #dfdfdf;
 }
 
 #selected-models .fa,
@@ -116,7 +121,7 @@
     display: inline-block;
     position: absolute;
     right: 10px;
-    top: auto; /* override bootstrap */
+    top: auto;
     line-height: .8em;
 }
 #selected-models .glyphicon {
@@ -131,10 +136,6 @@
     border-bottom: 1px solid #9f9f9f;
 }
 
-#selected-models {
-    margin: 15px 15px 0 15px;
-}
-
 #selected-models ul {
     margin-top: 5px;
 }
@@ -144,11 +145,15 @@
     border-bottom: 0px
 }
 
+.selected-data-highlight {
+    color: rgb(135, 206, 235) !important;
+}
+
 .ellipsis {
-  width: 175px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    width: 175px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .sidebar-nav i,
@@ -210,6 +215,10 @@
 
 /* tables */
 
+.table-borderless > tbody > tr >td{
+    border-top: none;
+}
+
 table tr.active {
     background-color: #ddd;
 }
@@ -223,12 +232,15 @@ table tr.active {
     margin: 0;
 }
 
-.fba-table h5 {
-    margin-left: 25px;
+.fba-table h5{
+    padding-top: 5px;
+    text-transform: uppercase;
+    color: #888;
 }
 
-.fba-table table {
-    margin-left: 25px;
+.fba-table {
+    border-left: 4px solid #5CB85C;
+    padding-left: 10px;
 }
 
 .fba-table table td,
@@ -255,7 +267,8 @@ table tr.active {
 }
 
 md-card {
-    padding: 15px;
+    padding: 0 15px;
+    margin: 0;
 }
 
 md-card h2{
@@ -281,9 +294,14 @@ md-tab.active {
 
 
 
+/* labels */
+.label-fba {
+    background-color: #5cb85c;
+}
+
+
+
 /* animations */
-
-
 .animate-enter {
     -webkit-transition: 1s linear all; /* Chrome */
     transition: 1s linear all;
