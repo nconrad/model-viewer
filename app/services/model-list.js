@@ -97,6 +97,9 @@ function($http, $q, $rootScope) {
                             var obj = d[i],
                                 meta = d[i][10];
 
+                            if (obj[7] === 'core_VR_FBA_Glucose_aerobic')
+                                continue;
+
                             items.push({name: obj[1],
                                         ws: obj[7],
                                         media: meta['Media name'],

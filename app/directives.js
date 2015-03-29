@@ -120,9 +120,6 @@ angular.module('core-directives')
                     var ws = obj.ws,
                         name = obj.name;
 
-                    if (ws === 'core_VR_FBA_Glucose_aerobic')
-                        continue;
-
                     var row = $('<tr data-ws="'+ws+'" data-name="'+name+'" data-media="'+obj.media+'">');
 
                     // mark anything selected as checked
