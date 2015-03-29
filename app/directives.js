@@ -16,11 +16,11 @@ angular.module('core-directives')
 
             // used to support various apps with different frameworks
             function urlRouter(type, ws, name) {
-                if (type == "KBaseFBA.FBAModel")
+                if (type === "KBaseFBA.FBAModel")
                     return '/app/#/models/'+ws+'/'+name;
-                else if (type == "KBaseFBA.FBA")
+                else if (type === "KBaseFBA.FBA")
                     return '/app/#/fba/'+ws+'/'+name;
-                else if (type == "KBaseBiochem.Media")
+                else if (type === "KBaseBiochem.Media")
                     return '/app/#/media/'+ws+'/'+name;
 
                 return;

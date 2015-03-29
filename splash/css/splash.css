@@ -289,6 +289,13 @@ section.dark {
     border: 5px solid #444;
 }
 
+#portfolio .portfolio-item .portfolio-nolink {
+    display: block;
+    position: relative;
+    margin: 0 auto;
+    max-width: 400px;
+    border: 5px solid #444;
+}
 
 #portfolio h2 {
     color: #A2E6FF;
@@ -336,6 +343,8 @@ section.dark {
 #portfolio * {
     z-index: 2;
 }
+
+
 
 
 @media(min-width:767px) {
