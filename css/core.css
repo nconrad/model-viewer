@@ -258,6 +258,11 @@ table tr.active {
     opacity: .5;
 }
 
+/* bootstrap mods */
+.popover {
+    z-index: 9000;
+}
+
 /* md mods */
 .md-tabs-content .map-table {
     margin-top: 15px;

@@ -82,7 +82,7 @@ angular.module('core-directives')
 
             scope.loading = true;
             $http.get('/data/app/modelList.json')
-                 .then(function(data) {
+                   .then(function(data) {
                     scope.loading = false;
 
                     scope.tableOptions.data = data.data;
