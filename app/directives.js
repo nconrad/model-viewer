@@ -888,7 +888,7 @@ function($compile, $stateParams) {
                                      .on("mouseover", function(){d3.select(this).attr("fill", "black");})
                                      .on("mouseout", function(){d3.select(this).attr("fill", "#333");});
 
-                    var bb = y_label.node().getBBox();
+                    var bb = y_label.node().getBoundingClientRect();
                     y_label.attr('transform', 'translate('+String(start_x-4)+',0)');
 
                     for (var j=0; j < xData.length; j++) {
