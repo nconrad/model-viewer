@@ -455,15 +455,12 @@ function($compile, $stateParams) {
                     numbers = data.numbers;
 
                 var h = 10; /* height of boxes */
-
-
                 $(ele).append('<div id="cdd-chart">');
 
                 //Create the Scale we will use for the Axis
                 var x = d3.scale.linear()
                                 .domain([0, max_end])
                                 .range([20, width-20]);
-
 
                 //Create the Axis
                 var xAxis = d3.svg.axis()
@@ -476,28 +473,26 @@ function($compile, $stateParams) {
                     .scaleExtent([1, 700])
                     .on("zoom", zoomed_poly);
 
-
                 var svg = d3.select("#cdd-chart").append("svg")
                                                  .attr("width", width)
                                                  .attr("height", height)
-                                                .attr("transform", "translate(" + 0 + "," + 0 + ")")
-                                                .call(zoom);
+                                                 .attr("transform", "translate(" + 0 + "," + 0 + ")")
+                                                 .call(zoom);
 
                 svg.append("rect")
                     .attr("class", "overlay")
                     .attr("width", width)
                     .attr("height", height);
 
-                //Create an SVG group Element for the Axis elements and call the xAxis function
+                // Create an SVG group Element for the Axis elements and call the xAxis function
                 var xAxisGroup = svg.append("g")
                                 .attr("class", "x axis")
                                 .attr("transform", "translate(0," + (height - padding_bottom) + ")")
                                     .call(xAxis);
 
-
                 function zoomed() {
                     svg.select(".x.axis").call(xAxis);
-                    //svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+                    // svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
                     svg.selectAll('.cdd-box').attr("x", function(d) {
                         var start = d3.select(this).data()[0].start
                         var end = d3.select(this).data()[0].end
@@ -525,7 +520,6 @@ function($compile, $stateParams) {
                                 return polyRight(start, end, h);
                             }
                     })
-
                 }
 
                 var ystart = 20
@@ -703,7 +697,6 @@ function($compile, $stateParams) {
                             .attr('x', e+2)
                             .attr('y', height - 10)
 
-
                     }).on('mouseout', function(d){
                         d3.selectAll('.cdd-box')
                                 //.transition()
@@ -781,7 +774,7 @@ function($compile, $stateParams) {
 
                 // ability to zoom
                 d3.select("#canvas")
-                  .call(d3.behavior.zoom().scaleExtent([-3, 8]).on("zoom", zoom))
+                  .call(d3.behavior.zoom().scaleExtent([-1, 8]).on("zoom", zoom))
 
                 function zoom() {
                     svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
@@ -1131,7 +1124,7 @@ function($compile, $stateParams) {
                 g.append('text')
                    .attr('x', start+w+boxPad)
                    .attr('y', yOffset+h)
-                   .text(-config.getMaxAbsFlux())
+                   .text(config.getMaxAbsFlux())
                    .attr('font-size', '10px');
 
                 g.append('text')
@@ -1273,7 +1266,6 @@ function($compile, $stateParams) {
             var collapsed = false;
 
             element.click(function() {
-
                 if ( !collapsed ){
                     element.find('.fa-caret-left').fadeOut(function() {
                         $(this).remove();
