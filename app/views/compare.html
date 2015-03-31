@@ -2,15 +2,18 @@
 
 
 <div class="row">
-    <div class="col-md-6">
-        <h1>Comparative Viewer</h1>
+    <div class="col-md-5">
+        <h2>Comparative Viewer</h2>
     </div>
-    <div class="col-md-6">
-        <div ng-if="MV.models.length > 0" legend></div>
+    <div class="col-md-7" ng-if="MV.models.length > 0">
+        <md-radio-group ng-model="VizOpts.flux" ng-change="updateOptions()" class="pull-right">
+            <md-radio-button ng-value="'absFlux'"> |flux|</md-radio-button>
+            <md-radio-button ng-value="'flux'"> flux </md-radio-button>
+        </md-radio-group>
     </div>
 </div>
-<hr class="no-margin">
 
+<hr class="no-margin">
 
 
 <div ng-if="MV.models.length == 0">
@@ -40,17 +43,17 @@
              md-swipe-left="next()"
              md-swipe-right="previous()">
 
-            <div heatmap>
-                <md-progress-circular ng-if="loading"
-                                      md-mode="indeterminate"
-                                      class="text-center"
-                                      md-diameter="40">
-                </md-progress-circular>
+            <div heatmap></div>
+
+            <div ng-if="MV.models.length" class="viz-tip text-muted">
+                Use the mouse wheel (or double-click) to zoom. Click and drag to pan.
             </div>
 
-            <div ng-if="models.length">
-                <b>Tips:</b> Use the mouse wheel to zoom. Click and drag to pan.<br>
-            </div>
+            <md-progress-circular ng-if="loading"
+                                  md-mode="indeterminate"
+                                  class="text-center"
+                                  md-diameter="40">
+            </md-progress-circular>
 
         </div>
 
@@ -114,19 +117,19 @@
 
     <div ng-repeat="tab in tabs">
         <div ng-show="selectedIndex == $index" id="{{tab.map}}">
-            <div class="path-container"></div>
+            <div class="path-container">
+            </div>
 
             <md-progress-circular ng-if="loadingMap"
                                   md-mode="indeterminate"
                                   class="text-center"
                                   md-diameter="40">
             </md-progress-circular>
-
-        <div>
+        </div>
     </div>
 
 
-
+    <div ng-if="MV.models.length && selectedIndex != 1" class="viz-legend" legend></div>
 </div>
 
 

@@ -81,7 +81,7 @@ angular.module('core-directives')
             //var p = $http.rpc('ws', 'list_objects', {workspaces: workspaces, includeMetadata: 1});
 
             scope.loading = true;
-            $http.get('/data/app/modelList.json')
+            $http.get('../data/app/modelList.json')
                    .then(function(data) {
                     scope.loading = false;
 
@@ -734,36 +734,61 @@ function($compile, $stateParams) {
         link: function(scope, elem, attr) {
             var msConfig = new ModelSeedVizConfig();
 
-            var width = 1000,
-                height = 250;
+            //var width = 1000,
+            //    height = 1000;
+
+            // resize svg
+            var d = document,
+                e = d.documentElement,
+                g = d.getElementsByTagName('body')[0],
+                width = window.innerWidth || e.clientWidth || g.clientWidth,
+                height = window.innerHeight|| e.clientHeight|| g.clientHeight;
+
+            var heatData, // avoid refresh
+                svg;
 
             scope.models = MV.models;
 
             function update() {
                 scope.loading = true;
                 MV.updateData().then(function(d) {
-                    scope.loading = false;
-
                     var models = d.FBAModel,
                         all_fbas = d.FBA;
 
-                    var d = parseData(models, all_fbas);
-
-                    elem.html('');
-                    //element.append('<div>'+d.x.length+' x '+d.y.length+' = '+(d.x.length*d.y.length)+' boxes</div>' )
-                    elem.append('<div id="canvas">');
-                    heatmap_d3(d.x, d.y, d.data);
+                    heatData = parseData(models, all_fbas);
+                    draw(heatData, true);
                 })
             }
 
+            // update and draw
             update();
+
+            scope.$on('Compare.event.absFlux', function(event, absFlux) {
+                draw(heatData, absFlux);
+            })
 
             scope.$on('MV.event.change', function() {
                 update()
             })
 
+
+            function draw(data, absFlux) {
+                elem.html('');
+                elem.append('<div id="canvas">');
+                heatmap_d3(data.x, data.y, data.data, absFlux);
+                scope.loading = false;
+
+
+                // ability to zoom
+                d3.select("#canvas")
+                  .call(d3.behavior.zoom().scaleExtent([-3, 8]).on("zoom", zoom))
+
+                function zoom() {
+                    svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+                }
+            }
+
             function parseData(models, fbas) {
-                console.log('fbas',fbas)
                 // create heatmap data
                 var rxn_names = [],
                     model_names = [],
@@ -828,109 +853,13 @@ function($compile, $stateParams) {
             }
 
 
-            function complete_cached() {
-                $.get('./node/output.json', function(d) {
-                    elem.rmLoading()
-                    elem.append('<div>'+d.x.length+' x '+d.y.length+' = '+(d.x.length*d.y.length)+' boxes</div>' )
-                    elem.append('<br>')
-                    elem.append('<div id="test"><canvas id="heatmap"></canvas></div>');
-                    super_map(d.x, d.y, d.data);
-                })
-            }
-
-            // canvas map, for use with viz service
-            function super_map(y_data, x_data, rows) {
-                elem.append('<div id="map" class="map" style="height: 400px; width: 100%;"></div>')
-
-                var offset_x = 100,
-                    offset_y = 100;
-
-                var w = 10,
-                    h = 10;
-
-                var width = 1500,
-                    height = 500;
-
-                var canvas = d3.select("#heatmap")
-                    .attr("width", width)
-                    .attr("height", height)
-                    .call( d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom) )
-                  .node().getContext("2d");
-
-                draw();
-
-                function zoom() {
-                    canvas.save();
-                    canvas.clearRect(0, 0, width, height);
-                    canvas.translate(d3.event.translate[0], d3.event.translate[1]);
-                    canvas.scale(d3.event.scale, d3.event.scale);
-                    draw();
-                    canvas.restore();
-                }
-
-
-                function layer() {
-                    var rects = []
-
-                    for (var i=0; i < rows.length; i++) {
-                        var row = rows[i];
-
-                        // for each rxn in union of rxns, try to find rxn for that model
-                        for (var j=0; j < row.length; j++) {
-                            var val = row[j];
-
-                            canvas.beginPath();
-                            canvas.rect(offset_x+(j*w), offset_y+(i*h), w, h);
-
-                            canvas.fillStyle = (val === 1 ? vizConfig.geneColor : 'white');
-                            canvas.fill();
-                            canvas.lineWidth = 0.1;
-                            canvas.strokeStyle = msConfig.stroke;
-                            canvas.stroke();
-                        }
-                    }
-                }
-
-                function draw() {
-                    /*
-                    for (var i=0; i < x_data.length; i++) {
-                        canvas.textAlign = 'right';
-                        canvas.fillText(x_data[i], offset_x-4, offset_y+(i*h)+h);
-                    }
-
-
-                    for (var i=0; i < y_data.length; i++) {
-                         canvas.save();
-                         var cx = offset_x+(i*w);
-                         var cy = offset_y;
-                         canvas.textAlign = 'center';
-                         canvas.translate(cx, cy);
-                         canvas.rotate( -(Math.PI / 4));
-                         canvas.translate(-cx, -cy);
-                         canvas.fillText(y_data[i], offset_x+(i*w)+30, offset_y+2);
-                         canvas.restore();
-                    }*/
-
-                    layer();
-
-                }
-            }
-
             // basic, zoomable svg map
-            function heatmap_d3(xData, yData, rows) {
+            function heatmap_d3(xData, yData, rows, absFlux) {
                 elem.append('<div id="canvas">');
-                var svg = d3.select("#canvas").append("svg")
+                svg = d3.select("#canvas").append("svg")
                     .attr("width", width)
                     .attr("height", height)
                     .append("g")
-
-                // ability to zoom
-                d3.select("#canvas")
-                  .call(d3.behavior.zoom().scaleExtent([-3, 8]).on("zoom", zoom))
-
-                function zoom() {
-                    svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-                }
 
                 var w = 7, h = 7, font_size = '8px', start_y = 100;
 
@@ -958,6 +887,7 @@ function($compile, $stateParams) {
                                      .attr('text-anchor', 'end')
                                      .on("mouseover", function(){d3.select(this).attr("fill", "black");})
                                      .on("mouseout", function(){d3.select(this).attr("fill", "#333");});
+
                     var bb = y_label.node().getBBox();
                     y_label.attr('transform', 'translate('+String(start_x-4)+',0)');
 
@@ -989,8 +919,9 @@ function($compile, $stateParams) {
                                       .attr('stroke-width', '.5px')
                                       .attr('data-row-num', i)
                                       .attr('class', 'model-rxn');
+
                         if (prop.present && prop.flux) {
-                            var color = msConfig.getColor(prop.flux);
+                            var color = msConfig.getColor(prop.flux, absFlux);
                             rect.attr('fill', color);
                         } else {
                             rect.attr("fill", (prop.present === 1 ? msConfig.geneColor : 'white') );
@@ -1015,13 +946,13 @@ function($compile, $stateParams) {
                             $('#selected-models ul li:eq('+i+')').find('a.fba')
                                 .removeClass('selected-data-highlight');
                         })
-                        /*
-                        $(rect.node()).popover({content: prop.flux,
-                                title: yData[i],
-                                trigger: 'hover',
-                                html: true,
-                                placement: 'bottom'});
-                        */
+
+                        function updateWindow(){
+                            width = window.innerWidth || d.clientWidth || g.clientWidth;
+                            height = window.innerHeight|| d.clientHeight|| g.clientHeight;
+                            svg.attr('width', width).attr('height', height);
+                        }
+                        window.onresize = updateWindow;
                     }
                 }
             }
@@ -1035,7 +966,204 @@ function($compile, $stateParams) {
         link: function(scope, elem, attr) {
             var config = new ModelSeedVizConfig();
 
-            angular.element(elem).append('<div id="test">');
+            angular.element(elem).append('<div id="legend">');
+
+            var w = 10,
+                h = 10;
+
+            var yOffset = 30,
+                xOffset = 10;
+
+            var boxPad = 3;
+
+            var svg = d3.select("#legend")
+                .append('svg')
+                .attr('width', 340)
+                .attr('height', 40);
+
+            // add genes present legend
+            var g = svg.append('g');
+            g.append('rect')
+               .attr('width', w)
+               .attr('height', h)
+               .attr('x', 10)
+               .attr('y', yOffset)
+               .attr('fill', config.geneColor)
+               .attr('stroke', config.stroke)
+
+            g.append('text')
+               .attr('x', xOffset+w+5)
+               .attr('y', yOffset+h)
+               .text('Gene Present')
+               .attr('font-size', '10px')
+
+
+            // legend gradients
+            var negGradient = svg.append("svg:defs")
+              .append("svg:linearGradient")
+                .attr("id", "negGradient")
+                .attr("x1", "0%")
+                .attr("y1", "0%")
+                .attr("x2", "100%")
+                .attr("y2", "0%")
+                .attr("spreadMethod", "pad");
+            negGradient.append("svg:stop")
+                .attr("offset", "0%")
+                .attr("stop-color", config.getNegMaxHex())
+                .attr("stop-opacity", 1);
+            negGradient.append("svg:stop")
+                .attr("offset", "100%")
+                .attr("stop-color", config.getNegMinHex())
+                .attr("stop-opacity", 1);
+
+            var posGradient = svg.append("svg:defs")
+              .append("svg:linearGradient")
+                .attr("id", "posGradient")
+                .attr("x1", "0%")
+                .attr("y1", "0%")
+                .attr("x2", "100%")
+                .attr("y2", "0%")
+                .attr("spreadMethod", "pad");
+            posGradient.append("svg:stop")
+                .attr("offset", "0%")
+                .attr("stop-color", config.getPosMinHex())
+                .attr("stop-opacity", 1);
+            posGradient.append("svg:stop")
+                .attr("offset", "100%")
+                .attr("stop-color", config.getPosMaxHex())
+                .attr("stop-opacity", 1);
+
+            var absGradient = svg.append("svg:defs")
+              .append("svg:linearGradient")
+                .attr("id", "absGradient")
+                .attr("x1", "0%")
+                .attr("y1", "0%")
+                .attr("x2", "100%")
+                .attr("y2", "0%")
+                .attr("spreadMethod", "pad");
+            absGradient.append("svg:stop")
+                .attr("offset", "0%")
+                .attr("stop-color", config.getNegMinHex())
+                .attr("stop-opacity", 1);
+            absGradient.append("svg:stop")
+                .attr("offset", "100%")
+                .attr("stop-color", config.getNegMaxHex())
+                .attr("stop-opacity", 1);
+
+            function fluxLegend() {
+                // Negative flux
+                var g = svg.append('g').attr('id', 'legend-neg-flux'),
+                    start = 125,
+                    w = 50;
+
+                g.append('rect')
+                   .attr('width', w)
+                   .attr('height', h)
+                   .attr('x', start)
+                   .attr('y', yOffset)
+                   //.attr('stroke', config.stroke)
+                   .style("fill", "url(#negGradient)");
+
+                g.append('text')
+                   .attr('x', start-17)
+                   .attr('y', yOffset+h)
+                   .text( -config.getMaxAbsFlux() )
+                   .attr('font-size', '10px');
+
+                g.append('text')
+                   .attr('x', start+w+boxPad)
+                   .attr('y', yOffset+h)
+                   .text(0)
+                   .attr('font-size', '10px');
+
+                g.append('text')
+                   .attr('x', start)
+                   .attr('y', yOffset -3)
+                   .text('Neg Flux')
+                   .attr('font-size', '10px');
+
+                // Positive flux
+                var g = svg.append('g').attr('id', 'legend-pos-flux'),
+                    start = 187,
+                    w = 50;
+
+                g.append('rect')
+                   .attr('width', w)
+                   .attr('height', h)
+                   .attr('x', start)
+                   .attr('y', yOffset)
+                   //.attr('stroke', config.stroke)
+                   .style("fill", "url(#posGradient)");
+
+                g.append('text')
+                   .attr('x', start+w+boxPad)
+                   .attr('y', yOffset+h)
+                   .text(config.getMaxAbsFlux())
+                   .attr('font-size', '10px');
+
+                g.append('text')
+                   .attr('x', start)
+                   .attr('y', yOffset -3)
+                   .text('Pos Flux')
+                   .attr('font-size', '10px');
+            }
+
+            function absFluxLegend() {
+                // Negative flux
+                var g = svg.append('g').attr('id', 'legend-abs-flux'),
+                    start = 125,
+                    w = 50;
+
+                g.append('rect')
+                   .attr('width', w)
+                   .attr('height', h)
+                   .attr('x', start)
+                   .attr('y', yOffset)
+                   //.attr('stroke', config.stroke)
+                   .style("fill", "url(#absGradient)");
+
+                g.append('text')
+                   .attr('x', start-10)
+                   .attr('y', yOffset+h)
+                   .text( 0 )
+                   .attr('font-size', '10px');
+
+                g.append('text')
+                   .attr('x', start+w+boxPad)
+                   .attr('y', yOffset+h)
+                   .text(-config.getMaxAbsFlux())
+                   .attr('font-size', '10px');
+
+                g.append('text')
+                   .attr('x', start)
+                   .attr('y', yOffset -3)
+                   .text('|flux|')
+                   .attr('font-size', '10px');
+            }
+            absFluxLegend();
+
+            scope.$on('Compare.event.absFlux', function(event, absFlux) {
+                if (absFlux) {
+                    svg.selectAll("g#legend-neg-flux").remove();
+                    svg.selectAll("g#legend-pos-flux").remove();
+                    absFluxLegend();
+                } else {
+                    svg.selectAll("g#legend-abs-flux").remove();
+                    fluxLegend()
+                }
+            })
+        }
+    }
+})
+
+
+
+.directive('absLegend', function() {
+    return {
+        link: function(scope, elem, attr) {
+            var config = new ModelSeedVizConfig();
+
+            angular.element(elem).append('<div id="legend">');
 
             var w = 10,
                 h = 10;
@@ -1045,7 +1173,7 @@ function($compile, $stateParams) {
 
             var boxPad = 3;
 
-            var svg = d3.select("#test")
+            var svg = d3.select("#legend")
                 .append('svg')
                 .attr('width', 400)
                 .attr('height', 66);
@@ -1067,80 +1195,58 @@ function($compile, $stateParams) {
                .attr('font-size', '10px')
 
 
-            // add neg flux legend
+            // add flux gradients
+            var posGradient = svg.append("svg:defs")
+              .append("svg:linearGradient")
+                .attr("id", "posGradient")
+                .attr("x1", "0%")
+                .attr("y1", "0%")
+                .attr("x2", "100%")
+                .attr("y2", "0%")
+                .attr("spreadMethod", "pad");
+            posGradient.append("svg:stop")
+                .attr("offset", "0%")
+                .attr("stop-color", config.getNegMinHex())
+                .attr("stop-opacity", 1);
+            posGradient.append("svg:stop")
+                .attr("offset", "100%")
+                .attr("stop-color", config.getNegMaxHex())
+                .attr("stop-opacity", 1);
+
+            // Negative flux
             var g = svg.append('g'),
                 start = 125,
-                len = config.negFluxColors.length;
+                w = 50;
 
-            for (var i=0; i < len; i++) {
-                g.append('rect')
-                   .attr('width', w)
-                   .attr('height', h)
-                   .attr('x', start+(i*(w+boxPad)) )
-                   .attr('y', yOffset)
-                   .attr('fill', config.negFluxColors[i])
-                   .attr('stroke', config.stroke)
-            }
-
-            var bounds = config.negBounds.reverse();
-            for (var i=0; i <len; i++) {
-                var bound = bounds[i];
-
-                var pos = start+(i*(w+boxPad))+7
-                var label = g.append('text')
-                             .attr('x', pos)
-                             .attr('y', yOffset-3)
-                             .text(bound === 0 ? '\u003C '+bound : '\u2264 '+bound)
-                             .attr('font-size', '10px')
-                             .attr("transform", 'rotate(-45,'+pos+','+yOffset+')')
-            }
+            g.append('rect')
+               .attr('width', w)
+               .attr('height', h)
+               .attr('x', start)
+               .attr('y', yOffset)
+               //.attr('stroke', config.stroke)
+               .style("fill", "url(#posGradient)");
 
             g.append('text')
-               .attr('x', start+(len*(w+boxPad)))
+               .attr('x', start-10)
                .attr('y', yOffset+h)
-               .text('Neg Flux')
-               .attr('font-size', '10px')
-
-            // add pos flux legend
-            var g = svg.append('g'),
-                start = 250,
-                len = config.fluxColors.length;
-
-            for (var i=0; i < len; i++) {
-                svg.append('rect')
-                   .attr('width', w)
-                   .attr('height', h)
-                   .attr('x', start+(i*(w+boxPad)) )
-                   .attr('y', yOffset)
-                   .attr('fill', config.fluxColors[i])
-                   .attr('stroke', config.stroke)
-            }
-
-
-            var bounds = config.bounds;
-            for (var i=0; i <len; i++) {
-                var bound = bounds[i];
-
-                var pos = start+(i*(w+boxPad))+7
-                var label = g.append('text')
-                             .attr('x', pos)
-                             .attr('y', yOffset-3)
-                             .text(bound === 0 ? '\u003E '+bound : '\u2265 '+bound)
-                             .attr('font-size', '10px')
-                             .attr("transform", 'rotate(-45,'+pos+','+yOffset+')')
-            }
+               .text( 0 )
+               .attr('font-size', '10px');
 
             g.append('text')
-               .attr('x', start+(len*(w+boxPad)))
+               .attr('x', start+w+boxPad)
                .attr('y', yOffset+h)
-               .text('Pos Flux')
-               .attr('font-size', '10px')
+               .text( config.getMaxAbsFlux())
+               .attr('font-size', '10px');
 
+            g.append('text')
+               .attr('x', start)
+               .attr('y', yOffset -3)
+               .text('Abs(Flux)')
+               .attr('font-size', '10px');
 
         }
     }
 })
-
 
 .directive('ngHover', function() {
     return {
@@ -1222,6 +1328,32 @@ function($compile, $stateParams) {
         link: function(scope, element, attrs) {
             var ws = attrs.ws;
             var name = attrs.name;
+        }
+    }
+})
+
+
+.directive('proto', function() {
+    return {
+        link: function(scope, element, attr) {
+
+
+            var config = new ModelSeedVizConfig();
+
+            var rainbow = new Rainbow();
+
+            var numberOfItems = 100;
+
+            rainbow.setNumberRange(1, numberOfItems);
+            rainbow.setSpectrum('lightred', 'darkred');
+
+            var s = $('<div>');
+            for (var i = 1; i <= numberOfItems; i++) {
+                var hexColour = rainbow.colourAt(i);
+                s.append( $('<div>#' + hexColour + '</div>').css('color', '#'+hexColour) );
+            }
+
+            $(element).append(s)
         }
     }
 })

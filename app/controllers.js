@@ -60,18 +60,35 @@ function($scope, $dialog, $compile) {
 
 }])
 
-.controller('Compare', ['$state', '$scope', 'ModelViewer', '$stateParams',
-function($state, $scope, MV, $stateParams) {
+.controller('Compare', ['$state', '$scope', 'ModelViewer', '$stateParams', '$timeout', 'VizOptions',
+function($state, $scope, MV, $stateParams, $timeout, VizOpts) {
+    var coreMaps = ['map00010', 'map00020', 'map00030', 'map00040', 'map00051', 'map00052'];
     $scope.MV = MV;
+    $scope.VizOpts = VizOpts;
 
     // map table
     $scope.predicate = 'id';
     $scope.reverse = false;
 
+    $scope.updateOptions = function() {
+        // wait for radio animation
+        $timeout(function() {
+            $scope.$broadcast('Compare.event.absFlux', VizOpts.flux == 'absFlux')
+        }, 100)
+    }
+
+    // fetch maps (once)
     $scope.loading = true;
     MV.getMaps().then(function(d) {
         $scope.loading = false;
-        $scope.maps = d;
+
+        var maps = [];
+        for (var i=0; i<d.length; i++) {
+            if (coreMaps.indexOf(d[i].id) === -1) continue
+            maps.push(d[i]);
+        }
+
+        $scope.maps = maps;
     })
 }])
 
@@ -152,8 +169,8 @@ function($state, $scope, MV, $stateParams) {
 
 }])
 
-.controller('CompareTabs', ['$scope', '$log', '$timeout', 'ModelViewer', '$compile',
-function ($scope, $log, $timeout, MV, $compile) {
+.controller('CompareTabs', ['$scope', '$timeout', 'ModelViewer', 'VizOptions',
+function ($scope, $timeout, MV, VizOpts) {
     var tabs = [
         { title: 'Heatmap'},
         { title: 'Pathways'}
@@ -185,6 +202,11 @@ function ($scope, $log, $timeout, MV, $compile) {
                 $scope.loadMap(map);
             })
         })
+
+        // update if flux settings change
+        $scope.$on('Compare.event.absFlux', function() {
+            $scope.loadMap(map);
+        })
     };
 
     $scope.removeTab = function (tab) {
@@ -200,7 +222,9 @@ function ($scope, $log, $timeout, MV, $compile) {
         $('#'+map.id).find('.path-container').remove();
         $('#'+map.id).append('<div class="path-container">')
         $scope.loadingMap = true;
-        $('#'+map.id).find('.path-container').kbasePathway({models: MV.data.FBAModel,
+        $('#'+map.id).find('.path-container').kbasePathway({
+                                    options: {absFlux: VizOpts.flux === 'absFlux'},
+                                    models: MV.data.FBAModel,
                                     fbas: MV.data.FBA,
                                     map_ws: 'nconrad:paths',
                                     map_name: map.id,
@@ -210,4 +234,12 @@ function ($scope, $log, $timeout, MV, $compile) {
                                         })
                                     }});
     }
-}]);
+
+}])
+
+.service('VizOptions', [function() {
+
+    // default for abs flux
+    this.flux = 'absFlux';
+
+}])

@@ -1,5 +1,23 @@
 
+
+
 /* global styling */
+
+.viz-tip {
+    position:fixed;
+    bottom: 2px;
+    right: 10px;
+    margin-left: 10px;
+    font-size: .8em;
+}
+
+.viz-legend {
+    position:fixed;
+    bottom: 2px;
+    left: 225px;
+}
+
+
 
 rect:hover,
 circle:hover,
