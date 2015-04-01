@@ -94,14 +94,21 @@ angular.module('coreModelViewer',
 }])
 
 .run(['$rootScope', '$state', '$stateParams', '$location',
-    function($rootScope, $state, $stateParams, $location) {
+    function($rootScope, $state, $sParams, $location) {
     $rootScope.$state = $state;
-    $rootScope.$stateParams = $stateParams;
+    $rootScope.$stateParams = $sParams;
 
     $rootScope.$on('$stateChangeSuccess',
         function(event, toState, toParams, fromState, fromParams){
             $rootScope.$subURL = toState.url.split('/')[1]
         })
+
+    // global method for active styling
+    $rootScope.isActive = function(ws, name) {
+        if (ws === $sParams.ws && name === $sParams.name) return true;
+        return false;
+    }
+
 
     //kb = new KBCacheClient();
 }]);

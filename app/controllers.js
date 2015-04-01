@@ -1,15 +1,26 @@
 
 angular.module('mv-controllers', [])
-.controller('MainCtrl',
-    ['$scope', 'ModelViewer',
-    function($scope, MV) {
+.controller('ModelCount', ['$scope', 'ModelViewer', function($scope, MV) {
+    $scope.MV = MV;
+}])
+
+.controller('SelectedData', ['$scope', '$mdDialog', 'ModelViewer', '$rootScope',
+function($scope, $dialog, MV, $rootScope) {
 
     $scope.MV = MV;
 
-}])
+    $rootScope.$on('$stateChangeStart',
+        function(event, toState, toParams, fromState, fromParams){
+            if (['modelPage', 'fbaPage'].indexOf(toState.name) === -1 )
+                angular.element('#selected-models').find('.active').removeClass('active')
+        })
 
-.controller('SelectedData', ['$scope', '$mdDialog', '$compile',
-function($scope, $dialog, $compile) {
+    // selected navigation item.  Only highlights clicked
+    $scope.makeActive = function(event, index, type, item) {
+        angular.element('#selected-models').find('.active').removeClass('active')
+        angular.element(event.target).parent().addClass('active');
+    }
+
 
     $scope.openFBAView = function(ev, $index, item) {
         $dialog.show({

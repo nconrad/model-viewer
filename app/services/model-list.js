@@ -18,6 +18,10 @@ function($http, $q, $rootScope) {
     // actual data cache
     this.data = {};
 
+    this.modelCount = function() {
+        return self.models.length;
+    }
+
     this.add = function(item) {
         // model has the form {ws: 'foo', name: bar}
         // similary for fba
