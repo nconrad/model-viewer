@@ -43,8 +43,8 @@ angular.module('core-directives')
     }
  })
 .directive('modelList',
-    ['$compile', '$stateParams', 'ModelViewer', '$http', '$timeout',
-    function($compile, $stateParams, MV, $http, $timeout) {
+    ['$compile', '$stateParams', 'ModelViewer', '$http', '$timeout', '$q',
+    function($compile, $stateParams, MV, $http, $timeout, $q) {
     return {
         link: function(scope, elem, attr) {
             var workspaces = ['janakakbase:CM-VR'];
@@ -78,14 +78,21 @@ angular.module('core-directives')
                                              searchPlaceholder: 'Search models'}
                                  }
 
-            //var p = $http.rpc('ws', 'list_objects', {workspaces: workspaces, includeMetadata: 1});
+
+            //var proms = [];
+            //for (var i=0; i<3; i++) {
+            //    proms.push( $http.rpc('ws', 'list_objects',
+            //        {workspaces: workspaces, includeMetadata: 1, skip: i*10000, type: 'KBaseFBA.FBAModel'}) );
+            //}
 
             scope.loading = true;
             $http.get('../data/app/modelList.json')
-                   .then(function(data) {
+                .then(function(data) {
+                //$q.all(proms).then(function(data) {
                     scope.loading = false;
+                    //var all = [].concat.apply([], data);
 
-                    scope.tableOptions.data = data.data;
+                    scope.tableOptions.data = data.data
                     scope.tableOptions.drawCallback = events;
 
                     tableElem = $('<table class="table">');
@@ -738,7 +745,8 @@ function($compile, $stateParams) {
                 height = window.innerHeight|| e.clientHeight|| g.clientHeight;
 
             var heatData, // avoid refresh
-                svg;
+                svg,
+                saveTimeoutID;
 
             scope.models = MV.models;
 
@@ -765,6 +773,7 @@ function($compile, $stateParams) {
             })
 
 
+
             function draw(data, absFlux) {
                 elem.html('');
                 elem.append('<div id="canvas">');
@@ -779,7 +788,36 @@ function($compile, $stateParams) {
                 function zoom() {
                     svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
                 }
+
+                // semi-hack for svg save
+                if (saveTimeoutID)
+                    saveTimeoutID.clearInterval();
             }
+
+            /*
+            function updateDownloadLink() {
+                var svgSource = document.getElementById("canvas");
+                var serializer = new XMLSerializer();
+                var source = serializer.serializeToString(svgSource);
+
+                //add name spaces.
+                if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/))
+                    source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+
+                if(!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/))
+                    source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
+
+                //add xml declaration
+                source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+
+                //convert svg source to URI data scheme.
+                var url = "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(source);
+
+                //set url value to a element's href attribute.
+                var link = document.getElementById("download-link");
+                link.href = url;
+                link.target = "_blank";
+            }*/
 
             function parseData(models, fbas) {
                 // create heatmap data

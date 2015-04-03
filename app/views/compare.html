@@ -22,6 +22,7 @@
 </div>
 
 
+
 <div ng-if="MV.models.length > 0" ng-controller="CompareTabs"  layout="column">
     <md-tabs md-selected="selectedIndex" flex >
         <md-tab ng-repeat="tab in tabs">
@@ -43,7 +44,11 @@
              md-swipe-left="next()"
              md-swipe-right="previous()">
 
+            <a id="download-link">Download!</a>
+
             <div heatmap></div>
+
+
 
             <div ng-if="MV.models.length" class="viz-tip text-muted">
                 Use the mouse wheel (or double-click) to zoom. Click and drag to pan.
